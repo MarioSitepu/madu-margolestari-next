@@ -88,7 +88,6 @@ const HeroSection = () => {
 ```
 
 ### Contoh 3: Flexbox Responsif
-
 ```typescript
 const ProductCard = () => {
   return (

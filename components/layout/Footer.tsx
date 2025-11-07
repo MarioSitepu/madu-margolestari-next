@@ -1,60 +1,132 @@
-// Contoh Layout Component: Footer
-// Komponen ini tampil di semua halaman
+import Image from 'next/image';
+import PhoneIcon from '@/components/icons/PhoneIcon';
+import EmailFilledIcon from '@/components/icons/EmailFilledIcon';
+import CopyrightIcon from '@/components/icons/CopyrightIcon';
 
-const Footer = () => {
+interface FooterSection {
+  title: string;
+  links: string[];
+}
+
+interface FooterContact {
+  title: string;
+  phone: string;
+  email: string;
+}
+
+interface FooterProps {
+  brandName?: string;
+  brandDescription?: string;
+  logoImage?: string;
+  sections?: FooterSection[];
+  contact?: FooterContact;
+  copyright?: string;
+  legalLinks?: string[];
+}
+
+const Footer = ({
+  brandName = "Madu Marles",
+  brandDescription = "UMKM Lebah Madu Margolestari merupakan usaha mikro, kecil, dan menengah yang berfokus pada budidaya lebah madu dan produksi madu murni berkualitas tinggi.",
+  logoImage = "/images/honeycomb-transparent.png",
+  sections = [
+    { title: "Code", links: ["About Us", "Services", "Community", "Testimonal"] },
+    { title: "Support", links: ["Help Center", "Tweet @Us", "Webians", "Feedback"] },
+    { title: "Links", links: ["Courses", "Become 5Teacher", "Services", "All In One"] }
+  ],
+  contact = {
+    title: "Contact Us",
+    phone: "081262143242412",
+    email: "Support@dfwff.com"
+  },
+  copyright = "Copyright By CodeUI.All right Reserved",
+  legalLinks = ["Privacy Policy", "Terms Of Use", "Legal"]
+}: FooterProps) => {
   return (
-    <footer className="
-      bg-gray-900 text-white
-      mt-auto
-    ">
-      <div className="
-        container mx-auto
-        px-4 sm:px-6 lg:px-8
-        py-8 sm:py-12
-      ">
-        <div className="
-          grid
-          grid-cols-1 sm:grid-cols-2 lg:grid-cols-4
-          gap-8
-        ">
-          <div>
-            <h3 className="text-lg font-bold mb-4">Madu MarLes</h3>
-            <p className="text-gray-400 text-sm">
-              Madu berkualitas tinggi dari alam
+    <footer className="bg-brand-teal text-brand-white">
+      <div className="container mx-auto px-4 py-12">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+          {/* Brand Section */}
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="relative w-[78px] h-[78px]">
+                <Image
+                  src={logoImage}
+                  alt={brandName}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
+            <h3 className="heading-sm text-brand-yellow mb-2">{brandName}</h3>
+            <p className="text-caption text-brand-white">
+              {brandDescription}
             </p>
           </div>
           
-          <div>
-            <h4 className="font-semibold mb-4">Tautan</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="/" className="hover:text-white">Home</a></li>
-              <li><a href="/produk" className="hover:text-white">Produk</a></li>
-              <li><a href="/tentang-kami" className="hover:text-white">Tentang Kami</a></li>
-            </ul>
-          </div>
+          {/* Navigation Sections */}
+          {sections.map((section, index) => (
+            <div key={index}>
+              <h4 className="text-footer-heading text-brand-yellow mb-4">
+                {section.title}
+              </h4>
+              <ul className="space-y-3">
+                {section.links.map((link, linkIndex) => (
+                  <li key={linkIndex}>
+                    <a href="#" className="text-footer-link text-brand-white hover:text-brand-yellow transition-colors">
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
           
+          {/* Contact Section */}
           <div>
-            <h4 className="font-semibold mb-4">Kontak</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>Email: info@madumarles.com</li>
-              <li>Telp: +62 123 456 789</li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-semibold mb-4">Sosial Media</h4>
-            <div className="flex gap-4">
-              {/* Icon sosial media */}
+            <h4 className="text-footer-heading text-brand-yellow mb-4">
+              {contact.title}
+            </h4>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <PhoneIcon width={22} height={22} color="#FFFFFF" />
+                <span className="text-footer-link text-brand-white">
+                  {contact.phone}
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <EmailFilledIcon width={20} height={16} color="#FFFFFF" />
+                <span className="text-footer-link text-brand-white">
+                  {contact.email}
+                </span>
+              </div>
             </div>
           </div>
         </div>
         
-        <div className="
-          mt-8 pt-8
-          border-t border-gray-800
-          text-center text-sm text-gray-400
-        ">
-          <p>© 2024 Madu MarLes. All rights reserved.</p>
+        {/* Divider */}
+        <div className="border-t-[3px] border-brand-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)] mb-8"></div>
+        
+        {/* Bottom Footer */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-2">
+            <CopyrightIcon width={16} height={16} color="#FFFFFF" />
+            <span className="text-footer-link text-brand-white">
+              {copyright}
+            </span>
+          </div>
+          
+          <div className="flex gap-16">
+            {legalLinks.map((link, index) => (
+              <a
+                key={index}
+                href="#"
+                className="text-footer-link text-brand-white hover:text-brand-yellow transition-colors"
+              >
+                {link}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>
@@ -62,4 +134,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
