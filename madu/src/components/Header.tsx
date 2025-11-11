@@ -1,6 +1,5 @@
-import React from 'react';
 export function Header() {
-  return <section className="w-full bg-gradient-to-br from-[#f4d58d] to-[#ffde7d] relative overflow-hidden min-h-[600px] flex items-center">
+  return <section className="w-full bg-linear-to-br from-[#f4d58d] to-[#ffde7d] relative overflow-hidden min-h-[600px] flex items-center">
       <div className="container mx-auto px-4 md:px-8 py-16 md:py-20 flex flex-col md:flex-row items-center gap-8 md:gap-16">
         <div className="md:w-1/2 z-10">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-black mb-6 leading-tight">

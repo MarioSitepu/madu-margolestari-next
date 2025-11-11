@@ -1,4 +1,3 @@
-import React from 'react';
 export function InfoSection() {
   return <section className="w-full bg-[#00b8a9] py-16 md:py-20 relative overflow-hidden">
       <div className="container mx-auto px-4 md:px-8">

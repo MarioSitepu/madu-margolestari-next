@@ -1,6 +1,5 @@
-import React from 'react';
 import { CheckCircle, Leaf, Heart } from 'lucide-react';
-export function Footer() {
+export function WhyUs() {
   return <footer className="w-full bg-[#ffde7d] py-16 md:py-20">
       <div className="container mx-auto px-4 md:px-8">
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-center mb-16">

@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowRight } from 'lucide-react';
 export function Documentation() {
   return <section className="w-full bg-white py-0 relative">

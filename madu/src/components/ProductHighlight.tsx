@@ -1,4 +1,3 @@
-import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 export function ProductHighlight() {
   return <section className="w-full bg-[#00b8a9] py-16 md:py-20">

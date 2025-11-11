@@ -1,4 +1,3 @@
-import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 const products = [{
   id: 1,

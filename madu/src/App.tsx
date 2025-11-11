@@ -1,21 +1,20 @@
-import { Navigation } from './components/Navigation'
-import { Header } from './components/Header'
-import { ProductHighlight } from './components/ProductHighlight'
-import { ProductList } from './components/ProductList'
-import { InfoSection } from './components/InfoSection'
-import { Documentation } from './components/Documentation'
-import { Footer } from './components/Footer'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
+import { Navigation } from '@/components/Navigation'
+import Home from '@/pages/Home'
+import { AboutUs } from '@/pages/AboutUs'
+
 export function App() {
   return (
-    <div className="flex flex-col w-full min-h-screen">
-      <Navigation />
-      <Header />
-      <ProductHighlight />
-      <ProductList />
-      <InfoSection />
-      <Documentation />
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <div className="flex min-h-screen w-full flex-col">
+        <Navigation />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutUs />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   )
 }
 
