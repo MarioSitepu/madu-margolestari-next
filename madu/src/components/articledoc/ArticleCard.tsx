@@ -1,4 +1,4 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CalendarIcon, UserIcon, UserCircleIcon, ArrowRightIcon } from 'lucide-react';
 
 interface ArticleData {
@@ -16,6 +16,8 @@ interface ArticleCardProps {
 }
 
 export function ArticleCard({ article }: ArticleCardProps) {
+  const navigate = useNavigate();
+
   // Default data if no article prop is provided
   const defaultArticle: ArticleData = {
     id: 1,
@@ -28,6 +30,10 @@ export function ArticleCard({ article }: ArticleCardProps) {
   };
 
   const articleData = article || defaultArticle;
+
+  const handleLihatGaleri = () => {
+    navigate('/article-galeri');
+  };
 
   return <div className="bg-[#00b8a9] border-[6px] border-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
       <div className="h-56 relative overflow-hidden">
@@ -55,7 +61,10 @@ export function ArticleCard({ article }: ArticleCardProps) {
             <UserCircleIcon className="h-5 w-5 mr-2" />
             <span className="text-sm font-semibold text-[#ffde7d]">{articleData.author}</span>
           </div>
-          <button className="bg-white text-[#00b8a9] text-sm font-semibold py-2.5 px-5 rounded-lg shadow-md flex items-center gap-2 hover:bg-[#ffde7d] hover:text-[#00b8a9] transition-all">
+          <button 
+            onClick={handleLihatGaleri}
+            className="bg-white text-[#00b8a9] text-sm font-semibold py-2.5 px-5 rounded-lg shadow-md flex items-center gap-2 hover:bg-[#ffde7d] hover:text-[#00b8a9] transition-all"
+          >
             <span>Lihat Galeri</span>
             <ArrowRightIcon className="h-4 w-4" />
           </button>

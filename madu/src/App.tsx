@@ -6,6 +6,7 @@ import { Navigation } from "@/components/Navigation";
 import Home from "@/pages/Home";
 import { AboutUs } from "@/pages/AboutUs";
 import ArticleDoc from "@/pages/ArticleDoc";
+import ArticleGaleri from "@/pages/ArticleGaleri";
 import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
 
@@ -34,6 +35,7 @@ export function App() {
                       <Route path="/" element={<Home />} />
                       <Route path="/about" element={<AboutUs />} />
                       <Route path="/article" element={<ArticleDoc />} />
+                      <Route path="/article-galeri" element={<ArticleGaleri />} />
                     </Routes>
                   </>
                 }
