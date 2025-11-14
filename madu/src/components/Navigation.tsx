@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogIn } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
@@ -11,7 +11,7 @@ type NavigationItem =
 const navigationItems: NavigationItem[] = [
   { label: "Beranda", type: "route", to: "/" },
   { label: "Produk", type: "anchor", href: "#produk" },
-  { label: "Artikel", type: "anchor", href: "#artikel" },
+  { label: "Artikel", type: "route", to: "/article" },
   { label: "Tentang Kami", type: "route", to: "/about" },
 ];
 
@@ -58,6 +58,11 @@ export function Navigation() {
               </a>
             )
           )}
+          {/* Login Button */}
+          <button className="bg-[#00b8a9] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center gap-2 shadow-md">
+            <LogIn size={18} />
+            Login
+          </button>
         </div>
         {/* Mobile Menu Button */}
         <button className="p-2 md:hidden" onClick={handleToggleMenu}>
@@ -95,6 +100,14 @@ export function Navigation() {
                 </a>
               )
             )}
+            {/* Mobile Login Button */}
+            <button 
+              className="bg-[#00b8a9] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center gap-2 shadow-md mt-2"
+              onClick={handleCloseMenu}
+            >
+              <LogIn size={18} />
+              Login
+            </button>
           </div>
         </div>
       )}
