@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+import { useAuth } from '@/context/AuthContext';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,6 +17,10 @@ export function Register() {
     password: '',
     confirmPassword: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -19,19 +28,73 @@ export function Register() {
       ...prev,
       [name]: value
     }));
+    setError(''); // Clear error when user types
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
     
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      alert('Password tidak cocok!');
+      setError('Password tidak cocok!');
+      setIsLoading(false);
       return;
     }
 
-    // Handle register logic here
-    console.log('Register attempt:', formData);
+    if (formData.password.length < 6) {
+      setError('Password minimal 6 karakter');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${API_URL}/auth/register`, {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      });
+
+      if (response.data.success) {
+        // Use auth context to store user data
+        login(response.data.token, response.data.user);
+        
+        // Redirect to home page
+        navigate('/');
+      }
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Terjadi kesalahan saat mendaftar');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await axios.post(`${API_URL}/auth/google`, {
+        credential: credentialResponse.credential
+      });
+
+      if (response.data.success) {
+        // Use auth context to store user data
+        login(response.data.token, response.data.user);
+        
+        // Redirect to home page
+        navigate('/');
+      }
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Terjadi kesalahan saat login dengan Google');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setError('Login dengan Google gagal. Silakan coba lagi.');
   };
 
   return (
@@ -45,6 +108,13 @@ export function Register() {
 
         {/* Register Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-8">
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-700 text-sm">{error}</p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name Field */}
             <div>
@@ -62,6 +132,7 @@ export function Register() {
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all"
                   placeholder="Masukkan nama lengkap"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -82,26 +153,7 @@ export function Register() {
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all"
                   placeholder="Masukkan email Anda"
                   required
-                />
-              </div>
-            </div>
-
-            {/* Phone Field */}
-            <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                Nomor Telepon
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all"
-                  placeholder="08xxxxxxxxxx"
-                  required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -120,13 +172,15 @@ export function Register() {
                   value={formData.password}
                   onChange={handleInputChange}
                   className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all"
-                  placeholder="Masukkan password"
+                  placeholder="Masukkan password (min. 6 karakter)"
                   required
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  disabled={isLoading}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -149,11 +203,13 @@ export function Register() {
                   className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all"
                   placeholder="Konfirmasi password"
                   required
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  disabled={isLoading}
                 >
                   {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -167,6 +223,7 @@ export function Register() {
                 id="terms"
                 className="mt-1 h-4 w-4 text-[#00b8a9] focus:ring-[#00b8a9] border-gray-300 rounded"
                 required
+                disabled={isLoading}
               />
               <label htmlFor="terms" className="text-sm text-gray-600">
                 Saya setuju dengan{' '}
@@ -180,10 +237,11 @@ export function Register() {
             {/* Register Button */}
             <button
               type="submit"
-              className="w-full bg-[#00b8a9] text-white py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center justify-center gap-2 shadow-lg"
+              disabled={isLoading}
+              className="w-full bg-[#00b8a9] text-white py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Daftar Sekarang
-              <ArrowRight className="h-5 w-5" />
+              {isLoading ? 'Mendaftar...' : 'Daftar Sekarang'}
+              {!isLoading && <ArrowRight className="h-5 w-5" />}
             </button>
           </form>
 
@@ -194,8 +252,22 @@ export function Register() {
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
+          {/* Google Login Button */}
+          <div className="w-full">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="outline"
+              size="large"
+              text="signup_with"
+              shape="rectangular"
+              logo_alignment="left"
+              width="100%"
+            />
+          </div>
+
           {/* Login Link */}
-          <div className="text-center">
+          <div className="text-center mt-6">
             <p className="text-gray-600">
               Sudah punya akun?{' '}
               <Link to="/login" className="text-[#00b8a9] font-semibold hover:underline">

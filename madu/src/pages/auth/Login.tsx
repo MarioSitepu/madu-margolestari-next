@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+import { useAuth } from '@/context/AuthContext';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -8,6 +13,10 @@ export function Login() {
     email: '',
     password: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -15,12 +24,56 @@ export function Login() {
       ...prev,
       [name]: value
     }));
+    setError(''); // Clear error when user types
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', formData);
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await axios.post(`${API_URL}/auth/login`, formData);
+      
+      if (response.data.success) {
+        // Use auth context to store user data
+        login(response.data.token, response.data.user);
+        
+        // Redirect to home page
+        navigate('/');
+      }
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Terjadi kesalahan saat login');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await axios.post(`${API_URL}/auth/google`, {
+        credential: credentialResponse.credential
+      });
+
+      if (response.data.success) {
+        // Use auth context to store user data
+        login(response.data.token, response.data.user);
+        
+        // Redirect to home page
+        navigate('/');
+      }
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Terjadi kesalahan saat login dengan Google');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setError('Login dengan Google gagal. Silakan coba lagi.');
   };
 
   return (
@@ -34,6 +87,13 @@ export function Login() {
 
         {/* Login Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-8">
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-700 text-sm">{error}</p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
@@ -51,6 +111,7 @@ export function Login() {
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all"
                   placeholder="Masukkan email Anda"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -71,11 +132,13 @@ export function Login() {
                   className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all"
                   placeholder="Masukkan password Anda"
                   required
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  disabled={isLoading}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -92,10 +155,11 @@ export function Login() {
             {/* Login Button */}
             <button
               type="submit"
-              className="w-full bg-[#00b8a9] text-white py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center justify-center gap-2 shadow-lg"
+              disabled={isLoading}
+              className="w-full bg-[#00b8a9] text-white py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Masuk
-              <ArrowRight className="h-5 w-5" />
+              {isLoading ? 'Masuk...' : 'Masuk'}
+              {!isLoading && <ArrowRight className="h-5 w-5" />}
             </button>
           </form>
 
@@ -106,8 +170,22 @@ export function Login() {
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
+          {/* Google Login Button */}
+          <div className="w-full">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="outline"
+              size="large"
+              text="signin_with"
+              shape="rectangular"
+              logo_alignment="left"
+              width="100%"
+            />
+          </div>
+
           {/* Register Link */}
-          <div className="text-center">
+          <div className="text-center mt-6">
             <p className="text-gray-600">
               Belum punya akun?{' '}
               <Link to="/register" className="text-[#00b8a9] font-semibold hover:underline">

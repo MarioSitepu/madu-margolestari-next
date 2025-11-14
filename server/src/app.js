@@ -4,6 +4,7 @@ import morgan from 'morgan';
 
 import healthRouter from './routes/health.js';
 import productRouter from './routes/products.js';
+import authRouter from './routes/auth.js';
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(morgan('dev'));
 
 app.use('/api/health', healthRouter);
 app.use('/api/products', productRouter);
+app.use('/api/auth', authRouter);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Endpoint tidak ditemukan' });
