@@ -1,16 +1,17 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { GoogleOAuthProvider } from '@react-oauth/google'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
-import { AuthProvider } from '@/context/AuthContext'
-import { Navigation } from '@/components/Navigation'
-import Home from '@/pages/Home'
-import { AboutUs } from '@/pages/AboutUs'
-import ArticleDoc from '@/pages/ArticleDoc'
-import { Login } from '@/pages/auth/Login'
-import { Register } from '@/pages/auth/Register'
+import { AuthProvider } from "@/context/AuthContext";
+import { Navigation } from "@/components/Navigation";
+import Home from "@/pages/Home";
+import { AboutUs } from "@/pages/AboutUs";
+import ArticleDoc from "@/pages/ArticleDoc";
+import { Login } from "@/pages/auth/Login";
+import { Register } from "@/pages/auth/Register";
 
 // Replace with your actual Google Client ID
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "your-google-client-id-here"
+const GOOGLE_CLIENT_ID =
+  import.meta.env.VITE_GOOGLE_CLIENT_ID || "your-google-client-id-here";
 
 export function App() {
   return (
@@ -22,24 +23,27 @@ export function App() {
               {/* Auth routes without navigation */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              
+
               {/* Main routes with navigation */}
-              <Route path="/*" element={
-                <>
-                  <Navigation />
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<AboutUs />} />
-                    <Route path="/article" element={<ArticleDoc />} />
-                  </Routes>
-                </>
-              } />
+              <Route
+                path="/*"
+                element={
+                  <>
+                    <Navigation />
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/about" element={<AboutUs />} />
+                      <Route path="/article" element={<ArticleDoc />} />
+                    </Routes>
+                  </>
+                }
+              />
             </Routes>
           </div>
         </BrowserRouter>
       </AuthProvider>
     </GoogleOAuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;
