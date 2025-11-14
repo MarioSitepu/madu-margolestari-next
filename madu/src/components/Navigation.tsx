@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Menu, X, LogIn } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
 
@@ -59,10 +59,13 @@ export function Navigation() {
             )
           )}
           {/* Login Button */}
-          <button className="bg-[#00b8a9] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center gap-2 shadow-md">
+          <Link 
+            to="/login"
+            className="bg-[#00b8a9] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center gap-2 shadow-md"
+          >
             <LogIn size={18} />
             Login
-          </button>
+          </Link>
         </div>
         {/* Mobile Menu Button */}
         <button className="p-2 md:hidden" onClick={handleToggleMenu}>
@@ -101,13 +104,14 @@ export function Navigation() {
               )
             )}
             {/* Mobile Login Button */}
-            <button 
+            <Link 
+              to="/login"
               className="bg-[#00b8a9] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center gap-2 shadow-md mt-2"
               onClick={handleCloseMenu}
             >
               <LogIn size={18} />
               Login
-            </button>
+            </Link>
           </div>
         </div>
       )}
