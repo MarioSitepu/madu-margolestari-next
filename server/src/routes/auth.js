@@ -1,21 +1,16 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
 import User from '../models/user.js';
+import { generateToken, verifyToken } from '../lib/jwt.js';
 
 const router = express.Router();
 
 // Initialize Google OAuth client
+if (!process.env.GOOGLE_CLIENT_ID) {
+  console.warn('Peringatan: GOOGLE_CLIENT_ID tidak ditemukan di environment variables');
+}
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-// JWT Secret (should be in environment variables)
-const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret-key';
-
-// Generate JWT token
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
-};
 
 // Regular login route
 router.post('/login', async (req, res) => {
@@ -94,6 +89,13 @@ router.post('/google', async (req, res) => {
       });
     }
 
+    if (!process.env.GOOGLE_CLIENT_ID) {
+      return res.status(500).json({
+        success: false,
+        message: 'Google OAuth tidak dikonfigurasi. Silakan set GOOGLE_CLIENT_ID di environment variables'
+      });
+    }
+
     // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: credential,
@@ -152,9 +154,51 @@ router.post('/google', async (req, res) => {
 
   } catch (error) {
     console.error('Google login error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      name: error.name,
+      stack: error.stack
+    });
+    
+    // Handle specific Google OAuth errors
+    if (error.message && error.message.includes('Token used too early')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token Google tidak valid atau sudah kadaluarsa'
+      });
+    }
+    
+    if (error.message && (error.message.includes('Invalid token signature') || error.message.includes('Wrong number of segments'))) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token Google tidak valid. Pastikan GOOGLE_CLIENT_ID di backend sama dengan di frontend',
+        details: process.env.NODE_ENV === 'development' ? {
+          error: error.message,
+          clientId: process.env.GOOGLE_CLIENT_ID ? 'Sudah di-set' : 'Belum di-set'
+        } : undefined
+      });
+    }
+
+    if (error.message && error.message.includes('Invalid audience')) {
+      return res.status(400).json({
+        success: false,
+        message: 'GOOGLE_CLIENT_ID tidak cocok. Pastikan Client ID di backend sama dengan di frontend',
+        details: process.env.NODE_ENV === 'development' ? {
+          error: error.message,
+          backendClientId: process.env.GOOGLE_CLIENT_ID ? 'Sudah di-set' : 'Belum di-set'
+        } : undefined
+      });
+    }
+
     res.status(500).json({
       success: false,
-      message: 'Terjadi kesalahan saat login dengan Google'
+      message: 'Terjadi kesalahan saat login dengan Google',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      details: process.env.NODE_ENV === 'development' ? {
+        name: error.name,
+        code: error.code
+      } : undefined
     });
   }
 });
@@ -233,32 +277,55 @@ export const authenticateToken = (req, res, next) => {
     });
   }
 
-  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
-    if (err) {
+  try {
+    // Verify token menggunakan utility function
+    const decoded = verifyToken(token);
+
+    // Find user dari database
+    User.findById(decoded.userId)
+      .select('-password')
+      .then(user => {
+        if (!user) {
+          return res.status(404).json({
+            success: false,
+            message: 'User tidak ditemukan'
+          });
+        }
+
+        req.user = user;
+        next();
+      })
+      .catch(error => {
+        console.error('Error finding user:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Terjadi kesalahan server'
+        });
+      });
+  } catch (error) {
+    // Handle specific JWT errors
+    if (error.message === 'Token sudah kadaluarsa') {
+      return res.status(401).json({
+        success: false,
+        message: 'Token sudah kadaluarsa. Silakan login kembali',
+        code: 'TOKEN_EXPIRED'
+      });
+    }
+
+    if (error.message === 'Token tidak valid') {
       return res.status(403).json({
         success: false,
-        message: 'Token tidak valid'
+        message: 'Token tidak valid',
+        code: 'TOKEN_INVALID'
       });
     }
 
-    try {
-      const user = await User.findById(decoded.userId).select('-password');
-      if (!user) {
-        return res.status(404).json({
-          success: false,
-          message: 'User tidak ditemukan'
-        });
-      }
-
-      req.user = user;
-      next();
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        message: 'Terjadi kesalahan server'
-      });
-    }
-  });
+    return res.status(403).json({
+      success: false,
+      message: 'Token tidak valid',
+      code: 'TOKEN_ERROR'
+    });
+  }
 };
 
 // Get current user profile

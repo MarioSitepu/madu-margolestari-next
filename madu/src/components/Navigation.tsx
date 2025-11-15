@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, LogIn, LogOut, ChevronDown } from "lucide-react";
+import { Menu, X, LogIn, LogOut, ChevronDown, User } from "lucide-react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
@@ -112,14 +112,22 @@ export function Navigation() {
                 </button>
                 
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1">
-                    <div className="px-4 py-2 border-b border-gray-200">
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                    <div className="px-4 py-3 border-b border-gray-200">
                       <p className="font-semibold text-gray-900">{user.name}</p>
-                      <p className="text-sm text-gray-600">{user.email}</p>
-                      <p className="text-xs text-gray-500 capitalize">
+                      <p className="text-sm text-gray-600 truncate">{user.email}</p>
+                      <p className="text-xs text-gray-500 capitalize mt-1">
                         Login via {user.provider === 'google' ? 'Google' : 'Email'}
                       </p>
                     </div>
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
+                    >
+                      <User size={16} />
+                      Dashboard
+                    </Link>
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
@@ -191,6 +199,14 @@ export function Navigation() {
                       <p className="text-sm text-gray-700">{user.email}</p>
                     </div>
                   </div>
+                  <Link
+                    to="/dashboard"
+                    onClick={handleCloseMenu}
+                    className="w-full bg-[#00b8a9] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center gap-2 justify-center mb-2"
+                  >
+                    <User size={18} />
+                    Dashboard
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center gap-2 justify-center"

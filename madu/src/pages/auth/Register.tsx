@@ -5,7 +5,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export function Register() {
   const [showPassword, setShowPassword] = useState(false);

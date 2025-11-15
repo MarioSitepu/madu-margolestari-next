@@ -5,7 +5,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -54,6 +54,12 @@ export function Login() {
     setError('');
 
     try {
+      if (!credentialResponse?.credential) {
+        setError('Google credential tidak ditemukan. Silakan coba lagi.');
+        setIsLoading(false);
+        return;
+      }
+
       const response = await axios.post(`${API_URL}/auth/google`, {
         credential: credentialResponse.credential
       });
@@ -64,9 +70,31 @@ export function Login() {
         
         // Redirect to home page
         navigate('/');
+      } else {
+        setError(response.data.message || 'Login dengan Google gagal');
       }
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Terjadi kesalahan saat login dengan Google');
+      console.error('Google login error:', error);
+      
+      // Extract error message
+      let errorMessage = 'Terjadi kesalahan saat login dengan Google';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+        
+        // Add details if available in development
+        if (error.response.data.details && import.meta.env.DEV) {
+          errorMessage += `\n\nDetail: ${JSON.stringify(error.response.data.details, null, 2)}`;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else if (error.response?.status === 500) {
+        errorMessage = 'Server error. Pastikan backend sudah berjalan dan GOOGLE_CLIENT_ID sudah dikonfigurasi.';
+      } else if (error.response?.status === 400) {
+        errorMessage = 'Request tidak valid. Pastikan Google Client ID sudah benar.';
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +118,7 @@ export function Login() {
           {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-700 text-sm">{error}</p>
+              <p className="text-red-700 text-sm whitespace-pre-wrap">{error}</p>
             </div>
           )}
 

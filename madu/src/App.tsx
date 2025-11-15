@@ -9,6 +9,7 @@ import ArticleDoc from "@/pages/ArticleDoc";
 import ArticleGaleri from "@/pages/ArticleGaleri";
 import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
+import { Dashboard } from "@/pages/Dashboard";
 
 // Replace with your actual Google Client ID
 const GOOGLE_CLIENT_ID =
@@ -36,6 +37,7 @@ export function App() {
                       <Route path="/about" element={<AboutUs />} />
                       <Route path="/article" element={<ArticleDoc />} />
                       <Route path="/article-galeri" element={<ArticleGaleri />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
                     </Routes>
                   </>
                 }
