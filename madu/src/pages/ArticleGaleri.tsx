@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { Footer } from "@/components/Footer";
 
 interface Article {
   id: number;
@@ -7,7 +7,7 @@ interface Article {
   image: string;
 }
 
-const ArticleGaleri: FC = () => {
+export function ArticleGaleri() {
   const articles: Article[] = [
     {
       id: 1,
@@ -33,7 +33,7 @@ const ArticleGaleri: FC = () => {
   ];
 
   return (
-    <div className="bg-yellow-300 min-h-screen">
+    <div className="bg-[#ffde7d] min-h-screen">
       {/* Header Section */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
@@ -78,31 +78,49 @@ const ArticleGaleri: FC = () => {
               templates for its desktop publishing program PageMaker.
             </p>
           </div>
-
-          {/* Promo Section */}
-          <div className="bg-white rounded-lg p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <img
-                src="/images/honey-bottle.png"
-                alt="Madu Marles Honey"
-                className="w-24 h-32 object-contain"
-              />
-              <div>
-                <p className="text-gray-800">
-                  Jangan lewatkan kesempatan untuk merasakan kelezatannya.
-                  Kunjungi toko kami dan beli sekarang juga di
-                  <a href="#" className="text-cyan-500 font-semibold ml-1">
-                    sini!
-                  </a>
-                </p>
-              </div>
-            </div>
-            <button className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-8 py-3 rounded-full font-semibold whitespace-nowrap transition">
-              Pesan Sekarang
-            </button>
-          </div>
         </div>
       </section>
+
+      {/* Promo Section */}
+      <div className="w-full bg-white p-8 px-8 md:px-16 flex flex-col md:flex-row items-center justify-between gap-6 px-8">
+        <div className="flex items-center gap-4">
+          <img
+            src="/images/honey-bottle.png"
+            alt="Madu Marles Honey"
+            className="w-24 h-32 object-contain"
+          />
+          <div>
+            <p className="text-gray-800">
+              Jangan lewatkan kesempatan untuk merasakan kelezatannya. Kunjungi
+              toko kami dan beli sekarang juga di
+              <a href="#" className="text-cyan-500 font-semibold ml-1">
+                sini!
+              </a>
+            </p>
+          </div>
+        </div>
+
+        <button
+          className="
+            w-full
+            bg-[#ffde7d]
+            text-white
+            font-bold
+            px-2
+            py-1
+            flex
+            items-center
+            justify-center
+            gap-3
+            shadow-[0_10px_15px_rgba(0,0,0,0.4)]
+            hover:bg-[#f5c869]
+            transition
+        "
+        >
+          Kunjungi Sekarang
+          <span className="text-2xl">↗</span>
+        </button>
+      </div>
 
       {/* Article Gallery Section */}
       <section className="py-16 px-4">
@@ -136,45 +154,9 @@ const ArticleGaleri: FC = () => {
           </div>
         </div>
       </section>
-
-      {/* Newsletter Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white rounded-lg p-8 flex flex-col md:flex-row items-center gap-8">
-            <div className="flex-shrink-0">
-              <img
-                src="/images/honey-drip.png"
-                alt="Honey drip"
-                className="w-32 h-32 object-contain"
-              />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-2xl font-bold text-cyan-500 mb-2">
-                Berlangganan ke web kami untuk
-              </h3>
-              <p className="text-gray-800 mb-6">
-                mendapatkan pembahuan tentang{" "}
-                <span className="text-yellow-500 font-semibold">
-                  penawaran menarik
-                </span>{" "}
-                dari kami
-              </p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="email"
-                  placeholder="Email anda di sini"
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-cyan-500"
-                />
-                <button className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-full font-semibold transition whitespace-nowrap">
-                  Berlangganan
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Footer />
     </div>
   );
-};
+}
 
 export default ArticleGaleri;
