@@ -43,7 +43,26 @@ export function Login() {
         navigate('/');
       }
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Terjadi kesalahan saat login');
+      console.error('Login error:', error);
+      
+      // Extract error message
+      let errorMessage = 'Terjadi kesalahan saat login';
+      
+      // Handle network errors
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\n` +
+          `Pastikan:\n` +
+          `1. Backend server sudah berjalan di http://localhost:5000\n` +
+          `2. API URL sudah benar: ${API_URL}\n` +
+          `3. Tidak ada firewall yang memblokir koneksi\n` +
+          `4. Coba buka http://localhost:5000/api/health di browser untuk test koneksi`;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +98,15 @@ export function Login() {
       // Extract error message
       let errorMessage = 'Terjadi kesalahan saat login dengan Google';
       
-      if (error.response?.data?.message) {
+      // Handle network errors
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\n` +
+          `Pastikan:\n` +
+          `1. Backend server sudah berjalan di http://localhost:5000\n` +
+          `2. API URL sudah benar: ${API_URL}\n` +
+          `3. Tidak ada firewall yang memblokir koneksi\n` +
+          `4. Coba buka http://localhost:5000/api/health di browser untuk test koneksi`;
+      } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
         
         // Add details if available in development

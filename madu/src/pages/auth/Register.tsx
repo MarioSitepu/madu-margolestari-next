@@ -64,7 +64,26 @@ export function Register() {
         navigate('/');
       }
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Terjadi kesalahan saat mendaftar');
+      console.error('Register error:', error);
+      
+      // Extract error message
+      let errorMessage = 'Terjadi kesalahan saat mendaftar';
+      
+      // Handle network errors
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\n` +
+          `Pastikan:\n` +
+          `1. Backend server sudah berjalan di http://localhost:5000\n` +
+          `2. API URL sudah benar: ${API_URL}\n` +
+          `3. Tidak ada firewall yang memblokir koneksi\n` +
+          `4. Coba buka http://localhost:5000/api/health di browser untuk test koneksi`;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -87,7 +106,35 @@ export function Register() {
         navigate('/');
       }
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Terjadi kesalahan saat login dengan Google');
+      console.error('Google login error:', error);
+      
+      // Extract error message
+      let errorMessage = 'Terjadi kesalahan saat login dengan Google';
+      
+      // Handle network errors
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\n` +
+          `Pastikan:\n` +
+          `1. Backend server sudah berjalan di http://localhost:5000\n` +
+          `2. API URL sudah benar: ${API_URL}\n` +
+          `3. Tidak ada firewall yang memblokir koneksi\n` +
+          `4. Coba buka http://localhost:5000/api/health di browser untuk test koneksi`;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+        
+        // Add details if available in development
+        if (error.response.data.details && import.meta.env.DEV) {
+          errorMessage += `\n\nDetail: ${JSON.stringify(error.response.data.details, null, 2)}`;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else if (error.response?.status === 500) {
+        errorMessage = 'Server error. Pastikan backend sudah berjalan dan GOOGLE_CLIENT_ID sudah dikonfigurasi.';
+      } else if (error.response?.status === 400) {
+        errorMessage = 'Request tidak valid. Pastikan Google Client ID sudah benar.';
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -111,7 +158,7 @@ export function Register() {
           {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-700 text-sm">{error}</p>
+              <p className="text-red-700 text-sm whitespace-pre-wrap">{error}</p>
             </div>
           )}
 

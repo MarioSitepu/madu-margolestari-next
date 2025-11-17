@@ -1,8 +1,11 @@
 import express from 'express';
+import multer from 'multer';
 import bcrypt from 'bcryptjs';
 import { OAuth2Client } from 'google-auth-library';
 import User from '../models/user.js';
 import { generateToken, verifyToken } from '../lib/jwt.js';
+import { uploadGoogleAvatarToSupabase, uploadImageToSupabase } from '../lib/supabase.js';
+import { resizeImage } from '../lib/supabase.js';
 
 const router = express.Router();
 
@@ -113,26 +116,80 @@ router.post('/google', async (req, res) => {
       ]
     });
 
+    // Upload Google profile picture to Supabase if available
+    let avatarUrl = picture; // Default to Google URL
+    let isSupabaseUrl = false;
+    
+    if (picture) {
+      try {
+        // Use existing user ID if available, otherwise will use temp ID and update later
+        const userId = user?._id?.toString() || 'temp-' + Date.now();
+        avatarUrl = await uploadGoogleAvatarToSupabase(picture, userId);
+        isSupabaseUrl = avatarUrl.includes('supabase');
+        if (isSupabaseUrl) {
+          console.log('Foto profil berhasil diupload ke Supabase:', avatarUrl);
+        }
+      } catch (error) {
+        console.error('Error uploading avatar to Supabase, menggunakan URL Google:', error);
+        // Fallback to Google URL if Supabase upload fails
+        avatarUrl = picture;
+        isSupabaseUrl = false;
+      }
+    }
+
     if (user) {
       // Update Google ID if user exists but doesn't have it
       if (!user.googleId && user.email === email) {
         user.googleId = googleId;
         user.provider = 'google';
         user.isVerified = true;
-        if (picture) user.avatar = picture;
+        if (avatarUrl) user.avatar = avatarUrl;
+        await user.save();
+      } else if (avatarUrl && (!user.avatar || user.avatar !== avatarUrl)) {
+        // Update avatar if it's different (e.g., user changed profile picture on Google)
+        // Re-upload with correct user ID if avatar was uploaded with temp ID
+        if (avatarUrl.includes('temp-') && user._id) {
+          try {
+            avatarUrl = await uploadGoogleAvatarToSupabase(picture, user._id.toString());
+            isSupabaseUrl = avatarUrl.includes('supabase');
+            if (isSupabaseUrl) {
+              console.log('Foto profil diupdate dengan user ID yang benar:', avatarUrl);
+            }
+          } catch (error) {
+            console.error('Error re-uploading avatar with user ID:', error);
+            // Keep the temp URL if re-upload fails
+          }
+        }
+        user.avatar = avatarUrl;
         await user.save();
       }
     } else {
-      // Create new user
+      // Create new user first
       user = new User({
         email,
         name,
         googleId,
-        avatar: picture,
+        avatar: avatarUrl, // Will be temp URL if Supabase upload happened
         provider: 'google',
         isVerified: true
       });
       await user.save();
+      
+      // If avatar was uploaded with temp ID or is still Google URL, re-upload with correct user ID
+      if (avatarUrl && (avatarUrl.includes('temp-') || (!isSupabaseUrl && picture))) {
+        try {
+          const newAvatarUrl = await uploadGoogleAvatarToSupabase(picture, user._id.toString());
+          if (newAvatarUrl.includes('supabase')) {
+            user.avatar = newAvatarUrl;
+            await user.save();
+            avatarUrl = newAvatarUrl;
+            console.log('Foto profil diupdate dengan user ID yang benar:', avatarUrl);
+          }
+        } catch (error) {
+          console.error('Error re-uploading avatar with user ID:', error);
+          // Keep existing avatar URL if re-upload fails
+        }
+      }
     }
 
     // Generate token
@@ -341,6 +398,79 @@ router.get('/me', authenticateToken, (req, res) => {
       isVerified: req.user.isVerified
     }
   });
+});
+
+// Configure multer for file upload (memory storage)
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Accept only image files
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('File harus berupa gambar'), false);
+    }
+  }
+});
+
+// Update user avatar
+router.post('/avatar', authenticateToken, upload.single('avatar'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'File gambar diperlukan'
+      });
+    }
+
+    const user = req.user;
+
+    // Resize image
+    const resizedBuffer = await resizeImage(req.file.buffer, 400, 400, 85);
+
+    // Generate unique filename
+    const fileName = `user-${user._id}-${Date.now()}.jpg`;
+
+    // Upload to Supabase
+    let avatarUrl;
+    try {
+      const { url } = await uploadImageToSupabase(resizedBuffer, fileName, 'avatars');
+      avatarUrl = url;
+    } catch (supabaseError) {
+      console.error('Error uploading to Supabase:', supabaseError);
+      return res.status(500).json({
+        success: false,
+        message: 'Gagal mengupload foto profil. Pastikan Supabase sudah dikonfigurasi.'
+      });
+    }
+
+    // Update user avatar in database
+    user.avatar = avatarUrl;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Foto profil berhasil diupdate',
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar,
+        provider: user.provider,
+        isVerified: user.isVerified
+      }
+    });
+
+  } catch (error) {
+    console.error('Error updating avatar:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Terjadi kesalahan saat mengupdate foto profil'
+    });
+  }
 });
 
 export default router;
