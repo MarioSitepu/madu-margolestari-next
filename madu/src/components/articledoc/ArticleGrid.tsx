@@ -58,11 +58,19 @@ export function ArticleGrid() {
     }
   ];
 
-  return <div className="w-full max-w-7xl mx-auto px-6 py-12">
+  return (
+    <div className="w-full max-w-7xl mx-auto px-6 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {articles.map((article) => (
-          <ArticleCard key={article.id} article={article} />
+        {articles.map((article, index) => (
+          <div
+            key={article.id}
+            className="animate-fade-up"
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
+            <ArticleCard article={article} />
+          </div>
         ))}
       </div>
-    </div>;
+    </div>
+  );
 }

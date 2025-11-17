@@ -148,7 +148,10 @@ export function Settings() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] flex items-center justify-center">
-        <div className="text-white text-xl">Memuat...</div>
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="text-white text-xl font-semibold">Memuat...</div>
+        </div>
       </div>
     );
   }
@@ -161,10 +164,10 @@ export function Settings() {
     <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
       <div className="container mx-auto max-w-4xl">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 animate-fade-in">
           <button
             onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-white/90 hover:text-white mb-4 transition-colors"
+            className="flex items-center gap-2 text-white/90 hover:text-white mb-4 transition-all duration-300 hover:translate-x-[-4px]"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Kembali ke Dashboard</span>
@@ -178,7 +181,7 @@ export function Settings() {
         </div>
 
         {/* Profile Picture Section */}
-        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 mb-6">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 mb-6 animate-scale-in">
           <h2 className="text-2xl font-black text-gray-900 mb-6">Foto Profil</h2>
           
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
@@ -239,7 +242,7 @@ export function Settings() {
                     <button
                       onClick={handleUpload}
                       disabled={uploading}
-                      className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {uploading ? (
                         <>
@@ -282,7 +285,7 @@ export function Settings() {
         </div>
 
         {/* User Info Section */}
-        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 animate-fade-up" style={{ animationDelay: '200ms' }}>
           <h2 className="text-2xl font-black text-gray-900 mb-6">Informasi Akun</h2>
           
           <div className="space-y-4">

@@ -35,7 +35,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
     navigate('/article-galeri');
   };
 
-  return <div className="bg-[#00b8a9] border-[6px] border-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
+  return <div className="bg-[#00b8a9] border-[6px] border-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
       <div className="h-56 relative overflow-hidden">
         <img 
           src={articleData.image} 
@@ -63,7 +63,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
           </div>
           <button 
             onClick={handleLihatGaleri}
-            className="bg-white text-[#00b8a9] text-sm font-semibold py-2.5 px-5 rounded-lg shadow-md flex items-center gap-2 hover:bg-[#ffde7d] hover:text-[#00b8a9] transition-all"
+            className="bg-white text-[#00b8a9] text-sm font-semibold py-2.5 px-5 rounded-lg shadow-md flex items-center gap-2 hover:bg-[#ffde7d] hover:text-[#00b8a9] transition-all duration-300 hover:scale-105"
           >
             <span>Lihat Galeri</span>
             <ArrowRightIcon className="h-4 w-4" />

@@ -58,7 +58,7 @@ export function Navigation() {
   );
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-black/5 bg-[#ffde7d] py-4 shadow-sm">
+    <nav className="sticky top-0 z-50 w-full border-b border-black/5 bg-[#ffde7d] py-4 shadow-sm transition-all duration-300">
       <div className="container mx-auto flex items-center justify-between px-4 md:px-8">
         <div className="flex items-center">
           <span className="text-2xl font-black text-black md:text-3xl">
@@ -112,7 +112,7 @@ export function Navigation() {
                 </button>
                 
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50 animate-scale-in">
                     <div className="px-4 py-3 border-b border-gray-200">
                       <p className="font-semibold text-gray-900">{user.name}</p>
                       <p className="text-sm text-gray-600 truncate">{user.email}</p>
@@ -158,7 +158,7 @@ export function Navigation() {
       
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="border-t border-black/5 bg-[#ffde7d] md:hidden">
+        <div className="border-t border-black/5 bg-[#ffde7d] md:hidden animate-slide-in-left">
           <div className="container mx-auto flex flex-col gap-2 px-4 py-4">
             {navigationItems.map((item) =>
               item.type === "route" ? (
