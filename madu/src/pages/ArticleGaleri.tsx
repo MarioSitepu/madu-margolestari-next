@@ -1,38 +1,123 @@
 import { Footer } from "@/components/Footer";
 import marlesHoney from "@/assets/marles-honey.png";
 
-interface Article {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
+const articleCards = [
+  {
+    id: 1,
+    title: "Pengambilan Madu",
+    description:
+      "Madu alami ini kaya akan antioksidan, vitamin, dan mineral yang dapat membantu meningkatkan daya tahan tubuh",
+    author: "Marles",
+    backgroundImage: "url(https://images.unsplash.com/photo-1587049633312-d628ae50a8ae?w=800&h=600&fit=crop)",
+  },
+  {
+    id: 2,
+    title: "Pengambilan Madu",
+    description:
+      "Madu alami ini kaya akan antioksidan, vitamin, dan mineral yang dapat membantu meningkatkan daya tahan tubuh",
+    author: "Marles",
+    backgroundImage: "url(https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=800&h=600&fit=crop)",
+  },
+  {
+    id: 3,
+    title: "Pengambilan Madu",
+    description:
+      "Madu alami ini kaya akan antioksidan, vitamin, dan mineral yang dapat membantu meningkatkan daya tahan tubuh",
+    author: "Marles",
+    backgroundImage: "url(https://images.unsplash.com/photo-1516824711217-8b7b8a1dd8b4?w=800&h=600&fit=crop)",
+  },
+];
+
+interface Comment {
+  id: string;
+  author: string;
+  authorAvatar?: string;
+  content: string;
+  createdAt: string;
+  likes: number;
+  isLiked?: boolean;
 }
 
 export function ArticleGaleri() {
   const postDate = "11 Agustus 2025";
   const articles: Article[] = [
     {
-      id: 1,
-      title: "Pengambilan Madu",
-      description:
-        "Madu asam di kaya akan antioksidasi, vitamin, dan mineral yang baik untuk kesehatan dan meningkatkan daya tahan tubuh.",
-      image: "/images/beekeeper1.jpg",
+      id: "1",
+      author: "Ahmad Subari",
+      content: "Artikel yang sangat informatif! Madu Marles memang berkualitas tinggi.",
+      createdAt: "2 jam yang lalu",
+      likes: 12,
+      isLiked: false,
     },
     {
-      id: 2,
-      title: "Pengambilan Madu",
-      description:
-        "Madu asam di kaya akan antioksidasi, vitamin, dan mineral yang baik untuk kesehatan dan meningkatkan daya tahan tubuh.",
-      image: "/images/beekeeper2.jpg",
+      id: "2",
+      author: "Siti Nurhaliza",
+      content: "Saya sudah mencoba produknya dan sangat puas dengan kualitasnya. Recommended!",
+      createdAt: "5 jam yang lalu",
+      likes: 8,
+      isLiked: true,
     },
     {
-      id: 3,
-      title: "Pengambilan Madu",
-      description:
-        "Madu asam di kaya akan antioksidasi, vitamin, dan mineral yang baik untuk kesehatan dan meningkatkan daya tahan tubuh.",
-      image: "/images/beekeeper3.jpg",
+      id: "3",
+      author: "Budi Santoso",
+      content: "Terima kasih atas informasinya. Sangat membantu untuk memahami manfaat madu.",
+      createdAt: "1 hari yang lalu",
+      likes: 5,
+      isLiked: false,
     },
-  ];
+  ]);
+  const [newComment, setNewComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    // Set visible immediately and also after a short delay for animation
+    setIsVisible(true);
+    
+    // Force re-render to ensure animations trigger
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleSubmitComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim() || !user) return;
+
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      const comment: Comment = {
+        id: Date.now().toString(),
+        author: user.name,
+        authorAvatar: user.avatar,
+        content: newComment,
+        createdAt: "Baru saja",
+        likes: 0,
+        isLiked: false,
+      };
+      
+      setComments([comment, ...comments]);
+      setNewComment("");
+      setIsSubmitting(false);
+    }, 500);
+  };
+
+  const handleLikeComment = (commentId: string) => {
+    setComments(comments.map(comment => {
+      if (comment.id === commentId) {
+        return {
+          ...comment,
+          isLiked: !comment.isLiked,
+          likes: comment.isLiked ? comment.likes - 1 : comment.likes + 1,
+        };
+      }
+      return comment;
+    }));
+  };
 
   return (
     <div className="bg-[#ffde7d] min-h-screen relative">
@@ -62,31 +147,17 @@ export function ArticleGaleri() {
             </div>
           </div>
 
-          {/* Description Text */}
-          <div className="space-y-4 mb-8 text-center">
-            <p className="text-sm text-gray-800 leading-relaxed">
-              Lorem Ipsum (Up iam "in sam/ LOR=en iP sam) is a dummy or
-              placeholder text commonly used in graphic designs, publishing, and
-              web development. The purpose is to permit a page layout to be
-              designed, independently of the copy that will subsequently
-              populate it, or to demonstrate what the visual layout of a page
-              will look like if it is populated with text of a typeface without
-              meaningful text that could be distracting.
-            </p>
-            <p className="text-sm text-gray-800 leading-relaxed">
-              Lorem Ipsum is typically a corrupted version of De finibus bonorum
-              et malorum, a 1st-century BC text by the Roman statesman and
-              philosopher Cicero, with words altered, added, and removed to make
-              it nonsensical and improper Latin. The first two words are the
-              truncation of dolorem ipsum ("Pain itself").
-            </p>
-            <p className="text-sm text-gray-800 leading-relaxed">
-              Versions of the Lorem Ipsum text have been used in typesetting
-              since the 1960s, when advertisements for Letraset transfer sheets
-              popularized it. It was introduced to the digital world in the
-              mid-1980s, when Aldus employed it in graphic and word-processing
-              templates for its desktop publishing program PageMaker.
-            </p>
+        <h1 className={`text-center font-['Nort-Medium',Helvetica] font-medium text-black text-3xl md:text-4xl lg:text-5xl mb-8 md:mb-12 transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          Madu Marles Berhasil Memenangkan Laga
+        </h1>
+
+        <div className={`mb-8 md:mb-12 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+          <div className="w-full max-w-5xl mx-auto bg-[#00b8a9] rounded-2xl shadow-2xl overflow-hidden">
+            <img
+              className="w-full h-auto object-cover"
+              alt="Article Featured"
+              src="https://images.unsplash.com/photo-1587049633312-d628ae50a8ae?w=1200&h=600&fit=crop"
+            />
           </div>
         </div>
       </section>
@@ -151,6 +222,7 @@ export function ArticleGaleri() {
               Lainnya
             </span>
           </h2>
+        </header>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {articles.map((article) => (
@@ -234,10 +306,9 @@ export function ArticleGaleri() {
             ))}
           </div>
         </div>
-      </section>
-      <Footer />
+      </div>
     </div>
   );
-}
+};
 
-export default ArticleGaleri;
+export default Desktop;

@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export function Login() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -43,7 +48,26 @@ export function Login() {
         navigate('/');
       }
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Terjadi kesalahan saat login');
+      console.error('Login error:', error);
+      
+      // Extract error message
+      let errorMessage = 'Terjadi kesalahan saat login';
+      
+      // Handle network errors
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\n` +
+          `Pastikan:\n` +
+          `1. Backend server sudah berjalan di http://localhost:5000\n` +
+          `2. API URL sudah benar: ${API_URL}\n` +
+          `3. Tidak ada firewall yang memblokir koneksi\n` +
+          `4. Coba buka http://localhost:5000/api/health di browser untuk test koneksi`;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -54,6 +78,12 @@ export function Login() {
     setError('');
 
     try {
+      if (!credentialResponse?.credential) {
+        setError('Google credential tidak ditemukan. Silakan coba lagi.');
+        setIsLoading(false);
+        return;
+      }
+
       const response = await axios.post(`${API_URL}/auth/google`, {
         credential: credentialResponse.credential
       });
@@ -64,9 +94,39 @@ export function Login() {
         
         // Redirect to home page
         navigate('/');
+      } else {
+        setError(response.data.message || 'Login dengan Google gagal');
       }
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Terjadi kesalahan saat login dengan Google');
+      console.error('Google login error:', error);
+      
+      // Extract error message
+      let errorMessage = 'Terjadi kesalahan saat login dengan Google';
+      
+      // Handle network errors
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\n` +
+          `Pastikan:\n` +
+          `1. Backend server sudah berjalan di http://localhost:5000\n` +
+          `2. API URL sudah benar: ${API_URL}\n` +
+          `3. Tidak ada firewall yang memblokir koneksi\n` +
+          `4. Coba buka http://localhost:5000/api/health di browser untuk test koneksi`;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+        
+        // Add details if available in development
+        if (error.response.data.details && import.meta.env.DEV) {
+          errorMessage += `\n\nDetail: ${JSON.stringify(error.response.data.details, null, 2)}`;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else if (error.response?.status === 500) {
+        errorMessage = 'Server error. Pastikan backend sudah berjalan dan GOOGLE_CLIENT_ID sudah dikonfigurasi.';
+      } else if (error.response?.status === 400) {
+        errorMessage = 'Request tidak valid. Pastikan Google Client ID sudah benar.';
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -80,17 +140,17 @@ export function Login() {
     <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo/Brand */}
-        <div className="text-center mb-8">
+        <div className={`text-center mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
           <h1 className="text-4xl font-black text-white mb-2">Marles</h1>
           <p className="text-white/80">Masuk ke akun Anda</p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <div className={`bg-white rounded-2xl shadow-2xl p-8 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-700 text-sm">{error}</p>
+              <p className="text-red-700 text-sm whitespace-pre-wrap">{error}</p>
             </div>
           )}
 
@@ -156,7 +216,7 @@ export function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#00b8a9] text-white py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#00b8a9] text-white py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Masuk...' : 'Masuk'}
               {!isLoading && <ArrowRight className="h-5 w-5" />}

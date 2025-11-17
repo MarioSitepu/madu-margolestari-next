@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, LogIn, LogOut, ChevronDown } from "lucide-react";
+import { Menu, X, LogIn, LogOut, ChevronDown, User } from "lucide-react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
@@ -58,7 +58,7 @@ export function Navigation() {
   );
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-black/5 bg-[#ffde7d] py-4 shadow-sm">
+    <nav className="sticky top-0 z-50 w-full border-b border-black/5 bg-[#ffde7d] py-4 shadow-sm transition-all duration-300">
       <div className="container mx-auto flex items-center justify-between px-4 md:px-8">
         <div className="flex items-center">
           <span className="text-2xl font-black text-black md:text-3xl">
@@ -112,14 +112,22 @@ export function Navigation() {
                 </button>
                 
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1">
-                    <div className="px-4 py-2 border-b border-gray-200">
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50 animate-scale-in">
+                    <div className="px-4 py-3 border-b border-gray-200">
                       <p className="font-semibold text-gray-900">{user.name}</p>
-                      <p className="text-sm text-gray-600">{user.email}</p>
-                      <p className="text-xs text-gray-500 capitalize">
+                      <p className="text-sm text-gray-600 truncate">{user.email}</p>
+                      <p className="text-xs text-gray-500 capitalize mt-1">
                         Login via {user.provider === 'google' ? 'Google' : 'Email'}
                       </p>
                     </div>
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
+                    >
+                      <User size={16} />
+                      Dashboard
+                    </Link>
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
@@ -150,7 +158,7 @@ export function Navigation() {
       
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="border-t border-black/5 bg-[#ffde7d] md:hidden">
+        <div className="border-t border-black/5 bg-[#ffde7d] md:hidden animate-slide-in-left">
           <div className="container mx-auto flex flex-col gap-2 px-4 py-4">
             {navigationItems.map((item) =>
               item.type === "route" ? (
@@ -191,6 +199,14 @@ export function Navigation() {
                       <p className="text-sm text-gray-700">{user.email}</p>
                     </div>
                   </div>
+                  <Link
+                    to="/dashboard"
+                    onClick={handleCloseMenu}
+                    className="w-full bg-[#00b8a9] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-colors flex items-center gap-2 justify-center mb-2"
+                  >
+                    <User size={18} />
+                    Dashboard
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center gap-2 justify-center"
