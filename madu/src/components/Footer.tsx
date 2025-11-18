@@ -46,7 +46,7 @@ export function Footer() {
                   newsletter kami.
                 </p>
                 <form onSubmit={handleSubscribe} className="relative">
-                  <div className="bg-[#00b8a9] rounded-full p-1 flex items-center max-w-md mt-8 mb-4 -ml-2">
+                  <div className="bg-[#00b8a9] rounded-full p-1 flex items-center max-w-120 mt-8 mb-4 -ml-2">
                     <div className="flex items-center flex-1 pl-4">
                       <img
                         src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
@@ -58,13 +58,13 @@ export function Footer() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Masukkan email Anda"
-                        className="bg-transparent text-sm text-black/50 outline-none w-full"
+                        className="bg-transparent text-sm text-black outline-none w-full"
                         required
                       />
                     </div>
                     <button
                       type="submit"
-                      className="bg-[#ffde7d] text-black font-medium text-sm py-3 px-4 rounded-full hover:bg-[#f5c869] transition "
+                      className="bg-[#ffde7d] text-black font-medium text-sm py-2 px-3 mr-3 rounded-full hover:bg-[#f5c869] transition "
                     >
                       Berlangganan
                     </button>
@@ -86,8 +86,8 @@ export function Footer() {
       </section>
       {/* Footer section */}
       <section className="bg-[#00b8a9] text-white grow">
-        <div className="container mx-auto px-4 sm:px-6 md:px-40 py-5 pt-50">
-          <div className="grid md:grid-cols-5 gap-10">
+        <div className="container mx-auto px-4 sm:px-6 md:px-40 py-15 pt-32">
+          <div className="grid md:grid-cols-[1.6fr_0.5fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-y-10 mt-15">
             {/* Company info */}
             <div className="">
               <div className="flex items-center -ml-7">
@@ -106,6 +106,8 @@ export function Footer() {
                 madu murni berkualitas tinggi.
               </p>
             </div>
+            {/* Empty spacer column */}
+            <div></div>
             {/* Navigation Links */}
             <div className="space-y-4">
               <h4 className="text-[#ffde7d] text-lg font-medium underline">
@@ -188,7 +190,7 @@ export function Footer() {
                 </li>
               </ul>
             </div>
-            <div className="space-y-4 md:col-start-4 md:row-start-1">
+            <div className="space-y-4 md:col-start-6 md:row-start-1">
               <h4 className="text-[#ffde7d] text-lg font-medium underline">
                 Contact Us
               </h4>
@@ -216,7 +218,7 @@ export function Footer() {
         {/* Divider */}
         <div className="border-t-4 border-white w-full shadow-[0_5px_5px_rgba(0,0,0,0.4)]"></div>
         {/* Copyright */}
-        <div className="container mx-auto px-4 sm:px-6 md:px-50 py-8">
+        <div className="container mx-auto px-4 sm:px-6 md:px-40 py-8">
           <div className="flex flex-col md:flex-row md:justify-between items-center text-sm">
             <div className="flex items-center mb-4 md:mb-0">
               <img
