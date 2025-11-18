@@ -11,7 +11,7 @@ type NavigationItem =
 
 const navigationItems: NavigationItem[] = [
   { label: "Beranda", type: "route", to: "/" },
-  { label: "Produk", type: "anchor", href: "#produk" },
+  { label: "Produk", type: "route", to: "/product" },
   { label: "Artikel", type: "route", to: "/article" },
   { label: "Tentang Kami", type: "route", to: "/about" },
 ];

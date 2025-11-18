@@ -23,20 +23,68 @@ const supabase = supabaseUrl && supabaseKey
  * @param {string} bucket - Storage bucket name (default: 'avatars')
  * @returns {Promise<{url: string, path: string}>} Public URL and path of uploaded file
  */
-export async function uploadImageToSupabase(imageBuffer, fileName, bucket = 'avatars') {
+/**
+ * Create bucket if it doesn't exist
+ * @param {string} bucketName - Name of the bucket to create
+ * @returns {Promise<boolean>} True if bucket exists or was created successfully
+ */
+async function ensureBucketExists(bucketName) {
+  if (!supabase) {
+    return false;
+  }
+
+  try {
+    // Check if bucket exists
+    const { data: buckets, error: listError } = await supabase.storage.listBuckets();
+    
+    if (listError) {
+      console.error('Error listing buckets:', listError);
+      return false;
+    }
+
+    const bucketExists = buckets?.some(b => b.name === bucketName);
+    
+    if (!bucketExists) {
+      // Create bucket
+      const { data, error: createError } = await supabase.storage.createBucket(bucketName, {
+        public: true,
+        allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+        fileSizeLimit: 10485760 // 10MB
+      });
+
+      if (createError) {
+        console.error(`Error creating bucket ${bucketName}:`, createError);
+        return false;
+      }
+
+      console.log(`Bucket "${bucketName}" berhasil dibuat`);
+      return true;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error ensuring bucket exists:', error);
+    return false;
+  }
+}
+
+export async function uploadImageToSupabase(imageBuffer, fileName, bucket = 'avatars', contentType = 'image/jpeg') {
   if (!supabase) {
     throw new Error('Supabase client tidak dikonfigurasi. Pastikan SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY sudah di-set di .env');
   }
 
   try {
-    // Create bucket if it doesn't exist (optional, can be done manually in Supabase dashboard)
-    // For now, we assume the bucket exists
+    // Ensure bucket exists
+    const bucketExists = await ensureBucketExists(bucket);
+    if (!bucketExists) {
+      throw new Error(`Bucket "${bucket}" tidak dapat dibuat atau diakses. Pastikan Supabase sudah dikonfigurasi dengan benar.`);
+    }
 
     // Upload file to Supabase Storage
     const { data, error } = await supabase.storage
       .from(bucket)
       .upload(fileName, imageBuffer, {
-        contentType: 'image/jpeg',
+        contentType: contentType,
         upsert: true // Overwrite if file exists
       });
 
