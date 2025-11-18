@@ -5,6 +5,10 @@ import morgan from 'morgan';
 import healthRouter from './routes/health.js';
 import productRouter from './routes/products.js';
 import authRouter from './routes/auth.js';
+import articleRouter from './routes/articles.js';
+import commentRouter from './routes/comments.js';
+import adminRouter from './routes/admin.js';
+import galleryRouter from './routes/gallery.js';
 
 const app = express();
 
@@ -47,6 +51,10 @@ app.use(morgan('dev'));
 app.use('/api/health', healthRouter);
 app.use('/api/products', productRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/articles', articleRouter);
+app.use('/api/comments', commentRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/gallery', galleryRouter);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Endpoint tidak ditemukan' });

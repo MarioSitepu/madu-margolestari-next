@@ -9,6 +9,7 @@ interface User {
   name: string;
   avatar?: string;
   provider: 'local' | 'google';
+  role?: 'user' | 'admin';
 }
 
 interface AuthContextType {
@@ -67,7 +68,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       if (response.data.success) {
-        setUser(response.data.user);
+        const userData = response.data.user;
+        setUser(userData);
+        // Update localStorage with latest user data (including role)
+        localStorage.setItem('user', JSON.stringify(userData));
       } else {
         logout();
       }

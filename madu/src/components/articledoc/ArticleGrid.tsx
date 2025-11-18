@@ -1,73 +1,95 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { ArticleCard } from './ArticleCard';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+interface Article {
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+  backgroundImage?: string;
+  authorName: string;
+  createdAt: string;
+  views: number;
+  published: boolean;
+  tags?: string[];
+}
+
 export function ArticleGrid() {
-  const articles = [
-    {
-      id: 1,
-      image: "https://images.unsplash.com/photo-1587049633312-d628ae50a8ae?w=800&h=600&fit=crop&crop=center",
-      date: "26 Desember 2024",
-      participants: 60,
-      title: "Pengambilan Madu",
-      description: "Madu alami ini kaya akan antioksidan, vitamin, dan mineral yang dapat membantu meningkatkan daya tahan tubuh",
-      author: "Marles"
-    },
-    {
-      id: 2,
-      image: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=800&h=600&fit=crop&crop=center",
-      date: "20 Desember 2024",
-      participants: 45,
-      title: "Pelatihan Budidaya Lebah",
-      description: "Pelajari teknik modern dalam budidaya lebah madu untuk menghasilkan produk berkualitas tinggi",
-      author: "Ahmad Subari"
-    },
-    {
-      id: 3,
-      image: "https://images.unsplash.com/photo-1516824711217-8b7b8a1dd8b4?w=800&h=600&fit=crop&crop=center",
-      date: "15 Desember 2024",
-      participants: 80,
-      title: "Festival Madu Nusantara",
-      description: "Acara tahunan yang menampilkan berbagai jenis madu dari seluruh Indonesia dengan cita rasa unik",
-      author: "Siti Nurhaliza"
-    },
-    {
-      id: 4,
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&crop=center",
-      date: "10 Desember 2024",
-      participants: 35,
-      title: "Workshop Produk Olahan Madu",
-      description: "Belajar membuat berbagai produk olahan madu seperti sabun, lilin, dan kosmetik alami",
-      author: "Budi Santoso"
-    },
-    {
-      id: 5,
-      image: "https://images.unsplash.com/photo-1606857521015-7f9fcf423740?w=800&h=600&fit=crop&crop=center",
-      date: "5 Desember 2024",
-      participants: 25,
-      title: "Eksplorasi Hutan Madu",
-      description: "Jelajahi hutan alami tempat lebah liar menghasilkan madu dengan kualitas dan rasa yang istimewa",
-      author: "Rina Kartika"
-    },
-    {
-      id: 6,
-      image: "https://images.unsplash.com/photo-1614115153627-d6d80dedb4b7?w=800&h=600&fit=crop&crop=center",
-      date: "1 Desember 2024",
-      participants: 55,
-      title: "Seminar Manfaat Madu untuk Kesehatan",
-      description: "Diskusi mendalam tentang kandungan nutrisi madu dan manfaatnya bagi kesehatan tubuh manusia",
-      author: "Dr. Maya Sari"
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchArticles();
+  }, []);
+
+  const fetchArticles = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/articles`);
+      if (response.data.success) {
+        setArticles(response.data.articles);
+      }
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="w-full max-w-7xl mx-auto px-6 py-12">
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#00b8a9]"></div>
+          <p className="mt-4 text-gray-600">Memuat artikel...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (articles.length === 0) {
+    return (
+      <div className="w-full max-w-7xl mx-auto px-6 py-12">
+        <div className="text-center py-12">
+          <p className="text-gray-600 text-lg">Belum ada artikel yang dipublikasikan</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-7xl mx-auto px-6 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {articles.map((article, index) => (
           <div
-            key={article.id}
+            key={article._id}
             className="animate-fade-up"
             style={{ animationDelay: `${index * 100}ms` }}
           >
-            <ArticleCard article={article} />
+            <ArticleCard 
+              article={{
+                id: article._id,
+                image: article.image || article.backgroundImage || "https://images.unsplash.com/photo-1587049633312-d628ae50a8ae?w=800&h=600&fit=crop&crop=center",
+                date: formatDate(article.createdAt),
+                participants: article.views || 0,
+                title: article.title,
+                description: article.description,
+                author: article.authorName,
+                tags: article.tags || []
+              }} 
+            />
           </div>
         ))}
       </div>

@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    lowercase: true
+    lowercase: true,
+    index: true
   },
   name: {
     type: String,
@@ -19,7 +20,8 @@ const userSchema = new mongoose.Schema({
   },
   googleId: {
     type: String,
-    sparse: true // Allows multiple null values but unique non-null values
+    sparse: true, // Allows multiple null values but unique non-null values
+    index: true
   },
   avatar: {
     type: String,
@@ -33,14 +35,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['local', 'google'],
     default: 'local'
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
   }
 }, {
   timestamps: true
 });
-
-// Index for efficient queries
-userSchema.index({ email: 1 });
-userSchema.index({ googleId: 1 });
 
 const User = mongoose.model('User', userSchema);
 

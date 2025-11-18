@@ -23,12 +23,25 @@ Setelah project dibuat, Anda perlu mendapatkan:
 
 ## 3. Buat Storage Bucket
 
+### Bucket untuk Avatar (Foto Profil)
+
 1. Buka **Storage** di sidebar Supabase dashboard
 2. Klik **New bucket**
 3. Isi:
    - **Name**: `avatars`
    - **Public bucket**: ✅ Centang (agar gambar bisa diakses publik)
 4. Klik **Create bucket**
+
+### Bucket untuk Artikel Images (Gambar Artikel)
+
+1. Buka **Storage** di sidebar Supabase dashboard
+2. Klik **New bucket**
+3. Isi:
+   - **Name**: `images` (atau `articles`)
+   - **Public bucket**: ✅ Centang (agar gambar bisa diakses publik)
+4. Klik **Create bucket**
+
+**Catatan**: Sistem akan otomatis mencoba membuat bucket jika belum ada, tapi lebih baik dibuat manual untuk menghindari error.
 
 ### Set Bucket Policy (Opsional)
 

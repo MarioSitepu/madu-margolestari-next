@@ -1,14 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-import { CalendarIcon, UserIcon, UserCircleIcon, ArrowRightIcon } from 'lucide-react';
+import { CalendarIcon, UserIcon, UserCircleIcon, ArrowRightIcon, Tag } from 'lucide-react';
 
 interface ArticleData {
-  id: number;
+  id: string | number;
   image: string;
   date: string;
   participants: number;
   title: string;
   description: string;
   author: string;
+  tags?: string[];
 }
 
 interface ArticleCardProps {
@@ -32,7 +33,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
   const articleData = article || defaultArticle;
 
   const handleLihatGaleri = () => {
-    navigate('/article-galeri');
+    navigate(`/article-galeri/${articleData.id}`);
   };
 
   return <div className="bg-[#00b8a9] border-[6px] border-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
@@ -53,9 +54,30 @@ export function ArticleCard({ article }: ArticleCardProps) {
           <span className="font-medium">{articleData.participants} peserta</span>
         </div>
         <h3 className="text-2xl font-bold mb-3">{articleData.title}</h3>
-        <p className="text-sm leading-relaxed mb-8 opacity-95">
+        <p className="text-sm leading-relaxed mb-4 opacity-95 line-clamp-3">
           {articleData.description}
         </p>
+        
+        {/* Tags */}
+        {articleData.tags && articleData.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {articleData.tags.slice(0, 3).map((tag, index) => (
+              <span
+                key={index}
+                className="inline-flex items-center gap-1 px-2 py-1 bg-white/20 text-white text-xs rounded-full"
+              >
+                <Tag className="w-3 h-3" />
+                {tag}
+              </span>
+            ))}
+            {articleData.tags.length > 3 && (
+              <span className="inline-flex items-center px-2 py-1 bg-white/20 text-white text-xs rounded-full">
+                +{articleData.tags.length - 3}
+              </span>
+            )}
+          </div>
+        )}
+
         <div className="flex justify-between items-center pt-4 border-t border-white/20">
           <div className="flex items-center">
             <UserCircleIcon className="h-5 w-5 mr-2" />

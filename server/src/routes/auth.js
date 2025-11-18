@@ -15,6 +15,31 @@ if (!process.env.GOOGLE_CLIENT_ID) {
 }
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+// Admin emails - bisa diubah sesuai kebutuhan
+const ADMIN_EMAILS = [
+  'admin@marles.com',
+  'admin@example.com',
+  // Tambahkan email admin lainnya di sini
+  ...(process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim()) : [])
+];
+
+// Helper function to check if email is admin email
+const isAdminEmail = (email) => {
+  if (!email) return false;
+  const normalizedEmail = email.toLowerCase().trim();
+  return ADMIN_EMAILS.some(adminEmail => adminEmail.toLowerCase() === normalizedEmail);
+};
+
+// Helper function to ensure user has admin role if email is admin email
+const ensureAdminRole = async (user) => {
+  if (isAdminEmail(user.email) && user.role !== 'admin') {
+    user.role = 'admin';
+    await user.save();
+    console.log(`User ${user.email} otomatis diberikan role admin`);
+  }
+  return user;
+};
+
 // Regular login route
 router.post('/login', async (req, res) => {
   try {
@@ -54,6 +79,11 @@ router.post('/login', async (req, res) => {
       });
     }
 
+    // Ensure admin role if email is admin email
+    await ensureAdminRole(user);
+    // Refresh user data
+    await user.populate();
+
     // Generate token
     const token = generateToken(user._id);
 
@@ -67,7 +97,8 @@ router.post('/login', async (req, res) => {
         email: user.email,
         name: user.name,
         avatar: user.avatar,
-        provider: user.provider
+        provider: user.provider,
+        role: user.role || (isAdminEmail(user.email) ? 'admin' : 'user')
       }
     });
 
@@ -138,6 +169,9 @@ router.post('/google', async (req, res) => {
     }
 
     if (user) {
+      // Ensure admin role if email is admin email
+      await ensureAdminRole(user);
+      
       // Update Google ID if user exists but doesn't have it
       if (!user.googleId && user.email === email) {
         user.googleId = googleId;
@@ -164,6 +198,9 @@ router.post('/google', async (req, res) => {
         await user.save();
       }
     } else {
+      // Determine role based on email
+      const role = isAdminEmail(email) ? 'admin' : 'user';
+      
       // Create new user first
       user = new User({
         email,
@@ -171,7 +208,8 @@ router.post('/google', async (req, res) => {
         googleId,
         avatar: avatarUrl, // Will be temp URL if Supabase upload happened
         provider: 'google',
-        isVerified: true
+        isVerified: true,
+        role: role
       });
       await user.save();
       
@@ -195,6 +233,10 @@ router.post('/google', async (req, res) => {
     // Generate token
     const token = generateToken(user._id);
 
+    // Ensure admin role if email is admin email (refresh user data)
+    await ensureAdminRole(user);
+    await user.populate();
+
     // Return success response
     res.json({
       success: true,
@@ -205,7 +247,8 @@ router.post('/google', async (req, res) => {
         email: user.email,
         name: user.name,
         avatar: user.avatar,
-        provider: user.provider
+        provider: user.provider,
+        role: user.role || (isAdminEmail(user.email) ? 'admin' : 'user')
       }
     });
 
@@ -286,12 +329,16 @@ router.post('/register', async (req, res) => {
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    // Determine role based on email
+    const role = isAdminEmail(email) ? 'admin' : 'user';
+
     // Create new user
     const user = new User({
       email,
       password: hashedPassword,
       name,
-      provider: 'local'
+      provider: 'local',
+      role: role
     });
 
     await user.save();
@@ -309,7 +356,8 @@ router.post('/register', async (req, res) => {
         email: user.email,
         name: user.name,
         avatar: user.avatar,
-        provider: user.provider
+        provider: user.provider,
+        role: user.role
       }
     });
 
@@ -385,8 +433,107 @@ export const authenticateToken = (req, res, next) => {
   }
 };
 
+// Middleware to verify admin role
+export const verifyAdmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Autentikasi diperlukan'
+    });
+  }
+
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Akses ditolak. Hanya admin yang dapat mengakses endpoint ini.'
+    });
+  }
+
+  next();
+};
+
+// Admin login route
+router.post('/admin/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email dan password harus diisi'
+      });
+    }
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Email atau password salah'
+      });
+    }
+
+    // Check if user is admin
+    if (user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Akses ditolak. Hanya admin yang dapat login di sini.'
+      });
+    }
+
+    // Check if user registered with Google
+    if (user.provider === 'google' && !user.password) {
+      return res.status(401).json({
+        success: false,
+        message: 'Akun admin ini terdaftar dengan Google. Silakan hubungi administrator.'
+      });
+    }
+
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: 'Email atau password salah'
+      });
+    }
+
+    // Generate token
+    const token = generateToken(user._id);
+
+    // Return success response
+    res.json({
+      success: true,
+      message: 'Login admin berhasil',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar,
+        provider: user.provider,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error('Admin login error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
+  }
+});
+
 // Get current user profile
-router.get('/me', authenticateToken, (req, res) => {
+router.get('/me', authenticateToken, async (req, res) => {
+  try {
+    // Ensure admin role if email is admin email
+    await ensureAdminRole(req.user);
+    // Refresh user data
+    await req.user.populate();
+
   res.json({
     success: true,
     user: {
@@ -395,9 +542,17 @@ router.get('/me', authenticateToken, (req, res) => {
       name: req.user.name,
       avatar: req.user.avatar,
       provider: req.user.provider,
-      isVerified: req.user.isVerified
+      isVerified: req.user.isVerified,
+        role: req.user.role || (isAdminEmail(req.user.email) ? 'admin' : 'user')
     }
   });
+  } catch (error) {
+    console.error('Error in /me route:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
+  }
 });
 
 // Configure multer for file upload (memory storage)
