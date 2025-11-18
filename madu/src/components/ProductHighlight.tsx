@@ -20,15 +20,15 @@ export function ProductHighlight() {
   const restOfName = nameParts.slice(1).join(' ');
 
   return (
-    <section className="w-full bg-white relative overflow-hidden min-h-[786px]">
+    <section className="w-full bg-white relative overflow-visible min-h-[786px]">
       {/* Background Rectangle - #00B8A9 */}
       <div className="absolute inset-0 bg-[#00B8A9]"></div>
 
       {/* Main Container - 1440px width */}
-      <div className="relative max-w-[1440px] mx-auto h-[786px]">
+      <div className="relative max-w-[1440px] mx-auto h-[786px] overflow-visible">
         {/* Product Card Group - Positioned at x: 113, y: 20 */}
         <div 
-          className="absolute"
+          className="absolute overflow-visible"
           style={{
             left: 'clamp(20px, 7.85vw, 113px)',
             top: 'clamp(20px, 2.54vw, 20px)',
@@ -38,7 +38,7 @@ export function ProductHighlight() {
         >
           {/* Product Card - Same structure as ProductList, but keep yellow background */}
           <div
-            className="relative bg-[#FFDE7D] rounded-[4px] overflow-hidden"
+            className="relative bg-[#FFDE7D] rounded-[4px] overflow-visible"
             style={{
               marginTop: 'clamp(50px, 7.78vw, 112px)',
               width: '100%',
@@ -46,8 +46,17 @@ export function ProductHighlight() {
               boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
             }}
           >
-            {/* Product Image - Positioned exactly as ProductList */}
-            <div className="absolute top-[38px] left-[109px] w-[165px] h-[380px]">
+            {/* Product Image - Enlarged, anchored at bottom, extending upward */}
+            <div 
+              className="absolute z-10"
+              style={{
+                left: '50%',
+                transform: 'translateX(-50%)',
+                bottom: 'clamp(150px, 13.06vw, 150px)',
+                width: 'clamp(190px, 15.56vw, 224px)',
+                height: 'clamp(450px, 37.5vw, 540px)'
+              }}
+            >
               <img
                 src={product.imageUrl || productBottleCard}
                 alt={product.name}
@@ -60,7 +69,7 @@ export function ProductHighlight() {
             </div>
 
             {/* Product Name - Positioned at x: 24, y: 421, with underline on first word */}
-            <div className="absolute top-[421px] left-[24px] right-[24px] h-[32px] flex items-center justify-start">
+            <div className="absolute top-[403px] left-[24px] right-[24px] h-[32px] flex items-center justify-start">
               <h3 
                 className="text-[24px] font-medium text-[#00B8A9] leading-[1.342] text-left whitespace-nowrap"
                 style={{ fontFamily: 'Nort, sans-serif' }}
@@ -71,7 +80,7 @@ export function ProductHighlight() {
             </div>
 
             {/* Product Description - Positioned at x: 24, y: 457, width: 302, height: 76 */}
-            <div className="absolute top-[457px] left-[24px] w-[302px] h-[76px]">
+            <div className="absolute top-[439px] left-[24px] w-[302px] h-[76px]">
               <p 
                 className="text-[12px] font-normal text-black leading-[1.342]"
                 style={{ fontFamily: 'Nort, sans-serif' }}
@@ -81,7 +90,7 @@ export function ProductHighlight() {
             </div>
 
             {/* Price and Cart Container - Aligned at y: 533 */}
-            <div className="absolute top-[533px] left-[24px] right-[24px] h-[32px] flex items-center justify-between">
+            <div className="absolute top-[515px] left-[24px] right-[24px] h-[32px] flex items-center justify-between">
               {/* Price Group */}
               <div className="flex items-center gap-1 h-full">
                 {/* Rp */}
