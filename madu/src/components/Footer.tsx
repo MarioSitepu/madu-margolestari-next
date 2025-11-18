@@ -1,23 +1,23 @@
-import { useState, type FormEvent } from 'react'
-import honeyLogo from '@/assets/1.svg'
-import honeycomb from '@/assets/2.png'
-export function Footer() { 
-  const [email, setEmail] = useState('')
+import { useState, type FormEvent } from "react";
+import honeyLogo from "@/assets/1.svg";
+import honeycomb from "@/assets/2.png";
+export function Footer() {
+  const [email, setEmail] = useState("");
   const handleSubscribe = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     // Handle subscription logic here
-    alert('Thank you for subscribing!')
-    setEmail('')
-  }
+    alert("Thank you for subscribing!");
+    setEmail("");
+  };
   return (
     <div className="flex flex-col min-h-screen w-full">
       {/* Top section with subscription form */}
-      <section className="relative bg-[#ffde7d] w-full">
-        <div className="container mx-auto px-4 py-8 relative">
+      <section className="relative bg-[#ffde7d] w-full mt-30">
+        <div className="container mx-auto px-50 py-8 relative">
           {/* White container with subscription form */}
-          <div className="bg-white rounded-2xl max-w-5xl mx-auto mt-24 mb-8 p-8 relative">
+          <div className="bg-white rounded-2xl max-w-8xl h-90 mx-auto -mt-42 -mb-50 p-12 relative shadow-[0_4px_6px_rgba(0,0,0,0.8)]">
             {/* Honeycomb image */}
-            <div className="absolute -top-32 left-8 md:left-16 w-64 md:w-80">
+            <div className="absolute -top-33 left-0 md:-left-6 w-64 md:w-120">
               <img
                 src={honeycomb}
                 alt="Honeycomb with honey"
@@ -25,26 +25,28 @@ export function Footer() {
               />
             </div>
             {/* Subscription content */}
-            <div className="grid md:grid-cols-2 gap-8 pt-16 md:pt-0">
+            <div className="grid md:grid-cols-2 pt-16 md:pt-4 -ml-55 -mt-8">
               <div className="md:col-span-1">
                 {/* Empty column on mobile, image space on desktop */}
               </div>
-              <div className="md:col-span-1 space-y-6">
-                <h2 className="text-[#00b8a9] text-2xl font-bold">
-                  Berlangganan ke web kami untuk mendapatkan pembaruan tentang{' '}
+              <div className="md:col-span-1 space-y-1">
+                <h2 className="text-[#00b8a9] text-[27px] font-bold">
+                  Berlangganan ke web kami untuk <br />
+                  mendapatkan pembaruan tentang{" "}
                   <span className="text-[#ffde7d] underline">
-                    penawaran menarik
-                  </span>{' '}
+                    penawaran <br />
+                    menarik
+                  </span>{" "}
                   dari kami
                 </h2>
-                <p className="text-[#00b8a9] text-sm">
-                  Dapatkan{' '}
-                  <span className="text-[#ffde7d] underline">diskon 20%</span>{' '}
+                <p className="text-[#00b8a9] text-[14px] font-m">
+                  Dapatkan{" "}
+                  <span className="text-[#ffde7d] underline">diskon 20%</span>{" "}
                   untuk pembelian pertama Anda hanya dengan berlangganan
                   newsletter kami.
                 </p>
                 <form onSubmit={handleSubscribe} className="relative">
-                  <div className="bg-[#00b8a9] rounded-full p-1 flex items-center">
+                  <div className="bg-[#00b8a9] rounded-full p-1 flex items-center max-w-120 mt-8 mb-4 -ml-2">
                     <div className="flex items-center flex-1 pl-4">
                       <img
                         src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
@@ -56,22 +58,22 @@ export function Footer() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Masukkan email Anda"
-                        className="bg-transparent text-sm text-black/50 outline-none w-full"
+                        className="bg-transparent text-sm text-black outline-none w-full"
                         required
                       />
                     </div>
                     <button
                       type="submit"
-                      className="bg-[#ffde7d] text-black font-medium text-sm py-2 px-4 rounded-full"
+                      className="bg-[#ffde7d] text-black font-medium text-sm py-2 px-3 mr-3 rounded-full hover:bg-[#f5c869] transition "
                     >
                       Berlangganan
                     </button>
                   </div>
                 </form>
-                <p className="text-[#00b8a9] text-xs">
+                <p className="text-[#00b8a9] text-[14px]">
                   Anda dapat berhenti berlangganan kapan saja.
                   <br />
-                  Baca kebijakan privasi kami{' '}
+                  Baca kebijakan privasi kami{" "}
                   <a href="#" className="text-[#ffde7d] underline">
                     di sini
                   </a>
@@ -84,26 +86,28 @@ export function Footer() {
       </section>
       {/* Footer section */}
       <section className="bg-[#00b8a9] text-white grow">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="container mx-auto px-4 sm:px-6 md:px-40 py-15 pt-32">
+          <div className="grid md:grid-cols-[1.6fr_0.5fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-y-10 mt-15">
             {/* Company info */}
-            <div className="space-y-4">
-              <div className="flex items-center">
+            <div className="">
+              <div className="flex items-center -ml-7">
                 <img
                   src={honeyLogo}
                   alt="Honeycomb logo"
-                  className="w-16 h-16 mr-4"
+                  className="w-20 h-20"
                 />
-                <h3 className="text-[#ffde7d] text-2xl font-bold">
+                <h3 className="text-[#ffde7d] text-2xl font-bold mt-2 -ml-3">
                   Madu Marles
                 </h3>
               </div>
-              <p className="text-sm">
+              <p className="text-sm -mt-2">
                 UMKM Lebah Madu Margolestari merupakan usaha mikro, kecil, dan
                 menengah yang berfokus pada budidaya lebah madu dan produksi
                 madu murni berkualitas tinggi.
               </p>
             </div>
+            {/* Empty spacer column */}
+            <div></div>
             {/* Navigation Links */}
             <div className="space-y-4">
               <h4 className="text-[#ffde7d] text-lg font-medium underline">
@@ -186,7 +190,7 @@ export function Footer() {
                 </li>
               </ul>
             </div>
-            <div className="space-y-4 md:col-start-4 md:row-start-1">
+            <div className="space-y-4 md:col-start-6 md:row-start-1">
               <h4 className="text-[#ffde7d] text-lg font-medium underline">
                 Contact Us
               </h4>
@@ -212,9 +216,9 @@ export function Footer() {
           </div>
         </div>
         {/* Divider */}
-        <div className="border-t border-white/30 w-full"></div>
+        <div className="border-t-4 border-white w-full shadow-[0_5px_5px_rgba(0,0,0,0.4)]"></div>
         {/* Copyright */}
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 sm:px-6 md:px-40 py-8">
           <div className="flex flex-col md:flex-row md:justify-between items-center text-sm">
             <div className="flex items-center mb-4 md:mb-0">
               <img
@@ -224,7 +228,7 @@ export function Footer() {
               />
               <span>Copyright By CodeUI.All right Reserved</span>
             </div>
-            <div className="flex gap-8">
+            <div className="flex gap-16">
               <a href="#" className="hover:underline">
                 Privacy Policy
               </a>
@@ -239,5 +243,5 @@ export function Footer() {
         </div>
       </section>
     </div>
-  )
+  );
 }

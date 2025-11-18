@@ -457,7 +457,7 @@ export function ArticleGaleri() {
           {/* Content (give left padding so image doesn't overlap text) */}
           <div className="flex items-center gap-4 pl-28 md:pl-40">
             <div>
-              <p className="text-[#00b8a9] md:text-lg lg:text-xl font-semibold leading-snug">
+              <p className="text-[#00b8a9] md:text-lg lg:text-xl font-[600] leading-snug">
                 Jangan lewatkan kesempatan untuk merasakan kelezatannya
                 <br />
                 Kunjungi toko kami dan beli sekarang juga di{" "}
@@ -469,7 +469,7 @@ export function ArticleGaleri() {
           </div>
 
           {/* CTA */}
-          <div className="shrink-0">
+          <div className="flex-shrink-0">
             <button
               className="
                 rounded
@@ -680,7 +680,7 @@ export function ArticleGaleri() {
       {/* Article Gallery Section */}
       <section className="py-40 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-extrabold text-center mb-12">
+          <h2 className="text-4xl font-[800] text-center mb-12">
             Lihat Artikel{" "}
             <span className="text-[#00b8a9] underline decoration-[black] decoration-5">
               Lainnya
