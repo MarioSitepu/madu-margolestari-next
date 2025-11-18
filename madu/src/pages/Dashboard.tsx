@@ -82,6 +82,13 @@ export function Dashboard() {
   const [adminComments, setAdminComments] = useState<AdminComment[]>([]);
   const [adminArticles, setAdminArticles] = useState<any[]>([]);
   const [adminStats, setAdminStats] = useState<any>(null);
+  const [adminStatsCards, setAdminStatsCards] = useState({
+    articles: 0,
+    products: 0,
+    users: 0,
+    comments: 0,
+    gallery: 0
+  });
   const [adminLoading, setAdminLoading] = useState(false);
   const [articleLoading, setArticleLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
@@ -161,21 +168,51 @@ export function Dashboard() {
     
     try {
       setAdminLoading(true);
-      const [usersRes, commentsRes, statsRes] = await Promise.all([
-        axios.get(`${API_URL}/admin/users`).catch(() => ({ data: { success: false } })),
-        axios.get(`${API_URL}/comments`).catch(() => ({ data: { success: false } })),
-        axios.get(`${API_URL}/admin/stats`).catch(() => ({ data: { success: false } }))
+      const token = localStorage.getItem('token');
+      const [usersRes, commentsRes, statsRes, articlesRes, productsRes, galleryRes] = await Promise.allSettled([
+        axios.get(`${API_URL}/admin/users`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).catch(() => ({ data: { success: false } })),
+        axios.get(`${API_URL}/comments`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).catch(() => ({ data: { success: false } })),
+        axios.get(`${API_URL}/admin/stats`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).catch(() => ({ data: { success: false } })),
+        axios.get(`${API_URL}/articles/all`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        axios.get(`${API_URL}/products/all`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        axios.get(`${API_URL}/gallery/all`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
       ]);
 
-      if (usersRes.data.success) {
-        setAdminUsers(usersRes.data.users);
+      if (usersRes.status === 'fulfilled' && usersRes.value.data.success) {
+        setAdminUsers(usersRes.value.data.users);
       }
-      if (commentsRes.data.success) {
-        setAdminComments(commentsRes.data.comments);
+      if (commentsRes.status === 'fulfilled' && commentsRes.value.data.success) {
+        setAdminComments(commentsRes.value.data.comments);
       }
-      if (statsRes.data.success) {
-        setAdminStats(statsRes.data.stats);
+      if (statsRes.status === 'fulfilled' && statsRes.value.data.success) {
+        setAdminStats(statsRes.value.data.stats);
       }
+
+      // Set stats cards
+      setAdminStatsCards({
+        articles: articlesRes.status === 'fulfilled' && articlesRes.value.data.success 
+          ? articlesRes.value.data.articles.length : 0,
+        products: productsRes.status === 'fulfilled' && productsRes.value.data.success 
+          ? productsRes.value.data.products.length : 0,
+        users: usersRes.status === 'fulfilled' && usersRes.value.data.success 
+          ? usersRes.value.data.users.length : 0,
+        comments: commentsRes.status === 'fulfilled' && commentsRes.value.data.success 
+          ? commentsRes.value.data.comments.length : 0,
+        gallery: galleryRes.status === 'fulfilled' && galleryRes.value.data.success 
+          ? galleryRes.value.data.galleries.length : 0
+      });
     } catch (error) {
       console.error('Error fetching admin data:', error);
     } finally {
@@ -290,12 +327,77 @@ export function Dashboard() {
         {/* Header */}
         <div className="mb-8 animate-fade-in">
           <h1 className="text-4xl md:text-5xl font-black text-white mb-2">
-            Dashboard
+            {isAdmin ? 'Admin Dashboard' : 'Dashboard'}
           </h1>
           <p className="text-white/90 text-lg">
             Selamat datang kembali, {userProfile.name}!
           </p>
         </div>
+
+        {/* Admin Stats Cards - Only for Admin */}
+        {isAdmin && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6 animate-fade-up">
+            <Card className="p-6 bg-white/95">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Artikel</p>
+                  <p className="text-3xl font-black text-[#00b8a9]">{adminStatsCards.articles}</p>
+                </div>
+                <div className="p-3 bg-[#00b8a9]/10 rounded-lg">
+                  <FileText className="w-6 h-6 text-[#00b8a9]" />
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 bg-white/95">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Produk</p>
+                  <p className="text-3xl font-black text-[#ffde7d]">{adminStatsCards.products}</p>
+                </div>
+                <div className="p-3 bg-[#ffde7d]/20 rounded-lg">
+                  <Package className="w-6 h-6 text-[#b8860b]" />
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 bg-white/95">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Pengguna</p>
+                  <p className="text-3xl font-black text-[#00b8a9]">{adminStatsCards.users}</p>
+                </div>
+                <div className="p-3 bg-[#00b8a9]/10 rounded-lg">
+                  <Users className="w-6 h-6 text-[#00b8a9]" />
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 bg-white/95">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Komentar</p>
+                  <p className="text-3xl font-black text-[#00b8a9]">{adminStatsCards.comments}</p>
+                </div>
+                <div className="p-3 bg-[#00b8a9]/10 rounded-lg">
+                  <MessageCircle className="w-6 h-6 text-[#00b8a9]" />
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 bg-white/95">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Galeri</p>
+                  <p className="text-3xl font-black text-[#00b8a9]">{adminStatsCards.gallery}</p>
+                </div>
+                <div className="p-3 bg-[#00b8a9]/10 rounded-lg">
+                  <ImageIcon className="w-6 h-6 text-[#00b8a9]" />
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
 
         {/* User Profile Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 mb-6 animate-scale-in">
@@ -495,27 +597,36 @@ export function Dashboard() {
           <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 animate-fade-up" style={{ animationDelay: '400ms' }}>
             <h3 className="text-2xl font-black text-gray-900 mb-6">Aksi Cepat</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <button
-                onClick={() => navigate('/admin/articles')}
-                className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105"
-              >
-                <FileText className="w-5 h-5" />
-                Kelola Artikel
-              </button>
-              <button
-                onClick={() => navigate('/admin/products')}
-                className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#ffde7d] to-[#f4d58d] text-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105"
-              >
-                <Package className="w-5 h-5" />
-                Kelola Produk
-              </button>
-              <button
-                onClick={() => navigate('/admin/gallery')}
-                className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#b8860b] to-[#9a6f09] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105"
-              >
-                <ImageIcon className="w-5 h-5" />
-                Kelola Galeri
-              </button>
+              <Link to="/admin/articles">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer">
+                  <FileText className="w-5 h-5" />
+                  Kelola Artikel
+                </div>
+              </Link>
+              <Link to="/admin/products">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#ffde7d] to-[#f4d58d] text-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer">
+                  <Package className="w-5 h-5" />
+                  Kelola Produk
+                </div>
+              </Link>
+              <Link to="/admin/gallery">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#b8860b] to-[#9a6f09] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer">
+                  <ImageIcon className="w-5 h-5" />
+                  Kelola Galeri
+                </div>
+              </Link>
+              <Link to="/admin/users">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer">
+                  <Users className="w-5 h-5" />
+                  Kelola Pengguna
+                </div>
+              </Link>
+              <Link to="/admin/comments">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer">
+                  <MessageCircle className="w-5 h-5" />
+                  Kelola Komentar
+                </div>
+              </Link>
             </div>
           </div>
         )}

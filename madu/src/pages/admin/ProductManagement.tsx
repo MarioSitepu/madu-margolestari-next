@@ -84,7 +84,7 @@ export function ProductManagement() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-            <Link to="/admin/dashboard">
+            <Link to="/dashboard">
               <Button variant="outline" className="bg-white/90">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Kembali

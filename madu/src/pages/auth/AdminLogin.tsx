@@ -44,8 +44,8 @@ export function AdminLogin() {
         // Use auth context to store user data
         login(response.data.token, response.data.user);
         
-        // Redirect to admin dashboard
-        navigate('/admin/dashboard');
+        // Redirect to dashboard (admin features will be shown there)
+        navigate('/dashboard');
       }
     } catch (error: any) {
       console.error('Admin login error:', error);

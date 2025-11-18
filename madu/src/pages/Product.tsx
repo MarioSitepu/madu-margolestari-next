@@ -188,39 +188,43 @@ export function ProductPage() {
                 {/* Product Description - Positioned at x: 24, y: 457, width: 302, height: 76 */}
                 <div className="absolute top-[457px] left-[24px] w-[302px] h-[76px]">
                   <p 
-                    className="text-[14px] font-normal text-black leading-[1.342]"
+                    className="text-[12px] font-normal text-black leading-[1.342]"
                     style={{ fontFamily: 'Nort, sans-serif' }}
                   >
                     {product.description}
                   </p>
                 </div>
 
-                {/* Price Group - Positioned at x: 24, y: 533, allow price to extend right */}
-                <div className="absolute top-[533px] left-[24px] right-[80px] h-[32px] flex items-center gap-1">
-                  {/* Rp */}
-                  <span 
-                    className="text-[15px] font-medium text-black leading-[1.342] whitespace-nowrap"
-                    style={{ fontFamily: 'Nort, sans-serif' }}
-                  >
-                    Rp
-                  </span>
-                  {/* Price - Allow to extend right */}
-                  <span 
-                    className="text-[24px] font-medium text-[#ffde7d] leading-[1.342] whitespace-nowrap"
-                    style={{ fontFamily: 'Nort, sans-serif' }}
-                  >
-                    {product.price.toLocaleString('id-ID')}
-                  </span>
-                </div>
+                {/* Price and Cart Container - Aligned at y: 533 */}
+                <div className="absolute top-[533px] left-[24px] right-[24px] h-[32px] flex items-center justify-between">
+                  {/* Price Group */}
+                  <div className="flex items-center gap-1 h-full">
+                    {/* Rp */}
+                    <span 
+                      className="text-[15px] font-medium text-black leading-[1.342] whitespace-nowrap flex items-center"
+                      style={{ fontFamily: 'Nort, sans-serif' }}
+                    >
+                      Rp
+                    </span>
+                    {/* Price */}
+                    <span 
+                      className="text-[24px] font-medium text-[#ffde7d] leading-[1.342] whitespace-nowrap flex items-center"
+                      style={{ fontFamily: 'Nort, sans-serif' }}
+                    >
+                      {product.price.toLocaleString('id-ID')}
+                    </span>
+                  </div>
 
-                {/* Shopping Cart Icon - Positioned at x: 326, y: 537, width: 24, height: 24 */}
-                <div className="absolute top-[537px] left-[300px] w-[24px] h-[24px]">
+                  {/* Shopping Cart Icon - Symmetrically aligned */}
                   <button
                     onClick={() => handleProductBuy(product)}
-                    className="w-full h-full flex items-center justify-center hover:opacity-80 transition-opacity"
+                    className="bg-white text-[#00b8a9] rounded-xl hover:bg-gray-50 hover:scale-110 active:scale-95 transition-all duration-300 shadow-md hover:shadow-xl flex items-center justify-center w-12 h-12 shrink-0"
                     title="Tambah ke Keranjang"
+                    style={{
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                    }}
                   >
-                    <ShoppingCart className="w-6 h-6 text-white" />
+                    <ShoppingCart size={20} strokeWidth={2.5} />
                   </button>
                 </div>
               </div>

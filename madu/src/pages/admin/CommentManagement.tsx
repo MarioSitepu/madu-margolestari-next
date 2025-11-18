@@ -77,7 +77,7 @@ export function CommentManagement() {
     <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
-          <Link to="/admin/dashboard">
+          <Link to="/dashboard">
             <Button variant="outline" className="bg-white/90">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Kembali

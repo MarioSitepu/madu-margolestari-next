@@ -10,7 +10,6 @@ import ArticleGaleri from "@/pages/ArticleGaleri";
 import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
 import { AdminLogin } from "@/pages/auth/AdminLogin";
-import { AdminDashboard } from "@/pages/admin/AdminDashboard";
 import { ArticleManagement } from "@/pages/admin/ArticleManagement";
 import { ArticleForm } from "@/pages/admin/ArticleForm";
 import { UserManagement } from "@/pages/admin/UserManagement";
@@ -39,7 +38,6 @@ export function App() {
               <Route path="/register" element={<Register />} />
 
               {/* Admin routes without navigation */}
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/articles" element={<ArticleManagement />} />
               <Route path="/admin/articles/new" element={<ArticleForm />} />
               <Route path="/admin/articles/:id/edit" element={<ArticleForm />} />
