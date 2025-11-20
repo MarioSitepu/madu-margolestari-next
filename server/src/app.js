@@ -31,6 +31,14 @@ const corsOptions = {
     if (process.env.FRONTEND_URL) {
       const frontendUrls = process.env.FRONTEND_URL.split(',').map(url => url.trim());
       allowedOrigins.push(...frontendUrls);
+      // Also add without trailing slash
+      frontendUrls.forEach(url => {
+        if (url.endsWith('/')) {
+          allowedOrigins.push(url.slice(0, -1));
+        } else {
+          allowedOrigins.push(url + '/');
+        }
+      });
     }
     
     // In development, allow all origins
@@ -38,11 +46,21 @@ const corsOptions = {
       return callback(null, true);
     }
     
+    // Log for debugging in production
+    if (process.env.NODE_ENV === 'production') {
+      console.log('CORS Check - Origin:', origin);
+      console.log('CORS Check - Allowed Origins:', allowedOrigins);
+    }
+    
     // In production, check against allowed origins
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      // Log the rejected origin for debugging
+      console.warn('CORS Error - Origin not allowed:', origin);
+      console.warn('CORS Error - Allowed origins:', allowedOrigins);
+      console.warn('CORS Error - FRONTEND_URL env:', process.env.FRONTEND_URL || 'NOT SET');
+      callback(new Error(`Not allowed by CORS. Origin: ${origin}. Please set FRONTEND_URL environment variable.`));
     }
   },
   credentials: true,

@@ -455,9 +455,16 @@ Jika mengalami masalah dengan Google OAuth, lihat [server/TROUBLESHOOTING_GOOGLE
    - Check MONGODB_URI di .env
    - Pastikan network access di MongoDB Atlas
 
-3. **CORS Error**
+3. **CORS Error (Production)**
+   - **PENTING**: Set `FRONTEND_URL` environment variable di Render/Railway
+   - Format: `FRONTEND_URL=https://your-frontend.vercel.app` (tanpa trailing slash)
+   - Lihat [RENDER_CORS_FIX.md](./server/RENDER_CORS_FIX.md) untuk panduan lengkap
+   - Pastikan frontend URL sudah ditambahkan di Google Cloud Console (untuk OAuth)
+
+4. **CORS Error (Development)**
    - Pastikan FRONTEND_URL di backend .env sudah benar
    - Check allowedOrigins di server/src/app.js
+   - Pastikan frontend berjalan di port yang diizinkan (5173, 3000, dll)
 
 ---
 
