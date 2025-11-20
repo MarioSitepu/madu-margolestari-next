@@ -27,6 +27,12 @@ const corsOptions = {
       'http://127.0.0.1:3000'
     ];
     
+    // Add production frontend URLs from environment variable
+    if (process.env.FRONTEND_URL) {
+      const frontendUrls = process.env.FRONTEND_URL.split(',').map(url => url.trim());
+      allowedOrigins.push(...frontendUrls);
+    }
+    
     // In development, allow all origins
     if (process.env.NODE_ENV === 'development') {
       return callback(null, true);
