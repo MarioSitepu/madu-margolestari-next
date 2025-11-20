@@ -103,14 +103,24 @@ export function Login() {
       // Extract error message
       let errorMessage = 'Terjadi kesalahan saat login dengan Google';
       
+      // Handle 404 - Endpoint tidak ditemukan
+      if (error.response?.status === 404) {
+        errorMessage = `Endpoint tidak ditemukan (404).\n\n` +
+          `Pastikan:\n` +
+          `1. Backend server sudah berjalan\n` +
+          `2. API URL sudah benar: ${API_URL}\n` +
+          `3. Endpoint /auth/google tersedia di backend\n` +
+          `4. Cek apakah backend sudah ter-deploy dengan benar\n` +
+          `5. Test endpoint: ${API_URL}/health`;
+      }
       // Handle network errors
-      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+      else if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
         errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\n` +
           `Pastikan:\n` +
           `1. Backend server sudah berjalan di http://localhost:5000\n` +
           `2. API URL sudah benar: ${API_URL}\n` +
           `3. Tidak ada firewall yang memblokir koneksi\n` +
-          `4. Coba buka http://localhost:5000/api/health di browser untuk test koneksi`;
+          `4. Coba buka ${API_URL}/health di browser untuk test koneksi`;
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
         
