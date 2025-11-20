@@ -29,7 +29,7 @@ export function Login() {
       ...prev,
       [name]: value
     }));
-    setError(''); // Clear error when user types
+    setError('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,26 +41,15 @@ export function Login() {
       const response = await axios.post(`${API_URL}/auth/login`, formData);
       
       if (response.data.success) {
-        // Use auth context to store user data
         login(response.data.token, response.data.user);
-        
-        // Redirect to home page
         navigate('/');
       }
     } catch (error: any) {
       console.error('Login error:', error);
-      
-      // Extract error message
       let errorMessage = 'Terjadi kesalahan saat login';
       
-      // Handle network errors
       if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
-        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\n` +
-          `Pastikan:\n` +
-          `1. Backend server sudah berjalan di http://localhost:5000\n` +
-          `2. API URL sudah benar: ${API_URL}\n` +
-          `3. Tidak ada firewall yang memblokir koneksi\n` +
-          `4. Coba buka http://localhost:5000/api/health di browser untuk test koneksi`;
+        errorMessage = 'Network Error: Tidak dapat terhubung ke server.';
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
@@ -78,55 +67,19 @@ export function Login() {
     setError('');
 
     try {
-      if (!credentialResponse?.credential) {
-        setError('Google credential tidak ditemukan. Silakan coba lagi.');
-        setIsLoading(false);
-        return;
-      }
-
+      if (!credentialResponse?.credential) return;
       const response = await axios.post(`${API_URL}/auth/google`, {
         credential: credentialResponse.credential
       });
 
       if (response.data.success) {
-        // Use auth context to store user data
         login(response.data.token, response.data.user);
-        
-        // Redirect to home page
         navigate('/');
       } else {
         setError(response.data.message || 'Login dengan Google gagal');
       }
     } catch (error: any) {
-      console.error('Google login error:', error);
-      
-      // Extract error message
-      let errorMessage = 'Terjadi kesalahan saat login dengan Google';
-      
-      // Handle network errors
-      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
-        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\n` +
-          `Pastikan:\n` +
-          `1. Backend server sudah berjalan di http://localhost:5000\n` +
-          `2. API URL sudah benar: ${API_URL}\n` +
-          `3. Tidak ada firewall yang memblokir koneksi\n` +
-          `4. Coba buka http://localhost:5000/api/health di browser untuk test koneksi`;
-      } else if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-        
-        // Add details if available in development
-        if (error.response.data.details && import.meta.env.DEV) {
-          errorMessage += `\n\nDetail: ${JSON.stringify(error.response.data.details, null, 2)}`;
-        }
-      } else if (error.message) {
-        errorMessage = error.message;
-      } else if (error.response?.status === 500) {
-        errorMessage = 'Server error. Pastikan backend sudah berjalan dan GOOGLE_CLIENT_ID sudah dikonfigurasi.';
-      } else if (error.response?.status === 400) {
-        errorMessage = 'Request tidak valid. Pastikan Google Client ID sudah benar.';
-      }
-      
-      setError(errorMessage);
+       setError('Gagal login Google');
     } finally {
       setIsLoading(false);
     }
@@ -137,17 +90,17 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] flex items-center justify-center p-4">
+    // UPDATED: Latar belakang solid Kuning Madu (#ffde7d)
+    <div className="min-h-screen bg-[#ffde7d] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Logo/Brand */}
+        {/* Logo/Brand - Teks Hitam */}
         <div className={`text-center mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
-          <h1 className="text-4xl font-black text-white mb-2">Marles</h1>
-          <p className="text-white/80">Masuk ke akun Anda</p>
+          <h1 className="text-4xl font-black text-black mb-2" style={{ fontFamily: 'Nort, sans-serif' }}>Marles</h1>
+          <p className="text-gray-800 font-medium">Masuk ke akun Anda</p>
         </div>
 
         {/* Login Card */}
-        <div className={`bg-white rounded-2xl shadow-2xl p-8 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-          {/* Error Message */}
+        <div className={`bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-8 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-red-700 text-sm whitespace-pre-wrap">{error}</p>
@@ -157,7 +110,7 @@ export function Login() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-2">
                 Email
               </label>
               <div className="relative">
@@ -168,6 +121,7 @@ export function Login() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
+                  // Focus ring warna Biru Halus
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all"
                   placeholder="Masukkan email Anda"
                   required
@@ -178,7 +132,7 @@ export function Login() {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-bold text-gray-700 mb-2">
                 Password
               </label>
               <div className="relative">
@@ -197,7 +151,7 @@ export function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#00b8a9]"
                   disabled={isLoading}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -205,32 +159,30 @@ export function Login() {
               </div>
             </div>
 
-            {/* Forgot Password */}
+            {/* Forgot Password - Link Biru Halus */}
             <div className="text-right">
-              <Link to="/forgot-password" className="text-sm text-[#00b8a9] hover:underline font-medium">
+              <Link to="/forgot-password" className="text-sm text-[#00b8a9] hover:underline font-bold">
                 Lupa password?
               </Link>
             </div>
 
-            {/* Login Button */}
+            {/* UPDATED: Tombol warna Biru Halus (#00b8a9) */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#00b8a9] text-white py-3 rounded-lg font-semibold hover:bg-[#00a298] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#00b8a9] text-white py-3 rounded-lg font-bold hover:bg-[#00a298] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Masuk...' : 'Masuk'}
               {!isLoading && <ArrowRight className="h-5 w-5" />}
             </button>
           </form>
 
-          {/* Divider */}
           <div className="my-6 flex items-center">
             <div className="flex-1 border-t border-gray-300"></div>
             <span className="px-4 text-gray-500 text-sm">atau</span>
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
-          {/* Google Login Button */}
           <div className="w-full">
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
@@ -244,20 +196,19 @@ export function Login() {
             />
           </div>
 
-          {/* Register Link */}
           <div className="text-center mt-6">
             <p className="text-gray-600">
               Belum punya akun?{' '}
-              <Link to="/register" className="text-[#00b8a9] font-semibold hover:underline">
+              <Link to="/register" className="text-[#00b8a9] font-bold hover:underline">
                 Daftar sekarang
               </Link>
             </p>
           </div>
         </div>
 
-        {/* Back to Home */}
+        {/* Back to Home - Teks Gelap */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-white/80 hover:text-white text-sm font-medium">
+          <Link to="/" className="text-gray-800 hover:text-black text-sm font-medium">
             ← Kembali ke beranda
           </Link>
         </div>
