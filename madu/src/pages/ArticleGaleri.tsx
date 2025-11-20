@@ -449,7 +449,7 @@ export function ArticleGaleri() {
           <div className="absolute left-6 top-0 -translate-y-1/2 z-30 pointer-events-none">
             <img
               src={marlesHoney}
-              alt="Madu Marles Honey"
+              alt="Madu Margo Lestari Honey"
               className="w-28 md:w-36 lg:w-25 object-contain drop-shadow-2xl"
             />
           </div>
@@ -735,7 +735,7 @@ export function ArticleGaleri() {
                             strokeLinejoin="round"
                           />
                         </svg>
-                        <span>Marles</span>
+                        <span>Madu Margo Lestari</span>
                       </div>
 
                       <button 

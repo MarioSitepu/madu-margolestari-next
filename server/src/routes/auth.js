@@ -17,7 +17,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Admin emails - bisa diubah sesuai kebutuhan
 const ADMIN_EMAILS = [
-  'admin@marles.com',
+  'admin@madumargolestari.com',
   'admin@example.com',
   // Tambahkan email admin lainnya di sini
   ...(process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim()) : [])

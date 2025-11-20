@@ -105,7 +105,7 @@ export function Footer() {
                   className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
                 />
                 <h3 className="text-[#ffde7d] text-xl sm:text-2xl font-bold mt-2 -ml-2 sm:-ml-3">
-                  Madu Marles
+                  Madu Margo Lestari
                 </h3>
               </div>
               <p className="text-xs sm:text-sm mt-2 sm:mt-0 pr-2 sm:pr-3 md:pr-4">

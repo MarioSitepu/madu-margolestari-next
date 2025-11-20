@@ -51,7 +51,7 @@ GOOGLE_CLIENT_ID=123456789-abcdefghijklmnop.apps.googleusercontent.com
 # ADMIN CONFIGURATION
 # ============================================
 # Email admin yang akan otomatis mendapat role admin (pisahkan dengan koma)
-ADMIN_EMAILS=admin@marles.com,admin@example.com
+ADMIN_EMAILS=admin@madumargolestari.com,admin@example.com
 
 # ============================================
 # SUPABASE STORAGE (Optional - untuk upload gambar)
@@ -106,7 +106,7 @@ VITE_GOOGLE_CLIENT_ID=123456789-abcdefghijklmnop.apps.googleusercontent.com
 # ADMIN CONFIGURATION (Optional)
 # ============================================
 # Email admin tambahan (pisahkan dengan koma)
-VITE_ADMIN_EMAILS=admin@marles.com,admin@example.com
+VITE_ADMIN_EMAILS=admin@madumargolestari.com,admin@example.com
 ```
 
 ### 📝 Catatan Frontend:
@@ -138,7 +138,7 @@ vercel
 |------|-------|-------------|
 | `VITE_API_URL` | `https://your-backend-api.railway.app/api` | Production, Preview, Development |
 | `VITE_GOOGLE_CLIENT_ID` | `123456789-...` | Production, Preview, Development |
-| `VITE_ADMIN_EMAILS` | `admin@marles.com,admin@example.com` | Production, Preview, Development |
+| `VITE_ADMIN_EMAILS` | `admin@madumargolestari.com,admin@example.com` | Production, Preview, Development |
 
 ### 3. Redeploy
 
