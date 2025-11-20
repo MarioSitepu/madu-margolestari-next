@@ -1,4 +1,3 @@
-import React from 'react';
 export const AboutSection = () => {
   return <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 md:py-24">
       {/* Background image */}

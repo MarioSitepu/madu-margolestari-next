@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
-import { Plus, Edit, Trash2, Eye, ArrowLeft } from 'lucide-react';
+import { Plus, Edit, Trash2, ArrowLeft } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 

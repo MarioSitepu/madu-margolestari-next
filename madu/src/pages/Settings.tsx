@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, Upload, X, User, Mail, Calendar, Shield, ArrowLeft, Save } from 'lucide-react';
+import { Camera, X, User, Mail, Calendar, Shield, ArrowLeft, Save } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { StarRating } from './StarRating';
 interface TestimonialProps {
   testimonial: {

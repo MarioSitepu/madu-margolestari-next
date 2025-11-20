@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Mail, Calendar, Shield, LogOut, Package, ShoppingCart, Heart, Settings, MessageCircle, Clock, FileText, Users, Plus, Edit, Trash2, Image as ImageIcon } from 'lucide-react';
+import { User, Mail, Calendar, Shield, LogOut, Package, Heart, Settings, MessageCircle, Clock, FileText, Users, Plus, Edit, Trash2, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
 import { Card } from '@/components/ui/card';
@@ -89,7 +89,6 @@ export function Dashboard() {
     comments: 0,
     gallery: 0
   });
-  const [adminLoading, setAdminLoading] = useState(false);
   const [articleLoading, setArticleLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
@@ -167,7 +166,6 @@ export function Dashboard() {
     if (!isAdmin) return;
     
     try {
-      setAdminLoading(true);
       const token = localStorage.getItem('token');
       const [usersRes, commentsRes, statsRes, articlesRes, productsRes, galleryRes] = await Promise.allSettled([
         axios.get(`${API_URL}/admin/users`, {
@@ -215,8 +213,6 @@ export function Dashboard() {
       });
     } catch (error) {
       console.error('Error fetching admin data:', error);
-    } finally {
-      setAdminLoading(false);
     }
   };
 

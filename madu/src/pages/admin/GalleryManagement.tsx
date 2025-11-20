@@ -297,10 +297,10 @@ export function GalleryManagement() {
                         )}
                       </Button>
                       <Button
-                        variant="destructive"
+                        variant="outline"
                         size="sm"
                         onClick={() => handleDelete(gallery._id)}
-                        className="flex-1"
+                        className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50"
                       >
                         <Trash2 className="w-4 h-4 mr-1" />
                         Hapus

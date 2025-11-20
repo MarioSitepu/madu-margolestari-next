@@ -1,5 +1,3 @@
-import React from 'react';
-import { StarRating } from './StarRating';
 import { TestimonialCard } from './TestimonialCard';
 export const TestimonialsSection = () => {
   const testimonials = [{

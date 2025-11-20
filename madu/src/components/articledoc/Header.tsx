@@ -1,4 +1,3 @@
-import React from 'react';
 export function Header() {
   const backgroundImage = "/f83eb87d5d615ec04e9f61005aa33cf944a9d860.png";
   return <div className="relative w-full h-[500px] md:h-[545px]">
