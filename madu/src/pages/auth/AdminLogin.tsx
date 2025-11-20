@@ -80,7 +80,7 @@ export function AdminLogin() {
         <div className={`text-center mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
           <div className="flex items-center justify-center gap-3 mb-4">
             <Shield className="w-12 h-12 text-white" />
-            <h1 className="text-4xl font-black text-white">Admin Marles</h1>
+            <h1 className="text-4xl font-black text-white">Admin Madu Margo Lestari</h1>
           </div>
           <p className="text-white/90 font-medium">Panel Administrasi</p>
         </div>
@@ -109,7 +109,7 @@ export function AdminLogin() {
                   value={formData.email}
                   onChange={handleInputChange}
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b8860b] focus:border-transparent outline-none transition-all"
-                  placeholder="admin@marles.com"
+                  placeholder="admin@madumargolestari.com"
                   required
                   disabled={isLoading}
                 />
@@ -160,7 +160,7 @@ export function AdminLogin() {
           <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
             <p className="text-amber-800 text-sm">
               <strong>Default Credentials:</strong><br />
-              Email: <code className="bg-amber-100 px-2 py-1 rounded">admin@marles.com</code><br />
+              Email: <code className="bg-amber-100 px-2 py-1 rounded">admin@madumargolestari.com</code><br />
               Password: <code className="bg-amber-100 px-2 py-1 rounded">admin123</code>
             </p>
           </div>

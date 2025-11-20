@@ -62,7 +62,7 @@ export function Navigation() {
       <div className="container mx-auto flex items-center justify-between px-4 md:px-8">
         <div className="flex items-center">
           <span className="text-2xl font-black text-black md:text-3xl">
-            Marles
+            Madu Margo Lestari
           </span>
         </div>
         

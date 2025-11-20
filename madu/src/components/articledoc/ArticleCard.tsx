@@ -27,7 +27,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
     participants: 60,
     title: "Pengambilan Madu",
     description: "Madu alami ini kaya akan antioksidan, vitamin, dan mineral yang dapat membantu meningkatkan daya tahan tubuh",
-    author: "Marles"
+    author: "Madu Margo Lestari"
   };
 
   const articleData = article || defaultArticle;

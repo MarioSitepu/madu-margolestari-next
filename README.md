@@ -205,7 +205,7 @@ PORT=5000
 MONGODB_URI=mongodb://localhost:27017/madu_db
 JWT_SECRET=your_jwt_secret_here
 GOOGLE_CLIENT_ID=your_google_client_id
-ADMIN_EMAILS=admin@marles.com
+ADMIN_EMAILS=admin@madumargolestari.com
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 FRONTEND_URL=http://localhost:5173
@@ -216,7 +216,7 @@ FRONTEND_URL=http://localhost:5173
 ```env
 VITE_API_URL=http://localhost:5000/api
 VITE_GOOGLE_CLIENT_ID=your_google_client_id
-VITE_ADMIN_EMAILS=admin@marles.com
+VITE_ADMIN_EMAILS=admin@madumargolestari.com
 ```
 
 > 📝 **Note**: Lihat [ENV_DEPLOYMENT_GUIDE.md](./ENV_DEPLOYMENT_GUIDE.md) untuk panduan lengkap environment variables.

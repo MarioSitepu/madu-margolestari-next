@@ -57,7 +57,7 @@ export function ProductPage() {
           <div className="hidden md:block absolute right-[154px] top-[31px] w-[435px] h-[435px]">
             <img
               src={productBottlesHero}
-              alt="Madu Marles Bottles"
+              alt="Madu Margo Lestari Bottles"
               className="w-full h-full object-contain"
             />
           </div>
@@ -67,7 +67,7 @@ export function ProductPage() {
             <div className="w-[300px] h-[300px]">
               <img
                 src={productBottlesHero}
-                alt="Madu Marles Bottles"
+                alt="Madu Margo Lestari Bottles"
                 className="w-full h-full object-contain"
               />
             </div>

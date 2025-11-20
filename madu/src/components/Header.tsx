@@ -16,7 +16,7 @@ export function Header() {
       <div className="absolute inset-0 w-full h-full">
         <img 
           src={headerImage} 
-          alt="Madu Marles" 
+          alt="Madu Margo Lestari" 
           className="w-full h-full object-cover object-center" 
         />
       </div>
@@ -89,7 +89,7 @@ export function Header() {
               maxWidth: '654px'
             }}
           >
-            Selamat datang di Madu Marles, tempat di mana keaslian dan kualitas
+            Selamat datang di Madu Margo Lestari, tempat di mana keaslian dan kualitas
             bertemu. Kami bangga mempersembahkan madu 100% asli,
             dipanen langsung dari peternakan lebah alami tanpa campuran
             bahan apapun. Setiap tetes madu kami adalah hasil dari alam

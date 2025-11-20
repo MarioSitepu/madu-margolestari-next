@@ -145,9 +145,9 @@ if (Object.keys(args).length > 0) {
   console.log('Debug - Parsed arguments:', args);
 }
 
-const ADMIN_EMAIL = args.email || process.env.ADMIN_EMAIL || 'admin@marles.com';
+const ADMIN_EMAIL = args.email || process.env.ADMIN_EMAIL || 'admin@madumargolestari.com';
 const ADMIN_PASSWORD = args.password || process.env.ADMIN_PASSWORD;
-const ADMIN_NAME = args.name || process.env.ADMIN_NAME || 'Admin Marles';
+const ADMIN_NAME = args.name || process.env.ADMIN_NAME || 'Admin Madu Margo Lestari';
 
 async function createAdmin() {
   try {
@@ -190,7 +190,7 @@ async function createAdmin() {
     }
 
     // Connect to MongoDB
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/marles';
+    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/madumargolestari';
     await mongoose.connect(mongoUri);
     console.log('\n✅ Connected to MongoDB');
 

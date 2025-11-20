@@ -10,7 +10,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Admin emails - bisa diubah sesuai kebutuhan
 const ADMIN_EMAILS = [
-  'admin@marles.com',
+  'admin@madumargolestari.com',
   'admin@example.com',
   // Tambahkan email admin lainnya di sini
   ...(import.meta.env.VITE_ADMIN_EMAILS ? import.meta.env.VITE_ADMIN_EMAILS.split(',') : [])

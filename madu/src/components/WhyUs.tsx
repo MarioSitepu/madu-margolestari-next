@@ -5,7 +5,7 @@ export function WhyUs() {
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-center mb-10 md:mb-12">
           Kenapa Harus Madu{' '}
           <span className="text-[#00b8a9] relative">
-            Marles
+            Margo Lestari
             <span className="absolute bottom-0 left-0 w-full h-1 bg-[#00b8a9]"></span>
           </span>
         </h2>

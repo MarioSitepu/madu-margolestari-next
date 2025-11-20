@@ -141,7 +141,7 @@ export function Login() {
       <div className="w-full max-w-md">
         {/* Logo/Brand */}
         <div className={`text-center mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
-          <h1 className="text-4xl font-black text-white mb-2">Marles</h1>
+          <h1 className="text-4xl font-black text-white mb-2">Madu Margo Lestari</h1>
           <p className="text-white/80">Masuk ke akun Anda</p>
         </div>
 

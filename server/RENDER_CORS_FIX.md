@@ -129,7 +129,7 @@ MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/madu_db?retryWri
 JWT_SECRET=your_jwt_secret_here_minimal_32_characters
 GOOGLE_CLIENT_ID=123456789-abcdefghijklmnop.apps.googleusercontent.com
 FRONTEND_URL=https://madu-margolestari.vercel.app
-ADMIN_EMAILS=admin@marles.com
+ADMIN_EMAILS=admin@madumargolestari.com
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
@@ -139,7 +139,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```env
 VITE_API_URL=https://madu-server.onrender.com/api
 VITE_GOOGLE_CLIENT_ID=123456789-abcdefghijklmnop.apps.googleusercontent.com
-VITE_ADMIN_EMAILS=admin@marles.com
+VITE_ADMIN_EMAILS=admin@madumargolestari.com
 ```
 
 ## 🚨 Masih Error?
