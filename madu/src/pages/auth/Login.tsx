@@ -4,8 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
+import { buildApiUrl, getApiUrl } from '@/lib/api';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = getApiUrl();
 
 export function Login() {
   const [isVisible, setIsVisible] = useState(false);
@@ -41,7 +42,8 @@ export function Login() {
     setError('');
 
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, formData);
+      const loginEndpoint = buildApiUrl('/auth/login');
+      const response = await axios.post(loginEndpoint, formData);
       
       if (response.data.success) {
         login(response.data.token, response.data.user);
@@ -77,10 +79,11 @@ export function Login() {
       }
 
       console.log('Mengirim Google credential ke backend...');
-      console.log('API URL:', API_URL);
-      console.log('Full endpoint:', `${API_URL}/auth/google`);
+      const googleEndpoint = buildApiUrl('/auth/google');
+      console.log('API Base URL:', API_URL);
+      console.log('Full endpoint:', googleEndpoint);
       
-      const response = await axios.post(`${API_URL}/auth/google`, {
+      const response = await axios.post(googleEndpoint, {
         credential: credentialResponse.credential
       });
 
@@ -104,11 +107,13 @@ export function Login() {
       
       // Handle 404 errors specifically
       if (error.response?.status === 404) {
-        errorMessage = `Endpoint tidak ditemukan. Pastikan VITE_API_URL di-set dengan benar.\n\nURL yang digunakan: ${error.config?.url || API_URL}/auth/google\n\nSilakan hubungi administrator untuk memeriksa konfigurasi backend.`;
+        const usedUrl = error.config?.url || buildApiUrl('/auth/google');
+        errorMessage = `Endpoint tidak ditemukan. Pastikan VITE_API_URL di-set dengan benar.\n\nURL yang digunakan: ${usedUrl}\n\nBackend URL seharusnya: https://madu-server.onrender.com/api\n\nPastikan VITE_API_URL di-set sebagai: https://madu-server.onrender.com/api`;
       }
       // Handle network errors
       else if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
-        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\nURL yang digunakan: ${API_URL}/auth/google\n\nPastikan backend server berjalan dan VITE_API_URL di-set dengan benar.`;
+        const usedUrl = buildApiUrl('/auth/google');
+        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\nURL yang digunakan: ${usedUrl}\n\nPastikan backend server berjalan dan VITE_API_URL di-set dengan benar.\n\nVITE_API_URL seharusnya: https://madu-server.onrender.com/api`;
       } 
       // Handle response errors with detailed messages
       else if (error.response?.data) {
