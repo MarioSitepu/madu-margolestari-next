@@ -66,32 +66,64 @@ export function ArticleManagement() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#00b8a9] via-[#00a298] to-[#009c91] flex items-center justify-center">
-        <div className="text-white text-xl" style={{ fontFamily: 'Nort, sans-serif' }}>Loading...</div>
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="text-white text-xl font-semibold" style={{ fontFamily: 'Nort, sans-serif' }}>Loading...</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#00b8a9] via-[#00a298] to-[#009c91] py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      </div>
+    <>
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes slideInFromLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        .animate-fade-up {
+          animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .animate-slide-in-left {
+          animation: slideInFromLeft 0.5s ease-out forwards;
+        }
+      `}</style>
+      <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#00b8a9] via-[#00a298] to-[#009c91] py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6 sm:mb-8">
+        <div className="max-w-7xl mx-auto relative z-10">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6 sm:mb-8 animate-slide-in-left" style={{ opacity: 0 }}>
           <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
             <Link to="/dashboard">
-              <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50 h-10 sm:h-11" style={{ fontFamily: 'Nort, sans-serif' }}>
+              <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50 h-10 sm:h-11 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" style={{ fontFamily: 'Nort, sans-serif' }}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">Kembali</span>
               </Button>
             </Link>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>Kelola Artikel</h1>
           </div>
-          <Link to="/admin/articles/new" className="w-full sm:w-auto">
-            <Button className="w-full sm:w-auto bg-[#ffde7d] hover:bg-[#f4d58d] text-gray-900 shadow-md hover:shadow-lg transition-all duration-300 font-semibold h-10 sm:h-11" style={{ fontFamily: 'Nort, sans-serif' }}>
+          <Link to="/admin/articles/new" className="w-full sm:w-auto animate-fade-up" style={{ opacity: 0, animationDelay: '0.2s' }}>
+            <Button className="w-full sm:w-auto bg-[#ffde7d] hover:bg-[#f4d58d] text-gray-900 shadow-md hover:shadow-lg transition-all duration-300 font-semibold h-10 sm:h-11 hover:-translate-y-1" style={{ fontFamily: 'Nort, sans-serif' }}>
               <Plus className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Buat Artikel Baru</span>
               <span className="sm:hidden">Artikel Baru</span>
@@ -99,13 +131,13 @@ export function ArticleManagement() {
           </Link>
         </div>
 
-        <Card className="p-4 sm:p-6 md:p-8 bg-white/98 backdrop-blur-md rounded-2xl border border-white/40 shadow-[0_20px_60px_rgba(0,184,169,0.15)] hover:shadow-[0_25px_70px_rgba(0,184,169,0.2)] transition-all duration-500 relative overflow-hidden group">
+        <Card className="p-4 sm:p-6 md:p-8 bg-white/98 backdrop-blur-md rounded-2xl border border-white/40 shadow-[0_20px_60px_rgba(0,184,169,0.15)] hover:shadow-[0_25px_70px_rgba(0,184,169,0.2)] transition-all duration-500 relative overflow-hidden group animate-fade-up" style={{ opacity: 0, animationDelay: '0.3s' }}>
           <div className="absolute inset-0 bg-gradient-to-br from-[#00b8a9]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           {articles.length === 0 ? (
             <div className="text-center py-12 relative z-10">
               <p className="text-gray-500 mb-4 text-lg">Belum ada artikel</p>
               <Link to="/admin/articles/new">
-                <Button className="bg-[#00b8a9] hover:bg-[#009c91] text-white font-semibold">
+                <Button className="bg-[#00b8a9] hover:bg-[#009c91] text-white font-semibold transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                   <Plus className="w-4 h-4 mr-2" />
                   Buat Artikel Pertama
                 </Button>
@@ -113,8 +145,8 @@ export function ArticleManagement() {
             </div>
           ) : (
             <div className="space-y-3 sm:space-y-4 relative z-10">
-              {articles.map((article) => (
-                <div key={article._id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 p-3 sm:p-4 border border-gray-200/50 rounded-lg hover:bg-white/80 hover:shadow-md transition-all duration-300 bg-white/60 backdrop-blur-sm">
+              {articles.map((article, index) => (
+                <div key={article._id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 p-3 sm:p-4 border border-gray-200/50 rounded-lg hover:bg-white/80 hover:shadow-md transition-all duration-300 bg-white/60 backdrop-blur-sm animate-fade-up" style={{ opacity: 0, animationDelay: `${0.4 + index * 0.1}s` }}>
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
                       <h3 className="text-base sm:text-lg font-bold text-gray-900 break-words" style={{ fontFamily: 'Nort, sans-serif' }}>{article.title}</h3>
@@ -133,7 +165,7 @@ export function ArticleManagement() {
                   </div>
                   <div className="flex items-center gap-2 w-full sm:w-auto">
                     <Link to={`/admin/articles/${article._id}/edit`} className="flex-1 sm:flex-none">
-                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                      <Button variant="outline" size="sm" className="w-full sm:w-auto transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
                         <Edit className="w-4 h-4" />
                         <span className="sm:hidden ml-2">Edit</span>
                       </Button>
@@ -142,7 +174,7 @@ export function ArticleManagement() {
                       variant="outline" 
                       size="sm"
                       onClick={() => handleDelete(article._id)}
-                      className="text-red-600 hover:text-red-700 flex-1 sm:flex-none w-full sm:w-auto"
+                      className="text-red-600 hover:text-red-700 flex-1 sm:flex-none w-full sm:w-auto transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
                     >
                       <Trash2 className="w-4 h-4" />
                       <span className="sm:hidden ml-2">Hapus</span>
@@ -154,8 +186,11 @@ export function ArticleManagement() {
           )}
         </Card>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
+
+
 
 

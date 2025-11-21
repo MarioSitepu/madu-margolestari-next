@@ -5,7 +5,6 @@ import axios from 'axios';
 import { ArrowLeft, Save, Upload, X, Image as ImageIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import honeyBg from "@/assets/honey-bg-6badc9.png";
 import { API_URL } from '@/lib/api';
 
 export function ArticleForm() {
@@ -164,51 +163,69 @@ export function ArticleForm() {
 
   if (fetching) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] flex items-center justify-center">
-        <div className="text-white text-xl" style={{ fontFamily: 'Nort, sans-serif' }}>Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-[#00b8a9] via-[#00a298] to-[#009c91] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="text-white text-xl" style={{ fontFamily: 'Nort, sans-serif' }}>Loading...</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
-      {/* Background Honey Image */}
-      <div className="absolute inset-0 overflow-hidden opacity-30">
-        <img 
-          src={honeyBg} 
-          alt="Honey background" 
-          className="w-full h-full object-cover"
-          style={{ transform: 'scale(1.1)' }}
-        />
-      </div>
-      
-      {/* Background Pattern Overlay */}
-      <div className="absolute inset-0 opacity-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 20px 20px, white 2px, transparent 0)`,
-            backgroundSize: "40px 40px",
-          }}
-        />
-      </div>
-
-      <div className="max-w-4xl mx-auto relative z-10">
-        <div className="flex items-center gap-4 mb-8">
-          <Link to="/admin/articles">
-            <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50" style={{ fontFamily: 'Nort, sans-serif' }}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Kembali
-            </Button>
-          </Link>
-          <h1 className="text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>
-            {isEdit ? 'Edit Artikel' : 'Buat Artikel Baru'}
-          </h1>
+    <>
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes slideInFromLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        .animate-fade-up {
+          animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .animate-slide-in-left {
+          animation: slideInFromLeft 0.5s ease-out forwards;
+        }
+      `}</style>
+      <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#00b8a9] via-[#00a298] to-[#009c91] py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
 
-        <Card className="p-8 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-2xl">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="flex items-center gap-4 mb-8 animate-slide-in-left" style={{ opacity: 0 }}>
+            <Link to="/admin/articles">
+              <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50 h-10 sm:h-11 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" style={{ fontFamily: 'Nort, sans-serif' }}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Kembali
+              </Button>
+            </Link>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>
+              {isEdit ? 'Edit Artikel' : 'Buat Artikel Baru'}
+            </h1>
+          </div>
+
+          <Card className="p-4 sm:p-6 md:p-8 bg-white/98 backdrop-blur-md rounded-2xl border border-white/40 shadow-[0_20px_60px_rgba(0,184,169,0.15)] hover:shadow-[0_25px_70px_rgba(0,184,169,0.2)] transition-all duration-500 relative overflow-hidden group animate-fade-up" style={{ opacity: 0 }}>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#00b8a9]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+          <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+            <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.1s' }}>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Judul Artikel *
               </label>
@@ -216,38 +233,38 @@ export function ArticleForm() {
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all duration-300 hover:border-[#00b8a9]/50"
                 required
               />
             </div>
 
-            <div>
+            <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.2s' }}>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Deskripsi *
               </label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all duration-300 hover:border-[#00b8a9]/50"
                 rows={3}
                 required
               />
             </div>
 
-            <div>
+            <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.3s' }}>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Konten
               </label>
               <textarea
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all duration-300 hover:border-[#00b8a9]/50"
                 rows={10}
               />
             </div>
 
             {/* Image for Article (Thumbnail otomatis dari gambar ini) */}
-            <div>
+            <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.4s' }}>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Gambar Artikel * (Thumbnail otomatis dari gambar ini)
               </label>
@@ -256,27 +273,27 @@ export function ArticleForm() {
               </p>
               <div className="space-y-4">
                 {imagePreview ? (
-                  <div className="relative">
+                  <div className="relative group">
                     <img
                       src={imagePreview}
                       alt="Preview"
-                      className="w-full h-64 object-cover rounded-lg border-2 border-gray-300"
+                      className="w-full h-64 object-cover rounded-lg border-2 border-gray-300 transition-all duration-300 group-hover:border-[#00b8a9] group-hover:shadow-lg"
                     />
                     <button
                       type="button"
                       onClick={removeImage}
-                      className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+                      className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300 hover:scale-110 shadow-lg"
                     >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-all duration-300 hover:border-[#00b8a9] hover:bg-[#00b8a9]/5">
                     <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-600 mb-4">Belum ada gambar</p>
                   </div>
                 )}
-                <div className="flex gap-4">
+                <div className="flex gap-4 flex-col sm:flex-row">
                   <label className="flex-1 cursor-pointer">
                     <input
                       type="file"
@@ -285,7 +302,7 @@ export function ArticleForm() {
                       className="hidden"
                       disabled={uploadingImage}
                     />
-                    <div className="w-full px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-center">
+                    <div className="w-full px-4 py-3 border border-gray-300 rounded-lg hover:bg-[#00b8a9]/5 transition-all duration-300 text-center hover:border-[#00b8a9]">
                       {uploadingImage ? (
                         <span className="text-gray-600">Mengupload...</span>
                       ) : (
@@ -304,14 +321,14 @@ export function ArticleForm() {
                       setFormData({ ...formData, image: url, backgroundImage: url });
                       setImagePreview(url);
                     }}
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all duration-300 hover:border-[#00b8a9]/50"
                     placeholder="Atau masukkan URL gambar"
                   />
                 </div>
               </div>
             </div>
 
-            <div>
+            <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.5s' }}>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Tags (pisahkan dengan koma)
               </label>
@@ -319,35 +336,35 @@ export function ArticleForm() {
                 type="text"
                 value={formData.tags}
                 onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all duration-300 hover:border-[#00b8a9]/50"
                 placeholder="madu, kesehatan, lebah"
               />
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 animate-fade-up" style={{ opacity: 0, animationDelay: '0.6s' }}>
               <input
                 type="checkbox"
                 id="published"
                 checked={formData.published}
                 onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                className="w-4 h-4 text-[#00b8a9] border-gray-300 rounded focus:ring-[#00b8a9]"
+                className="w-4 h-4 text-[#00b8a9] border-gray-300 rounded focus:ring-[#00b8a9] cursor-pointer transition-all duration-300"
               />
-              <label htmlFor="published" className="text-sm font-semibold text-gray-700">
+              <label htmlFor="published" className="text-sm font-semibold text-gray-700 cursor-pointer">
                 Publikasikan artikel
               </label>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 pt-4 animate-fade-up" style={{ opacity: 0, animationDelay: '0.7s' }}>
               <Button
                 type="submit"
                 disabled={loading}
-                className="bg-[#00b8a9] hover:bg-[#009c91] text-white"
+                className="bg-[#00b8a9] hover:bg-[#009c91] text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <Save className="w-4 h-4 mr-2" />
                 {loading ? 'Menyimpan...' : isEdit ? 'Update Artikel' : 'Buat Artikel'}
               </Button>
-              <Link to="/admin/articles">
-                <Button type="button" variant="outline">
+              <Link to="/admin/articles" className="flex-1 sm:flex-none">
+                <Button type="button" variant="outline" className="w-full transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
                   Batal
                 </Button>
               </Link>
@@ -355,7 +372,8 @@ export function ArticleForm() {
           </form>
         </Card>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 
