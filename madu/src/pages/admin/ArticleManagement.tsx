@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
-import { Plus, Edit, Trash2, ArrowLeft } from 'lucide-react';
+import { Plus, Edit, Trash2, ArrowLeft, X } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { API_URL } from '@/lib/api';
@@ -25,6 +25,12 @@ export function ArticleManagement() {
   const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; articleId: string | null; articleTitle: string }>({
+    isOpen: false,
+    articleId: null,
+    articleTitle: ''
+  });
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!isLoading && (!user || user.role !== 'admin')) {
@@ -51,15 +57,35 @@ export function ArticleManagement() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Apakah Anda yakin ingin menghapus artikel ini?')) return;
+  const openDeleteModal = (articleId: string, articleTitle: string) => {
+    setDeleteModal({
+      isOpen: true,
+      articleId,
+      articleTitle
+    });
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModal({
+      isOpen: false,
+      articleId: null,
+      articleTitle: ''
+    });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal.articleId) return;
 
     try {
-      await axios.delete(`${API_URL}/articles/${id}`);
-      setArticles(articles.filter(a => a._id !== id));
+      setDeleting(true);
+      await axios.delete(`${API_URL}/articles/${deleteModal.articleId}`);
+      setArticles(articles.filter(a => a._id !== deleteModal.articleId));
+      closeDeleteModal();
     } catch (error) {
       console.error('Error deleting article:', error);
       alert('Gagal menghapus artikel');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -173,7 +199,7 @@ export function ArticleManagement() {
                     <Button 
                       variant="outline" 
                       size="sm"
-                      onClick={() => handleDelete(article._id)}
+                      onClick={() => openDeleteModal(article._id, article.title)}
                       className="text-red-600 hover:text-red-700 flex-1 sm:flex-none w-full sm:w-auto transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -187,9 +213,106 @@ export function ArticleManagement() {
         </Card>
       </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteModal.isOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in" style={{ opacity: 0, animationDelay: '0s' }}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in" style={{ opacity: 0, animationDelay: '0.1s' }}>
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-500 to-red-600 px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-red-700/50 rounded-lg flex items-center justify-center">
+                  <Trash2 className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-white" style={{ fontFamily: 'Nort, sans-serif' }}>Hapus Artikel</h3>
+              </div>
+              <button
+                onClick={closeDeleteModal}
+                disabled={deleting}
+                className="text-white hover:bg-red-700/50 p-1 rounded transition-all duration-200 disabled:opacity-50"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="px-6 py-6">
+              <p className="text-gray-700 mb-4" style={{ fontFamily: 'Nort, sans-serif' }}>
+                Apakah Anda yakin ingin menghapus artikel berikut?
+              </p>
+              <div className="bg-gray-100 p-4 rounded-lg mb-6 border-l-4 border-red-500">
+                <p className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Nort, sans-serif' }}>Judul Artikel:</p>
+                <p className="font-semibold text-gray-900 break-words line-clamp-2" style={{ fontFamily: 'Nort, sans-serif' }}>
+                  {deleteModal.articleTitle}
+                </p>
+              </div>
+              <p className="text-sm text-gray-600" style={{ fontFamily: 'Nort, sans-serif' }}>
+                ⚠️ Tindakan ini tidak dapat dibatalkan. Artikel akan dihapus secara permanen.
+              </p>
+            </div>
+
+            {/* Footer */}
+            <div className="bg-gray-50 px-6 py-4 flex gap-3 justify-end border-t border-gray-200">
+              <Button
+                onClick={closeDeleteModal}
+                disabled={deleting}
+                variant="outline"
+                className="transition-all duration-300 disabled:opacity-50"
+              >
+                Batal
+              </Button>
+              <Button
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="bg-red-600 hover:bg-red-700 text-white transition-all duration-300 disabled:opacity-50"
+              >
+                {deleting ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Menghapus...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Trash2 className="w-4 h-4" />
+                    Hapus Sekarang
+                  </span>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+        .animate-scale-in {
+          animation: scaleIn 0.3s ease-out forwards;
+        }
+      `}</style>
     </>
   );
 }
+
 
 
 
