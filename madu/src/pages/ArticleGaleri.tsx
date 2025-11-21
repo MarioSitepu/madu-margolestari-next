@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { MessageCircle, Send, Heart, MoreVertical, Clock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
@@ -57,22 +57,31 @@ export function ArticleGaleri() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [commentLoading, setCommentLoading] = useState(false);
+  const viewCountedRef = useRef(false);
 
   useEffect(() => {
     if (id) {
-      fetchArticle();
+      if (!viewCountedRef.current) {
+        fetchArticle();
+        viewCountedRef.current = true;
+      }
       fetchComments();
       fetchRelatedArticles();
     } else {
       // If no ID, redirect to article list or show default
       navigate('/article');
     }
-  }, [id, navigate]);
+  }, [id]);
 
   const fetchArticle = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/articles/${id}`);
+      const url = new URL(`${API_URL}/articles/${id}`);
+      // Add userId as query parameter if user is logged in
+      if (user?.id) {
+        url.searchParams.append('userId', user.id);
+      }
+      const response = await axios.get(url.toString());
       if (response.data.success) {
         setArticle(response.data.article);
       }

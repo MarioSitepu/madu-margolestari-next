@@ -52,7 +52,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
         </div>
         <div className="flex items-center text-sm mb-5 opacity-90">
           <UserIcon className="h-4 w-4 mr-2" />
-          <span className="font-medium">{articleData.participants} peserta</span>
+          <span className="font-medium">dilihat oleh {articleData.participants} user</span>
         </div>
         <h3 className="text-2xl font-bold mb-3">{articleData.title}</h3>
         <p className="text-sm leading-relaxed mb-4 opacity-95 line-clamp-3">

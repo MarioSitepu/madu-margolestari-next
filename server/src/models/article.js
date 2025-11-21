@@ -39,6 +39,10 @@ const articleSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  viewedBy: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: []
+  },
   tags: {
     type: [String],
     default: []
