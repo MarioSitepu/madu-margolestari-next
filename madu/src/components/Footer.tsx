@@ -1,6 +1,14 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Twitter } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Facebook,
+  Instagram,
+  Twitter,
+} from "lucide-react";
 import honeyLogo from "@/assets/1.svg";
 import honeycomb from "@/assets/2.png";
 
@@ -20,7 +28,7 @@ export function Footer() {
           {/* White container with subscription form */}
           <div className="bg-white rounded-2xl max-w-6xl mx-auto -mb-12 sm:-mb-16 md:-mb-20 lg:-mb-24 xl:-mb-28 p-3 sm:p-5 md:p-6 lg:p-8 relative shadow-[0_4px_6px_rgba(0,0,0,0.8)] min-h-[180px] sm:min-h-[240px] md:min-h-[280px]">
             {/* Honeycomb image */}
-            <div className="absolute -top-4 sm:-top-6 md:-top-8 lg:-top-10 xl:-top-12 left-0 md:-left-6 w-28 sm:w-40 md:w-56 lg:w-80 xl:w-96 hidden sm:block">
+            <div className="absolute -top-4 sm:-top-6 md:-top-8 lg:-top-10 xl:-top-12 left-0 md:-left-6 w-28 sm:w-40 md:w-56 lg:w-80 xl:w-96 hidden md:block">
               <img
                 src={honeycomb}
                 alt="Honeycomb with honey"
@@ -55,8 +63,8 @@ export function Footer() {
                   newsletter kami.
                 </p>
                 <form onSubmit={handleSubscribe} className="relative">
-                  <div className="bg-[#00b8a9] rounded-full p-1 flex flex-col sm:flex-row items-stretch sm:items-center max-w-full sm:max-w-lg md:max-w-120 mt-3 sm:mt-4 md:mt-5 mb-1.5 sm:mb-2 md:mb-2.5">
-                    <div className="flex items-center flex-1 pl-3 sm:pl-4 mb-2 sm:mb-0">
+                  <div className="bg-[#00b8a9] rounded-full p-1 flex flex-row items-center sm:items-center max-w-full sm:max-w-lg md:max-w-120 mt-3 sm:mt-4 md:mt-5 mb-1.5 sm:mb-2 md:mb-2.5">
+                    <div className="flex items-center flex-1 pl-3 sm:pl-4">
                       <img
                         src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
                         alt=""
@@ -73,7 +81,17 @@ export function Footer() {
                     </div>
                     <button
                       type="submit"
-                      className="bg-[#ffde7d] text-black font-medium text-xs sm:text-sm py-2 px-3 sm:px-4 md:px-3 sm:mr-3 rounded-full hover:bg-[#f5c869] transition whitespace-nowrap"
+                      className="
+                      bg-[#ffde7d] text-black font-medium 
+                      text-xs sm:text-sm 
+                      py-2 px-3 
+                      sm:px-4 
+                      md:px-3 
+                      sm:mr-3 rounded-full 
+                      hover:bg-[#f5c869] 
+                      transition whitespace-nowrap
+                      flex-shrink-0
+                      "
                     >
                       Berlangganan
                     </button>
@@ -117,27 +135,27 @@ export function Footer() {
                 madu murni berkualitas tinggi.
               </p>
               <div className="flex items-center gap-3 mt-4">
-                <a 
-                  href="https://www.facebook.com/madumargolestari" 
-                  target="_blank" 
+                <a
+                  href="https://www.facebook.com/madumargolestari"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-[#ffde7d] transition-colors"
                   aria-label="Facebook"
                 >
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a 
-                  href="https://www.instagram.com/madumargolestari" 
-                  target="_blank" 
+                <a
+                  href="https://www.instagram.com/madumargolestari"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-[#ffde7d] transition-colors"
                   aria-label="Instagram"
                 >
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a 
-                  href="https://twitter.com/madumargolestari" 
-                  target="_blank" 
+                <a
+                  href="https://twitter.com/madumargolestari"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-[#ffde7d] transition-colors"
                   aria-label="Twitter"
@@ -236,18 +254,25 @@ export function Footer() {
                 <li className="flex items-start gap-2">
                   <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
                   <span className="break-all">
-                    Margo Lestari, Kec. Jati Agung, Kabupaten Lampung Selatan, Lampung 35365
+                    Margo Lestari, Kec. Jati Agung, Kabupaten Lampung Selatan,
+                    Lampung 35365
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Phone className="w-4 h-4 shrink-0" />
-                  <a href="tel:+6281234567890" className="hover:underline break-all">
+                  <a
+                    href="tel:+6281234567890"
+                    className="hover:underline break-all"
+                  >
                     +62 812-3456-7890
                   </a>
                 </li>
                 <li className="flex items-center gap-2">
                   <Mail className="w-4 h-4 shrink-0" />
-                  <a href="mailto:info@lebahmadu.co.id" className="hover:underline break-all">
+                  <a
+                    href="mailto:info@lebahmadu.co.id"
+                    className="hover:underline break-all"
+                  >
                     info@lebahmadu.co.id
                   </a>
                 </li>
@@ -266,14 +291,21 @@ export function Footer() {
           <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 text-xs sm:text-sm">
             <div className="flex items-center">
               <span className="text-center sm:text-left">
-                © {new Date().getFullYear()} Madu Margo Lestari. All rights reserved.
+                © {new Date().getFullYear()} Madu Margo Lestari. All rights
+                reserved.
               </span>
             </div>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-16">
-              <a href="#kebijakan-privasi" className="hover:underline whitespace-nowrap">
+              <a
+                href="#kebijakan-privasi"
+                className="hover:underline whitespace-nowrap"
+              >
                 Kebijakan Privasi
               </a>
-              <a href="#syarat-ketentuan" className="hover:underline whitespace-nowrap">
+              <a
+                href="#syarat-ketentuan"
+                className="hover:underline whitespace-nowrap"
+              >
                 Syarat & Ketentuan
               </a>
               <a href="#legal" className="hover:underline whitespace-nowrap">
