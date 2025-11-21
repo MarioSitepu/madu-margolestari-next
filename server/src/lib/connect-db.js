@@ -8,10 +8,16 @@ async function connectDB(uri) {
   }
 
   // Trim whitespace and validate format
-  const trimmedUri = uri.trim();
+  let trimmedUri = uri.trim();
   
   if (!trimmedUri) {
     throw new Error('Variabel lingkungan MONGODB_URI kosong');
+  }
+
+  // Handle case where someone accidentally included "MONGODB_URI=" in the value
+  // This can happen when copying from .env file
+  if (trimmedUri.startsWith('MONGODB_URI=')) {
+    trimmedUri = trimmedUri.substring('MONGODB_URI='.length).trim();
   }
 
   // Validate that URI starts with correct protocol
@@ -21,7 +27,8 @@ async function connectDB(uri) {
     throw new Error(
       `Format MONGODB_URI tidak valid. Connection string harus dimulai dengan "mongodb://" atau "mongodb+srv://". ` +
       `Nilai saat ini dimulai dengan: "${preview}...". ` +
-      `Pastikan MONGODB_URI di environment variables sudah dikonfigurasi dengan benar.`
+      `Pastikan MONGODB_URI di environment variables sudah dikonfigurasi dengan benar. ` +
+      `Jika Anda menyalin dari file .env, pastikan hanya menyalin nilainya saja (tanpa "MONGODB_URI=").`
     );
   }
 

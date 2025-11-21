@@ -142,14 +142,34 @@ export function Navigation() {
                       className="fixed inset-0 z-40" 
                       onClick={() => setIsUserMenuOpen(false)}
                     />
-                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200/50 py-2 z-50 animate-scale-in overflow-hidden">
+                    <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200/50 py-2 z-50 animate-scale-in overflow-hidden">
                       <div className="px-4 py-3 border-b border-gray-200 bg-gradient-to-r from-[#ffde7d]/20 to-[#00b8a9]/10">
-                        <p className="font-bold text-gray-900 truncate">{user.name}</p>
-                        <p className="text-sm text-gray-600 truncate">{user.email}</p>
-                        <p className="text-xs text-gray-500 capitalize mt-1 flex items-center gap-1">
-                          <span className="w-2 h-2 bg-[#00b8a9] rounded-full"></span>
-                          Login via {user.provider === 'google' ? 'Google' : 'Email'}
-                        </p>
+                        <div className="flex items-center gap-3 mb-2">
+                          <UserAvatar size="w-12 h-12" />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-gray-900 truncate">{user.name}</p>
+                            <p className="text-sm text-gray-600 truncate">{user.email}</p>
+                          </div>
+                        </div>
+                        {user.provider === 'google' && (
+                          <div className="flex items-center gap-2 mt-2 p-2 bg-white/60 rounded-lg border border-gray-200/50">
+                            <svg width="16" height="16" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                              <g fill="none" fillRule="evenodd">
+                                <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
+                                <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+                                <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.348 6.173 0 7.55 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+                                <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                              </g>
+                            </svg>
+                            <p className="text-xs text-gray-700 font-medium">Login sebagai {user.name?.split(' ')[0] || 'User'}</p>
+                          </div>
+                        )}
+                        {user.provider !== 'google' && (
+                          <p className="text-xs text-gray-500 capitalize mt-1 flex items-center gap-1">
+                            <span className="w-2 h-2 bg-[#00b8a9] rounded-full"></span>
+                            Login via Email
+                          </p>
+                        )}
                       </div>
                       <Link
                         to="/dashboard"
@@ -242,10 +262,25 @@ export function Navigation() {
                         <div className="flex-1 min-w-0">
                           <p className="font-bold text-gray-900 truncate">{user.name}</p>
                           <p className="text-sm text-gray-700 truncate">{user.email}</p>
-                          <p className="text-xs text-gray-600 capitalize mt-1 flex items-center gap-1">
-                            <span className="w-2 h-2 bg-[#00b8a9] rounded-full"></span>
-                            Login via {user.provider === 'google' ? 'Google' : 'Email'}
-                          </p>
+                          {user.provider === 'google' && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <svg width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                                <g fill="none" fillRule="evenodd">
+                                  <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
+                                  <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+                                  <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.348 6.173 0 7.55 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+                                  <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                                </g>
+                              </svg>
+                              <p className="text-xs text-gray-700 font-medium">Login sebagai {user.name?.split(' ')[0] || 'User'}</p>
+                            </div>
+                          )}
+                          {user.provider !== 'google' && (
+                            <p className="text-xs text-gray-600 capitalize mt-1 flex items-center gap-1">
+                              <span className="w-2 h-2 bg-[#00b8a9] rounded-full"></span>
+                              Login via Email
+                            </p>
+                          )}
                         </div>
                       </div>
                       <Link

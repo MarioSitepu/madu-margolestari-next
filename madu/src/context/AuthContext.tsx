@@ -19,6 +19,12 @@ interface AuthContextType {
   logout: () => void;
   updateUser: (userData: User) => void;
   isLoading: boolean;
+  getGoogleAccountHistory: () => Array<{
+    email: string;
+    name: string;
+    avatar: string;
+    lastUsed: string;
+  }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,6 +67,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
   }, []);
 
+  // Helper function to get Google account history
+  const getGoogleAccountHistory = (): Array<{
+    email: string;
+    name: string;
+    avatar: string;
+    lastUsed: string;
+  }> => {
+    try {
+      const stored = localStorage.getItem('google_accounts');
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      console.error('Error reading Google account history:', error);
+      return [];
+    }
+  };
+
   const verifyToken = async (token: string) => {
     try {
       const response = await axios.get(`${API_URL}/auth/me`, {
@@ -88,6 +110,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Store in localStorage
     localStorage.setItem('token', newToken);
     localStorage.setItem('user', JSON.stringify(userData));
+    
+    // Store Google account history if user logged in with Google
+    if (userData.provider === 'google') {
+      const googleAccounts = getGoogleAccountHistory();
+      const accountExists = googleAccounts.find(
+        (acc) => acc.email === userData.email
+      );
+      
+      if (!accountExists) {
+        const newAccount = {
+          email: userData.email,
+          name: userData.name,
+          avatar: userData.avatar || '',
+          lastUsed: new Date().toISOString()
+        };
+        googleAccounts.unshift(newAccount); // Add to beginning
+        // Keep only last 5 accounts
+        const limitedAccounts = googleAccounts.slice(0, 5);
+        localStorage.setItem('google_accounts', JSON.stringify(limitedAccounts));
+      } else {
+        // Update last used time
+        accountExists.lastUsed = new Date().toISOString();
+        accountExists.name = userData.name;
+        accountExists.avatar = userData.avatar || accountExists.avatar;
+        // Move to beginning
+        const filtered = googleAccounts.filter(
+          (acc) => acc.email !== userData.email
+        );
+        filtered.unshift(accountExists);
+        localStorage.setItem('google_accounts', JSON.stringify(filtered));
+      }
+    }
     
     // Set default authorization header for axios
     axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
@@ -117,7 +171,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login,
     logout,
     updateUser,
-    isLoading
+    isLoading,
+    getGoogleAccountHistory
   };
 
   return (
