@@ -145,12 +145,14 @@ router.post('/google', async (req, res) => {
     const { sub: googleId, email, name, picture } = payload;
 
     // Check if user already exists
+    console.log('Mencari user dengan googleId:', googleId, 'atau email:', email);
     let user = await User.findOne({ 
       $or: [
         { googleId },
         { email }
       ]
     });
+    console.log('User ditemukan:', user ? 'Ya' : 'Tidak');
 
     // Upload Google profile picture to Supabase if available
     let avatarUrl = picture; // Default to Google URL
@@ -174,6 +176,7 @@ router.post('/google', async (req, res) => {
     }
 
     if (user) {
+      console.log('User sudah ada, mengupdate data...');
       // Ensure admin role if email is admin email
       await ensureAdminRole(user);
       
@@ -183,7 +186,13 @@ router.post('/google', async (req, res) => {
         user.provider = 'google';
         user.isVerified = true;
         if (avatarUrl) user.avatar = avatarUrl;
-        await user.save();
+        try {
+          await user.save();
+          console.log('✅ User berhasil diupdate');
+        } catch (saveError) {
+          console.error('❌ Error saat menyimpan user:', saveError);
+          throw saveError;
+        }
       } else if (avatarUrl && (!user.avatar || user.avatar !== avatarUrl)) {
         // Update avatar if it's different (e.g., user changed profile picture on Google)
         // Re-upload with correct user ID if avatar was uploaded with temp ID
@@ -203,8 +212,10 @@ router.post('/google', async (req, res) => {
         await user.save();
       }
     } else {
+      console.log('User baru, membuat user baru...');
       // Determine role based on email
       const role = isAdminEmail(email) ? 'admin' : 'user';
+      console.log('Role user:', role);
       
       // Create new user first
       user = new User({
@@ -216,7 +227,19 @@ router.post('/google', async (req, res) => {
         isVerified: true,
         role: role
       });
-      await user.save();
+      
+      try {
+        await user.save();
+        console.log('✅ User baru berhasil dibuat dengan ID:', user._id);
+      } catch (saveError) {
+        console.error('❌ Error saat menyimpan user baru:', saveError);
+        console.error('Error details:', {
+          message: saveError.message,
+          name: saveError.name,
+          code: saveError.code
+        });
+        throw saveError;
+      }
       
       // If avatar was uploaded with temp ID or is still Google URL, re-upload with correct user ID
       if (avatarUrl && (avatarUrl.includes('temp-') || (!isSupabaseUrl && picture))) {
@@ -236,11 +259,14 @@ router.post('/google', async (req, res) => {
     }
 
     // Generate token
+    console.log('Membuat token untuk user ID:', user._id);
     const token = generateToken(user._id);
 
     // Ensure admin role if email is admin email (refresh user data)
     await ensureAdminRole(user);
     await user.populate();
+    
+    console.log('✅ Login Google berhasil untuk user:', user.email);
 
     // Return success response
     res.json({

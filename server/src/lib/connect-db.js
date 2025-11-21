@@ -33,16 +33,28 @@ async function connectDB(uri) {
   }
 
   mongoose.connection.on('connected', () => {
-    console.log('MongoDB terhubung');
+    console.log('✅ MongoDB terhubung dengan sukses');
+    console.log('Database:', mongoose.connection.db?.databaseName || 'unknown');
   });
 
   mongoose.connection.on('error', (err) => {
-    console.error('Kesalahan koneksi MongoDB:', err);
+    console.error('❌ Kesalahan koneksi MongoDB:', err);
   });
 
-  await mongoose.connect(trimmedUri, {
-    serverSelectionTimeoutMS: 5000
+  mongoose.connection.on('disconnected', () => {
+    console.warn('⚠️ MongoDB terputus');
   });
+
+  try {
+    await mongoose.connect(trimmedUri, {
+      serverSelectionTimeoutMS: 10000, // Increase timeout for production
+      socketTimeoutMS: 45000,
+    });
+    console.log('✅ Koneksi MongoDB berhasil dibuat');
+  } catch (error) {
+    console.error('❌ Gagal menghubungkan ke MongoDB:', error.message);
+    throw error;
+  }
 }
 
 export default connectDB;
