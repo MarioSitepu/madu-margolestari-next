@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Trash2, Upload, X, Image as ImageIcon, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import honeyBg from "@/assets/honey-bg-6badc9.png";
+
 import { API_URL } from '@/lib/api';
 
 interface Gallery {
@@ -166,60 +166,44 @@ export function GalleryManagement() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#b8860b] to-[#9a6f09] flex items-center justify-center">
         <div className="text-white text-xl" style={{ fontFamily: 'Nort, sans-serif' }}>Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
-      {/* Background Honey Image */}
-      <div className="absolute inset-0 overflow-hidden opacity-30">
-        <img 
-          src={honeyBg} 
-          alt="Honey background" 
-          className="w-full h-full object-cover"
-          style={{ transform: 'scale(1.1)' }}
-        />
-      </div>
-      
-      {/* Background Pattern Overlay */}
-      <div className="absolute inset-0 opacity-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 20px 20px, white 2px, transparent 0)`,
-            backgroundSize: "40px 40px",
-          }}
-        />
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#b8860b] via-[#a0761d] to-[#9a6f09] py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Link to="/dashboard">
-              <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50" style={{ fontFamily: 'Nort, sans-serif' }}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Kembali
-              </Button>
-            </Link>
-            <h1 className="text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>Kelola Galeri</h1>
-          </div>
+        <div className="flex items-center gap-2 sm:gap-4 mb-6 sm:mb-8">
+          <Link to="/dashboard">
+            <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50 h-10 sm:h-11" style={{ fontFamily: 'Nort, sans-serif' }}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Kembali</span>
+            </Button>
+          </Link>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>Kelola Galeri</h1>
         </div>
 
         {/* Upload Section */}
-        <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-2xl mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6" style={{ fontFamily: 'Nort, sans-serif' }}>
+        <Card className="p-4 sm:p-6 md:p-8 bg-white/98 backdrop-blur-md rounded-2xl border border-white/40 shadow-[0_20px_60px_rgba(184,134,11,0.15)] hover:shadow-[0_25px_70px_rgba(184,134,11,0.2)] transition-all duration-500 relative overflow-hidden group mb-6 sm:mb-8">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#b8860b]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 relative z-10" style={{ fontFamily: 'Nort, sans-serif' }}>
             Upload Gambar Galeri
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-4 relative z-10">
             {imagePreview && !uploadingImage && (
               <div className="relative">
                 <img
                   src={imagePreview}
                   alt="Preview"
-                  className="w-full h-64 object-cover rounded-lg border-2 border-gray-300"
+                  className="w-full h-48 sm:h-64 object-cover rounded-lg border-2 border-gray-300"
                 />
                 <button
                   type="button"
@@ -232,12 +216,12 @@ export function GalleryManagement() {
             )}
             {uploadingImage && (
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#00b8a9] mb-4"></div>
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#b8860b] mb-4"></div>
                 <p className="text-gray-600">Mengupload gambar...</p>
               </div>
             )}
             {!imagePreview && !uploadingImage && (
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center">
                 <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600 mb-4">Pilih gambar untuk diupload</p>
               </div>
@@ -250,33 +234,35 @@ export function GalleryManagement() {
                 className="hidden"
                 disabled={uploadingImage}
               />
-              <div className="w-full px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-center bg-[#00b8a9] text-white hover:bg-[#009c91]">
-                <span className="font-semibold flex items-center justify-center gap-2">
+              <div className="w-full px-4 py-3 border border-gray-300 rounded-lg hover:bg-opacity-90 transition text-center bg-[#b8860b] text-white hover:bg-[#9a6f09] font-semibold">
+                <span className="flex items-center justify-center gap-2 text-sm sm:text-base">
                   <Upload className="w-4 h-4" />
                   {uploadingImage ? 'Mengupload...' : 'Unggah Gambar'}
                 </span>
               </div>
             </label>
-            <p className="text-sm text-gray-500 text-center">
+            <p className="text-xs sm:text-sm text-gray-500 text-center">
               Nama gambar akan otomatis dibuat sesuai urutan (Gambar 1, Gambar 2, dst.)
             </p>
           </div>
         </Card>
 
         {/* Gallery List */}
-        <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-2xl">
+        <Card className="p-4 sm:p-6 md:p-8 bg-white/98 backdrop-blur-md rounded-2xl border border-white/40 shadow-[0_20px_60px_rgba(184,134,11,0.15)] hover:shadow-[0_25px_70px_rgba(184,134,11,0.2)] transition-all duration-500 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#b8860b]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           {galleries.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="text-center py-12 relative z-10">
               <ImageIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 mb-4">Belum ada gambar galeri</p>
+              <p className="text-gray-500 text-lg">Belum ada gambar galeri</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 relative z-10">
               {galleries.map((gallery) => (
                 <div
                   key={gallery._id}
-                  className="border-2 border-gray-200/50 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm hover:scale-105"
+                  className="border border-gray-200/50 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm hover:scale-105 relative overflow-hidden group"
                 >
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#b8860b]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                   <div className="relative">
                     <img
                       src={gallery.imageUrl}
@@ -289,8 +275,8 @@ export function GalleryManagement() {
                       </div>
                     )}
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1" style={{ fontFamily: 'Nort, sans-serif' }}>
+                  <div className="p-4 relative z-10">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 line-clamp-1 truncate" style={{ fontFamily: 'Nort, sans-serif' }}>
                       {gallery.title}
                     </h3>
                     {gallery.description && (
@@ -298,9 +284,9 @@ export function GalleryManagement() {
                         {gallery.description}
                       </p>
                     )}
-                    <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
+                    <div className="flex flex-wrap items-center justify-between text-xs text-gray-500 mb-4 gap-2">
                       <span>Urutan: {gallery.order}</span>
-                      <span>
+                      <span className="whitespace-nowrap">
                         {new Date(gallery.createdAt).toLocaleDateString('id-ID')}
                       </span>
                     </div>
@@ -309,7 +295,7 @@ export function GalleryManagement() {
                         variant="outline"
                         size="sm"
                         onClick={() => togglePublished(gallery._id, gallery.published)}
-                        className={gallery.published ? 'text-green-600' : 'text-gray-600'}
+                        className={`flex-1 ${gallery.published ? 'text-green-600' : 'text-gray-600'}`}
                       >
                         {gallery.published ? (
                           <Eye className="w-4 h-4" />
@@ -324,7 +310,7 @@ export function GalleryManagement() {
                         className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50"
                       >
                         <Trash2 className="w-4 h-4 mr-1" />
-                        Hapus
+                        <span className="hidden sm:inline">Hapus</span>
                       </Button>
                     </div>
                   </div>

@@ -5,7 +5,6 @@ import axios from 'axios';
 import { Plus, Edit, Trash2, ArrowLeft } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import honeyBg from "@/assets/honey-bg-6badc9.png";
 import { API_URL } from '@/lib/api';
 
 interface Article {
@@ -66,98 +65,87 @@ export function ArticleManagement() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#00b8a9] via-[#00a298] to-[#009c91] flex items-center justify-center">
         <div className="text-white text-xl" style={{ fontFamily: 'Nort, sans-serif' }}>Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
-      {/* Background Honey Image */}
-      <div className="absolute inset-0 overflow-hidden opacity-30">
-        <img 
-          src={honeyBg} 
-          alt="Honey background" 
-          className="w-full h-full object-cover"
-          style={{ transform: 'scale(1.1)' }}
-        />
-      </div>
-      
-      {/* Background Pattern Overlay */}
-      <div className="absolute inset-0 opacity-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 20px 20px, white 2px, transparent 0)`,
-            backgroundSize: "40px 40px",
-          }}
-        />
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#00b8a9] via-[#00a298] to-[#009c91] py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6 sm:mb-8">
+          <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
             <Link to="/dashboard">
-              <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50" style={{ fontFamily: 'Nort, sans-serif' }}>
+              <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50 h-10 sm:h-11" style={{ fontFamily: 'Nort, sans-serif' }}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Kembali
+                <span className="hidden sm:inline">Kembali</span>
               </Button>
             </Link>
-            <h1 className="text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>Kelola Artikel</h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>Kelola Artikel</h1>
           </div>
-          <Link to="/admin/articles/new">
-            <Button className="bg-[#00b8a9] hover:bg-[#009c91] text-white shadow-md hover:shadow-lg transition-all duration-300" style={{ fontFamily: 'Nort, sans-serif' }}>
+          <Link to="/admin/articles/new" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto bg-[#ffde7d] hover:bg-[#f4d58d] text-gray-900 shadow-md hover:shadow-lg transition-all duration-300 font-semibold h-10 sm:h-11" style={{ fontFamily: 'Nort, sans-serif' }}>
               <Plus className="w-4 h-4 mr-2" />
-              Buat Artikel Baru
+              <span className="hidden sm:inline">Buat Artikel Baru</span>
+              <span className="sm:hidden">Artikel Baru</span>
             </Button>
           </Link>
         </div>
 
-        <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-2xl">
+        <Card className="p-4 sm:p-6 md:p-8 bg-white/98 backdrop-blur-md rounded-2xl border border-white/40 shadow-[0_20px_60px_rgba(0,184,169,0.15)] hover:shadow-[0_25px_70px_rgba(0,184,169,0.2)] transition-all duration-500 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#00b8a9]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           {articles.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">Belum ada artikel</p>
+            <div className="text-center py-12 relative z-10">
+              <p className="text-gray-500 mb-4 text-lg">Belum ada artikel</p>
               <Link to="/admin/articles/new">
-                <Button className="bg-[#00b8a9] hover:bg-[#009c91] text-white">
+                <Button className="bg-[#00b8a9] hover:bg-[#009c91] text-white font-semibold">
                   <Plus className="w-4 h-4 mr-2" />
                   Buat Artikel Pertama
                 </Button>
               </Link>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4 relative z-10">
               {articles.map((article) => (
-                <div key={article._id} className="flex items-center justify-between p-4 border-2 border-gray-200/50 rounded-lg hover:bg-white/80 hover:shadow-md transition-all duration-300 bg-white/60 backdrop-blur-sm">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'Nort, sans-serif' }}>{article.title}</h3>
+                <div key={article._id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 p-3 sm:p-4 border border-gray-200/50 rounded-lg hover:bg-white/80 hover:shadow-md transition-all duration-300 bg-white/60 backdrop-blur-sm">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-900 break-words" style={{ fontFamily: 'Nort, sans-serif' }}>{article.title}</h3>
                       {!article.published && (
-                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded">Draft</span>
+                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded whitespace-nowrap">Draft</span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 line-clamp-2 mb-2">{article.description}</p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 mb-2">{article.description}</p>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-gray-500">
                       <span>Oleh: {article.authorName}</span>
-                      <span>•</span>
+                      <span className="hidden sm:inline">•</span>
                       <span>{article.views} views</span>
-                      <span>•</span>
+                      <span className="hidden sm:inline">•</span>
                       <span>{new Date(article.createdAt).toLocaleDateString('id-ID')}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Link to={`/admin/articles/${article._id}/edit`}>
-                      <Button variant="outline" size="sm">
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <Link to={`/admin/articles/${article._id}/edit`} className="flex-1 sm:flex-none">
+                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
                         <Edit className="w-4 h-4" />
+                        <span className="sm:hidden ml-2">Edit</span>
                       </Button>
                     </Link>
                     <Button 
                       variant="outline" 
                       size="sm"
                       onClick={() => handleDelete(article._id)}
-                      className="text-red-600 hover:text-red-700"
+                      className="text-red-600 hover:text-red-700 flex-1 sm:flex-none w-full sm:w-auto"
                     >
                       <Trash2 className="w-4 h-4" />
+                      <span className="sm:hidden ml-2">Hapus</span>
                     </Button>
                   </div>
                 </div>
