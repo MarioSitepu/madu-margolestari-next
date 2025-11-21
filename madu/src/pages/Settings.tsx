@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, X, User, Mail, Calendar, Shield, ArrowLeft, Save } from 'lucide-react';
+import { Camera, X, User, Mail, Calendar, Shield, ArrowLeft, Save, Edit2, Check, X as XIcon } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
 
@@ -28,6 +28,11 @@ export function Settings() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [updatingName, setUpdatingName] = useState(false);
+  const [nameError, setNameError] = useState('');
+  const [nameSuccess, setNameSuccess] = useState('');
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -39,6 +44,12 @@ export function Settings() {
       fetchUserProfile();
     }
   }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+    if (userProfile) {
+      setNewName(userProfile.name);
+    }
+  }, [userProfile]);
 
   const fetchUserProfile = async () => {
     try {
@@ -133,6 +144,62 @@ export function Settings() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  const handleUpdateName = async () => {
+    if (!newName || newName.trim().length < 2) {
+      setNameError('Nama harus minimal 2 karakter');
+      return;
+    }
+
+    if (newName.trim().length > 100) {
+      setNameError('Nama maksimal 100 karakter');
+      return;
+    }
+
+    if (newName.trim() === userProfile?.name) {
+      setIsEditingName(false);
+      return;
+    }
+
+    setUpdatingName(true);
+    setNameError('');
+    setNameSuccess('');
+
+    try {
+      const response = await axios.put(`${API_URL}/auth/username`, {
+        name: newName.trim()
+      });
+
+      if (response.data.success) {
+        setNameSuccess('Username berhasil diupdate!');
+        setUserProfile(response.data.user);
+        setIsEditingName(false);
+        
+        // Update user data in context
+        updateUser(response.data.user);
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          setNameSuccess('');
+        }, 3000);
+      }
+    } catch (error: any) {
+      console.error('Error updating username:', error);
+      setNameError(
+        error.response?.data?.message || 
+        'Gagal mengupdate username. Silakan coba lagi.'
+      );
+    } finally {
+      setUpdatingName(false);
+    }
+  };
+
+  const handleCancelEditName = () => {
+    setNewName(userProfile?.name || '');
+    setIsEditingName(false);
+    setNameError('');
+    setNameSuccess('');
   };
 
   const formatDate = (dateString?: string) => {
@@ -289,11 +356,77 @@ export function Settings() {
           <h2 className="text-2xl font-black text-gray-900 mb-6">Informasi Akun</h2>
           
           <div className="space-y-4">
-            <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-              <User className="w-5 h-5 text-gray-600 mt-1" />
-              <div>
-                <div className="text-sm text-gray-500 mb-1">Nama</div>
-                <div className="font-semibold text-gray-900">{userProfile.name}</div>
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-start gap-4">
+                <User className="w-5 h-5 text-gray-600 mt-1 flex-shrink-0" />
+                <div className="flex-1">
+                  <div className="text-sm text-gray-500 mb-1">Nama</div>
+                  {isEditingName ? (
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        value={newName}
+                        onChange={(e) => {
+                          setNewName(e.target.value);
+                          setNameError('');
+                        }}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition-all font-semibold text-gray-900"
+                        placeholder="Masukkan nama baru"
+                        disabled={updatingName}
+                        maxLength={100}
+                        autoFocus
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleUpdateName}
+                          disabled={updatingName || !newName.trim() || newName.trim() === userProfile?.name}
+                          className="flex items-center gap-2 bg-[#00b8a9] hover:bg-[#00a298] text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {updatingName ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              Menyimpan...
+                            </>
+                          ) : (
+                            <>
+                              <Check className="w-4 h-4" />
+                              Simpan
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={handleCancelEditName}
+                          disabled={updatingName}
+                          className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50"
+                        >
+                          <XIcon className="w-4 h-4" />
+                          Batal
+                        </button>
+                      </div>
+                      {nameError && (
+                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                          <p className="text-red-700 text-sm">{nameError}</p>
+                        </div>
+                      )}
+                      {nameSuccess && (
+                        <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                          <p className="text-green-700 text-sm">{nameSuccess}</p>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between">
+                      <div className="font-semibold text-gray-900">{userProfile.name}</div>
+                      <button
+                        onClick={() => setIsEditingName(true)}
+                        className="flex items-center gap-2 text-[#00b8a9] hover:text-[#00a298] font-semibold transition-colors"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Edit
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

@@ -628,4 +628,64 @@ router.post('/avatar', authenticateToken, upload.single('avatar'), async (req, r
   }
 });
 
+// Update username
+router.put('/username', authenticateToken, async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    // Validate input
+    if (!name || typeof name !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Nama harus diisi'
+      });
+    }
+
+    // Trim and validate name length
+    const trimmedName = name.trim();
+    if (trimmedName.length < 2) {
+      return res.status(400).json({
+        success: false,
+        message: 'Nama harus minimal 2 karakter'
+      });
+    }
+
+    if (trimmedName.length > 100) {
+      return res.status(400).json({
+        success: false,
+        message: 'Nama maksimal 100 karakter'
+      });
+    }
+
+    // Update user name
+    const user = req.user;
+    user.name = trimmedName;
+    await user.save();
+
+    // Ensure admin role if email is admin email
+    await ensureAdminRole(user);
+
+    res.json({
+      success: true,
+      message: 'Username berhasil diupdate',
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar,
+        provider: user.provider,
+        isVerified: user.isVerified,
+        role: user.role || (isAdminEmail(user.email) ? 'admin' : 'user')
+      }
+    });
+
+  } catch (error) {
+    console.error('Error updating username:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Terjadi kesalahan saat mengupdate username'
+    });
+  }
+});
+
 export default router;
