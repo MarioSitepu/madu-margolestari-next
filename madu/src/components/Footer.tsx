@@ -1,12 +1,15 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter } from "lucide-react";
 import honeyLogo from "@/assets/1.svg";
 import honeycomb from "@/assets/2.png";
+
 export function Footer() {
   const [email, setEmail] = useState("");
   const handleSubscribe = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle subscription logic here
-    alert("Thank you for subscribing!");
+    alert("Terima kasih telah berlangganan!");
     setEmail("");
   };
   return (
@@ -54,17 +57,13 @@ export function Footer() {
                 <form onSubmit={handleSubscribe} className="relative">
                   <div className="bg-[#00b8a9] rounded-full p-1 flex flex-col sm:flex-row items-stretch sm:items-center max-w-full sm:max-w-lg md:max-w-120 mt-3 sm:mt-4 md:mt-5 mb-1.5 sm:mb-2 md:mb-2.5">
                     <div className="flex items-center flex-1 pl-3 sm:pl-4 mb-2 sm:mb-0">
-                      <img
-                        src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
-                        alt=""
-                        className="w-4 h-4 mr-2 flex-shrink-0"
-                      />
+                      <Mail className="w-4 h-4 mr-2 flex-shrink-0 text-white" />
                       <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Masukkan email Anda"
-                        className="bg-transparent text-xs sm:text-sm text-black outline-none w-full"
+                        className="bg-transparent text-xs sm:text-sm text-white placeholder-white/70 outline-none w-full"
                         required
                       />
                     </div>
@@ -82,7 +81,7 @@ export function Footer() {
                     <br />
                   </span>{" "}
                   Baca kebijakan privasi kami{" "}
-                  <a href="#" className="text-[#ffde7d] underline">
+                  <a href="#" className="text-[#ffde7d] underline hover:text-[#f5c869] transition-colors">
                     di sini
                   </a>
                   .
@@ -95,153 +94,156 @@ export function Footer() {
       {/* Footer section */}
       <section className="bg-[#00b8a9] text-white grow">
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-8 xl:px-10 2xl:px-40 py-8 sm:py-12 md:py-15 pt-12 sm:pt-16 md:pt-20 lg:pt-24">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-4 mt-6 sm:mt-8 md:mt-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 lg:gap-12 mt-6 sm:mt-8 md:mt-10">
             {/* Company info */}
-            <div className="sm:col-span-2 lg:col-span-2 xl:col-span-2">
-              <div className="flex items-center -ml-2 sm:-ml-4 md:-ml-7">
+            <div className="sm:col-span-2 lg:col-span-1">
+              <div className="flex items-center mb-4">
                 <img
                   src={honeyLogo}
                   alt="Honeycomb logo"
                   className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
                 />
-                <h3 className="text-[#ffde7d] text-xl sm:text-2xl font-bold mt-2 -ml-2 sm:-ml-3">
+                <h3 className="text-[#ffde7d] text-xl sm:text-2xl font-bold ml-2">
                   Madu Margo Lestari
                 </h3>
               </div>
-              <p className="text-xs sm:text-sm mt-2 sm:mt-0 pr-2 sm:pr-3 md:pr-4">
+              <p className="text-sm sm:text-base leading-relaxed mb-4 text-white/90">
                 UMKM Lebah Madu Margolestari merupakan usaha mikro, kecil, dan
                 menengah yang berfokus pada budidaya lebah madu dan produksi
                 madu murni berkualitas tinggi.
               </p>
+              {/* Social Media Links */}
+              <div className="flex gap-3 mt-6">
+                <a
+                  href="https://www.facebook.com/madumargolestari"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-white/20 hover:bg-[#ffde7d] hover:text-[#00b8a9] flex items-center justify-center transition-all duration-300"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://www.instagram.com/madumargolestari"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-white/20 hover:bg-[#ffde7d] hover:text-[#00b8a9] flex items-center justify-center transition-all duration-300"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://twitter.com/madumargolestari"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-white/20 hover:bg-[#ffde7d] hover:text-[#00b8a9] flex items-center justify-center transition-all duration-300"
+                  aria-label="Twitter"
+                >
+                  <Twitter className="w-5 h-5" />
+                </a>
+              </div>
             </div>
             {/* Navigation Links */}
-            <div className="space-y-3 sm:space-y-3">
-              <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Code
+            <div className="space-y-4">
+              <h4 className="text-[#ffde7d] text-lg sm:text-xl font-bold mb-4">
+                Navigasi
               </h4>
-              <ul className="space-y-3 text-sm sm:text-[15px]">
+              <ul className="space-y-3 text-sm sm:text-base">
                 <li>
-                  <a href="#" className="hover:underline">
-                    About Us
+                  <Link to="/" className="hover:text-[#ffde7d] transition-colors inline-block">
+                    Beranda
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/product" className="hover:text-[#ffde7d] transition-colors inline-block">
+                    Produk
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/article" className="hover:text-[#ffde7d] transition-colors inline-block">
+                    Artikel
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="hover:text-[#ffde7d] transition-colors inline-block">
+                    Tentang Kami
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            {/* Support & Info */}
+            <div className="space-y-4">
+              <h4 className="text-[#ffde7d] text-lg sm:text-xl font-bold mb-4">
+                Informasi
+              </h4>
+              <ul className="space-y-3 text-sm sm:text-base">
+                <li>
+                  <a href="#" className="hover:text-[#ffde7d] transition-colors inline-block">
+                    Kebijakan Privasi
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline">
-                    Services
+                  <a href="#" className="hover:text-[#ffde7d] transition-colors inline-block">
+                    Syarat & Ketentuan
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline">
-                    Community
+                  <a href="#" className="hover:text-[#ffde7d] transition-colors inline-block">
+                    FAQ
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline">
-                    Testimonal
+                  <a href="#" className="hover:text-[#ffde7d] transition-colors inline-block">
+                    Bantuan
                   </a>
                 </li>
               </ul>
             </div>
-            <div className="space-y-3 sm:space-y-3">
-              <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Support
+            {/* Contact Us */}
+            <div className="space-y-4">
+              <h4 className="text-[#ffde7d] text-lg sm:text-xl font-bold mb-4">
+                Hubungi Kami
               </h4>
-              <ul className="space-y-3 text-sm sm:text-[15px]">
-                <li>
-                  <a href="#" className="hover:underline">
-                    Help Center
+              <ul className="space-y-4 text-sm sm:text-base">
+                <li className="flex items-start gap-3">
+                  <Phone className="w-5 h-5 text-[#ffde7d] flex-shrink-0 mt-0.5" />
+                  <a href="tel:+6281234567890" className="hover:text-[#ffde7d] transition-colors">
+                    +62 812-3456-7890
                   </a>
                 </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Tweet @Us
+                <li className="flex items-start gap-3">
+                  <Mail className="w-5 h-5 text-[#ffde7d] flex-shrink-0 mt-0.5" />
+                  <a href="mailto:info@madumargolestari.com" className="hover:text-[#ffde7d] transition-colors break-all">
+                    info@madumargolestari.com
                   </a>
                 </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Webians
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Feedback
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="space-y-3 sm:space-y-3">
-              <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Links
-              </h4>
-              <ul className="space-y-3 text-sm sm:text-[15px]">
-                <li>
-                  <a href="#" className="hover:underline">
-                    Courses
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Become 5Teacher
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Services
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    All In One
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="space-y-[18px] sm:space-y-[18px]">
-              <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Contact Us
-              </h4>
-              <ul className="space-y-[18px] text-sm sm:text-[15px]">
-                <li className="flex items-center">
-                  <img
-                    src="https://uploadthingy.s3.us-west-1.amazonaws.com/qtzmAPNGY8KKXCxbsKaGgN/239e916ef62ae36e3c81fd165260edd7033b0d3d.svg"
-                    alt=""
-                    className="w-4 h-4 mr-2 flex-shrink-0"
-                  />
-                  <span className="break-all">081262143242412</span>
-                </li>
-                <li className="flex items-center">
-                  <img
-                    src="https://uploadthingy.s3.us-west-1.amazonaws.com/qsy7F41wDUnmVMRxW8eD61/dbdaf6bbb07247b278f897c9f4cb0dc4674a44a9.svg"
-                    alt=""
-                    className="w-4 h-4 mr-2 flex-shrink-0"
-                  />
-                  <span className="break-all">Support@dfwff.com</span>
+                <li className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-[#ffde7d] flex-shrink-0 mt-0.5" />
+                  <span className="text-white/90">
+                    Jl. Lebah Madu No. 123<br />
+                    Bandung, Jawa Barat 40123
+                  </span>
                 </li>
               </ul>
             </div>
           </div>
         </div>
         {/* Divider */}
-        <div className="border-t-2 sm:border-t-4 border-white w-full shadow-[0_5px_5px_rgba(0,0,0,0.4)]"></div>
+        <div className="border-t border-white/30 w-full mt-8 sm:mt-12"></div>
         {/* Copyright */}
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-40 py-6 sm:py-8">
-          <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 text-xs sm:text-sm">
-            <div className="flex items-center">
-              <img
-                src="https://uploadthingy.s3.us-west-1.amazonaws.com/1wBeAqm1RZJaTFgKYstpym/28269401c235d5b35d7e1ba2526ba68897b32d3a.svg"
-                alt=""
-                className="w-4 h-4 mr-2 flex-shrink-0"
-              />
-              <span className="text-center sm:text-left">Copyright By CodeUI.All right Reserved</span>
+          <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 text-sm sm:text-base">
+            <div className="text-center md:text-left text-white/80">
+              © {new Date().getFullYear()} <span className="text-[#ffde7d] font-semibold">Madu Margo Lestari</span>. All rights reserved.
             </div>
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-16">
-              <a href="#" className="hover:underline whitespace-nowrap">
-                Privacy Policy
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
+              <a href="#" className="hover:text-[#ffde7d] transition-colors whitespace-nowrap">
+                Kebijakan Privasi
               </a>
-              <a href="#" className="hover:underline whitespace-nowrap">
-                Terms Of Use
+              <a href="#" className="hover:text-[#ffde7d] transition-colors whitespace-nowrap">
+                Syarat & Ketentuan
               </a>
-              <a href="#" className="hover:underline whitespace-nowrap">
+              <a href="#" className="hover:text-[#ffde7d] transition-colors whitespace-nowrap">
                 Legal
               </a>
             </div>
