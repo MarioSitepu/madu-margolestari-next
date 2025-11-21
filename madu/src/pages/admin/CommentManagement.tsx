@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
-import { ArrowLeft, Trash2, MessageCircle, X } from 'lucide-react';
+import { ArrowLeft, Trash2, MessageCircle, X, ExternalLink } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { API_URL } from '@/lib/api';
@@ -209,7 +209,18 @@ export function CommentManagement() {
                     </span>
                     <p className="text-sm sm:text-base text-gray-700 mb-2 break-words">{comment.content}</p>
                     <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
-                      <span className="truncate">Artikel: {comment.articleId?.title || 'N/A'}</span>
+                      <div className="flex items-center gap-2">
+                        <span>Artikel:</span>
+                        <Link 
+                          to={`/article-galeri/${comment.articleId?._id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#00b8a9] hover:text-[#009c91] font-semibold flex items-center gap-1 transition-colors duration-300 truncate hover:underline"
+                        >
+                          {comment.articleId?.title || 'N/A'}
+                          <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                        </Link>
+                      </div>
                       <span className="hidden sm:inline">•</span>
                       <span className="whitespace-nowrap">{comment.likes} likes</span>
                     </div>
