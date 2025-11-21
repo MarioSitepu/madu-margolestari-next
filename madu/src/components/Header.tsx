@@ -30,7 +30,10 @@ export function Header() {
             marginLeft: 'clamp(16px, 5.35vw, 77px)',
             marginTop: 'clamp(60px, 37vw, 316.5px)',
             width: 'calc(100% - clamp(32px, 10.7vw, 154px))',
-            maxWidth: '654px'
+            maxWidth: '654px',
+            border: '2px solid #00B8A9',
+            padding: '20px',
+            borderRadius: '8px'
           }}
         >
           {/* Group 23: Heading Group - x: 0, y: 0, width: 452, height: 133.89 */}
@@ -78,24 +81,36 @@ export function Header() {
           </div>
 
           {/* Description Text - x: 0, y: 151.89, width: 654, height: 76 */}
-          <p 
-            className="text-[12px] sm:text-[13px] md:text-[14px] font-normal text-black leading-relaxed sm:leading-[1.342] mb-4 sm:mb-5 md:mb-[18px] bg-[#FFF8E7] md:bg-transparent px-4 py-3 md:px-0 md:py-0 rounded-lg md:rounded-none backdrop-blur-sm md:backdrop-blur-none"
+          <div 
+            className="text-[12px] sm:text-[13px] md:text-[14px] font-bold text-white leading-relaxed sm:leading-[1.342] mb-4 sm:mb-5 md:mb-[18px] px-0 py-0 md:px-0 md:py-0 rounded-none md:rounded-none"
             style={{ 
               fontFamily: 'Nort, sans-serif',
-              fontWeight: 400,
+              fontWeight: 700,
               fontSize: 'clamp(12px, 0.97vw, 14px)',
               lineHeight: '1.342',
               width: '100%',
-              maxWidth: '654px'
+              maxWidth: '654px',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.25rem'
             }}
           >
-            Selamat datang di Madu Margo Lestari, tempat di mana keaslian dan kualitas
-            bertemu. Kami bangga mempersembahkan madu 100% asli,
-            dipanen langsung dari peternakan lebah alami tanpa campuran
-            bahan apapun. Setiap tetes madu kami adalah hasil dari alam
-            yang murni, yang diproses dengan hati-hati untuk menjaga
-            manfaat dan kualitasnya.
-          </p>
+            {['Selamat datang di Madu Margo Lestari tempat ini,', 'keaslian dan kualitas bertemu Kami bangga mempersembahkan,', 'madu seratus persen asli dipanen dari peternakan alam,', 'lebah alami tanpa campuran bahan apapun untuk Setiap,', 'tetes madu kami adalah hasil dari alam yang murni,', 'murni yang diproses dengan hati-hati untuk menjaga baik.'].map((word, index) => (
+              <span
+                key={index}
+                className="px-1.5 py-0.5 rounded"
+                style={{
+                  backgroundColor: 'rgba(0, 184, 169, 0.4)',
+                  display: 'inline-block',
+                  border: '1px solid rgba(0, 184, 169, 0.6)',
+                  minWidth: '150px',
+                  textAlign: 'left'
+                }}
+              >
+                {word}
+              </span>
+            ))}
+          </div>
 
           {/* Group 86: Button - x: 0, y: 245.89, width: 186, height: 47 */}
           <div className="w-full sm:w-[186px] h-[44px] sm:h-[47px]">

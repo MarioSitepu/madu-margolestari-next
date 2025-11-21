@@ -48,7 +48,7 @@ export function ScrollToTopButton() {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 group bg-white/20 backdrop-blur-md hover:bg-white/30 rounded-full shadow-lg hover:shadow-xl"
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-50 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 group bg-white/20 backdrop-blur-md hover:bg-white/30 rounded-full shadow-lg hover:shadow-xl"
       aria-label="Scroll to top"
       title="Kembali ke atas"
     >
