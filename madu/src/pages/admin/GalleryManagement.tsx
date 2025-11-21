@@ -26,13 +26,13 @@ interface SuccessModalProps {
 
 const SuccessModal = ({ message, onClose }: SuccessModalProps) => {
   useEffect(() => {
-    const timer = setTimeout(onClose, 3000);
+    const timer = setTimeout(onClose, 1500);
     return () => clearTimeout(timer);
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in" style={{ opacity: 0, animationDelay: '0s' }}>
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in" style={{ opacity: 0, animationDelay: '0.1s' }}>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in" style={{ opacity: 0, animationDelay: '0s', animation: 'fadeIn 0.2s ease-out forwards' }}>
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in" style={{ opacity: 0, animationDelay: '0s', animation: 'scaleIn 0.2s ease-out forwards' }}>
         {/* Header */}
         <div className="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -57,7 +57,7 @@ const SuccessModal = ({ message, onClose }: SuccessModalProps) => {
           <div
             className="h-full bg-gradient-to-r from-green-500 to-green-600 animate-shrink"
             style={{
-              animation: 'shrink 3s linear forwards'
+              animation: 'shrink 1.5s linear forwards'
             }}
           ></div>
         </div>

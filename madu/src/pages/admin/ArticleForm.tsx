@@ -2,10 +2,67 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
-import { ArrowLeft, Save, Upload, X, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Save, Upload, X, Image as ImageIcon, CheckCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { API_URL } from '@/lib/api';
+
+// Success Modal Component
+interface SuccessModalProps {
+  message: string;
+  onClose: () => void;
+}
+
+const SuccessModal = ({ message, onClose }: SuccessModalProps) => {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 1500);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in" style={{ opacity: 0, animationDelay: '0s', animation: 'fadeIn 0.2s ease-out forwards' }}>
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in" style={{ opacity: 0, animationDelay: '0s', animation: 'scaleIn 0.2s ease-out forwards' }}>
+        {/* Header */}
+        <div className="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-green-700/50 rounded-lg flex items-center justify-center">
+              <CheckCircle className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="text-lg font-bold text-white" style={{ fontFamily: 'Nort, sans-serif' }}>Berhasil!</h3>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-6">
+          <p className="text-gray-700 text-center" style={{ fontFamily: 'Nort, sans-serif' }}>
+            {message}
+          </p>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="h-1 bg-gray-100">
+          <div
+            className="h-full bg-gradient-to-r from-green-500 to-green-600 animate-shrink"
+            style={{
+              animation: 'shrink 1.5s linear forwards'
+            }}
+          ></div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes shrink {
+          from {
+            width: 100%;
+          }
+          to {
+            width: 0%;
+          }
+        }
+      `}</style>
+    </div>
+  );
+};
 
 export function ArticleForm() {
   const { user, isLoading } = useAuth();
@@ -26,6 +83,10 @@ export function ArticleForm() {
   const [fetching, setFetching] = useState(isEdit);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imagePreview, setImagePreview] = useState<string>('');
+  const [successModal, setSuccessModal] = useState<{ isOpen: boolean; message: string }>({
+    isOpen: false,
+    message: ''
+  });
 
   useEffect(() => {
     if (!isLoading && (!user || user.role !== 'admin')) {
@@ -85,7 +146,7 @@ export function ArticleForm() {
         // Set both image and backgroundImage to the same URL (thumbnail otomatis dari gambar artikel)
         setFormData({ ...formData, image: imageUrl, backgroundImage: imageUrl });
         setImagePreview(imageUrl);
-        alert('Gambar berhasil diupload!');
+        setSuccessModal({ isOpen: true, message: 'Gambar berhasil diupload!' });
       }
     } catch (error: any) {
       console.error('Error uploading image:', error);
@@ -115,6 +176,10 @@ export function ArticleForm() {
   const removeImage = () => {
     setFormData({ ...formData, image: '', backgroundImage: '' });
     setImagePreview('');
+  };
+
+  const closeSuccessModal = () => {
+    setSuccessModal({ isOpen: false, message: '' });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -195,11 +260,35 @@ export function ArticleForm() {
             transform: translateX(0);
           }
         }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
         .animate-fade-up {
           animation: fadeInUp 0.6s ease-out forwards;
         }
         .animate-slide-in-left {
           animation: slideInFromLeft 0.5s ease-out forwards;
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+        .animate-scale-in {
+          animation: scaleIn 0.3s ease-out forwards;
         }
       `}</style>
       <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#00b8a9] via-[#00a298] to-[#009c91] py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6">
@@ -373,6 +462,14 @@ export function ArticleForm() {
         </Card>
       </div>
       </div>
+
+      {/* Success Modal */}
+      {successModal.isOpen && (
+        <SuccessModal
+          message={successModal.message}
+          onClose={closeSuccessModal}
+        />
+      )}
     </>
   );
 }
