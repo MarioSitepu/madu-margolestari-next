@@ -18,6 +18,65 @@ interface Gallery {
   createdAt: string;
 }
 
+// Success Modal Component
+interface SuccessModalProps {
+  message: string;
+  onClose: () => void;
+}
+
+const SuccessModal = ({ message, onClose }: SuccessModalProps) => {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 3000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in" style={{ opacity: 0, animationDelay: '0s' }}>
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in" style={{ opacity: 0, animationDelay: '0.1s' }}>
+        {/* Header */}
+        <div className="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-green-700/50 rounded-lg flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-white" style={{ fontFamily: 'Nort, sans-serif' }}>Berhasil!</h3>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-6">
+          <p className="text-gray-700 text-center" style={{ fontFamily: 'Nort, sans-serif' }}>
+            {message}
+          </p>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="h-1 bg-gray-100">
+          <div
+            className="h-full bg-gradient-to-r from-green-500 to-green-600 animate-shrink"
+            style={{
+              animation: 'shrink 3s linear forwards'
+            }}
+          ></div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes shrink {
+          from {
+            width: 100%;
+          }
+          to {
+            width: 0%;
+          }
+        }
+      `}</style>
+    </div>
+  );
+};
+
 export function GalleryManagement() {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
@@ -31,6 +90,11 @@ export function GalleryManagement() {
     galleryTitle: ''
   });
   const [deleting, setDeleting] = useState(false);
+  const [successModal, setSuccessModal] = useState<{ isOpen: boolean; message: string }>({
+    isOpen: false,
+    message: ''
+  });
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     if (!isLoading && (!user || user.role !== 'admin')) {
@@ -79,8 +143,19 @@ export function GalleryManagement() {
       if (uploadResponse.data.success) {
         const imageUrl = uploadResponse.data.imageUrl;
         
-        // Auto-generate title based on number of existing galleries
-        const nextOrder = galleries.length;
+        // Fetch galleries first to get accurate count
+        let currentGalleries: Gallery[] = [];
+        try {
+          const response = await axios.get(`${API_URL}/gallery/all`);
+          if (response.data.success) {
+            currentGalleries = response.data.galleries;
+          }
+        } catch (error) {
+          console.error('Error fetching galleries:', error);
+        }
+        
+        // Auto-generate title based on actual gallery count
+        const nextOrder = currentGalleries.length;
         const title = `Gambar ${nextOrder + 1}`;
         
         // Create gallery entry with auto-generated title
@@ -99,9 +174,13 @@ export function GalleryManagement() {
         );
 
         if (createResponse.data.success) {
-          alert('Gambar berhasil ditambahkan!');
+          openSuccessModal('Gambar berhasil ditambahkan!');
           setImagePreview('');
-          fetchGalleries();
+          // Fetch fresh data after successful create
+          const response = await axios.get(`${API_URL}/gallery/all`);
+          if (response.data.success) {
+            setGalleries(response.data.galleries);
+          }
         }
       }
     } catch (error: any) {
@@ -186,6 +265,51 @@ export function GalleryManagement() {
     } catch (error) {
       console.error('Error toggling published status:', error);
       alert('Gagal mengubah status publikasi');
+    }
+  };
+
+  const openSuccessModal = (message: string) => {
+    setSuccessModal({ isOpen: true, message });
+  };
+
+  const closeSuccessModal = () => {
+    setSuccessModal({ isOpen: false, message: '' });
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (!file.type.startsWith('image/')) {
+        alert('File harus berupa gambar');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Ukuran file maksimal 10MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      handleImageUpload(file);
     }
   };
 
@@ -302,9 +426,21 @@ export function GalleryManagement() {
               </div>
             )}
             {!imagePreview && !uploadingImage && (
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center">
-                <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-4">Pilih gambar untuk diupload</p>
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`border-2 border-dashed rounded-lg p-6 sm:p-8 text-center transition-all duration-300 ${
+                  isDragging
+                    ? 'border-[#b8860b] bg-[#b8860b]/10 scale-105'
+                    : 'border-gray-300 hover:border-[#b8860b]/50 hover:bg-[#b8860b]/5'
+                }`}
+              >
+                <ImageIcon className={`w-12 h-12 mx-auto mb-4 transition-all duration-300 ${isDragging ? 'text-[#b8860b] scale-110' : 'text-gray-400'}`} />
+                <p className={`font-semibold transition-all duration-300 ${isDragging ? 'text-[#b8860b]' : 'text-gray-600'}`}>
+                  {isDragging ? 'Lepaskan gambar di sini' : 'Drag & drop gambar di sini'}
+                </p>
+                <p className="text-sm text-gray-500 mt-2">atau klik tombol di bawah</p>
               </div>
             )}
             <label className="block cursor-pointer">
@@ -471,6 +607,14 @@ export function GalleryManagement() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Success Modal */}
+      {successModal.isOpen && (
+        <SuccessModal
+          message={successModal.message}
+          onClose={closeSuccessModal}
+        />
       )}
     </>
   );
