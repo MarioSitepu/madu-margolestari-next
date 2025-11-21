@@ -114,9 +114,14 @@ router.post('/login', async (req, res) => {
 // Google OAuth login route
 router.post('/google', async (req, res) => {
   try {
+    console.log('Google OAuth login endpoint hit');
+    console.log('Request body:', { credential: req.body.credential ? 'present' : 'missing' });
+    console.log('Request headers:', { origin: req.headers.origin, 'content-type': req.headers['content-type'] });
+    
     const { credential } = req.body;
 
     if (!credential) {
+      console.log('Error: Google credential tidak ditemukan');
       return res.status(400).json({
         success: false,
         message: 'Google credential diperlukan'

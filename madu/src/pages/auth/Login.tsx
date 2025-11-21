@@ -77,6 +77,9 @@ export function Login() {
       }
 
       console.log('Mengirim Google credential ke backend...');
+      console.log('API URL:', API_URL);
+      console.log('Full endpoint:', `${API_URL}/auth/google`);
+      
       const response = await axios.post(`${API_URL}/auth/google`, {
         credential: credentialResponse.credential
       });
@@ -89,17 +92,33 @@ export function Login() {
       }
     } catch (error: any) {
       console.error('Google login error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        code: error.code,
+        response: error.response?.data,
+        status: error.response?.status,
+        url: error.config?.url
+      });
       
       let errorMessage = 'Gagal login Google';
       
+      // Handle 404 errors specifically
+      if (error.response?.status === 404) {
+        errorMessage = `Endpoint tidak ditemukan. Pastikan VITE_API_URL di-set dengan benar.\n\nURL yang digunakan: ${error.config?.url || API_URL}/auth/google\n\nSilakan hubungi administrator untuk memeriksa konfigurasi backend.`;
+      }
       // Handle network errors
-      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
-        errorMessage = 'Network Error: Tidak dapat terhubung ke server. Pastikan backend server berjalan.';
+      else if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        errorMessage = `Network Error: Tidak dapat terhubung ke server.\n\nURL yang digunakan: ${API_URL}/auth/google\n\nPastikan backend server berjalan dan VITE_API_URL di-set dengan benar.`;
       } 
       // Handle response errors with detailed messages
       else if (error.response?.data) {
         const errorData = error.response.data;
         errorMessage = errorData.message || 'Login dengan Google gagal';
+        
+        // Include path information for 404 errors
+        if (error.response.status === 404 && errorData.path) {
+          errorMessage += `\n\nPath yang diminta: ${errorData.path}`;
+        }
         
         // Include additional details if available (for development)
         if (errorData.details && import.meta.env.DEV) {

@@ -82,8 +82,29 @@ app.use('/api/admin', adminRouter);
 app.use('/api/gallery', galleryRouter);
 app.use('/', sitemapRouter); // Sitemap at root level /sitemap.xml
 
+// Debug middleware untuk logging semua request
 app.use((req, res, next) => {
-  res.status(404).json({ message: 'Endpoint tidak ditemukan' });
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  }
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log(`404 - Endpoint tidak ditemukan: ${req.method} ${req.path}`);
+  console.log('Available routes:', {
+    auth: ['/api/auth/login', '/api/auth/register', '/api/auth/google', '/api/auth/me'],
+    products: '/api/products',
+    articles: '/api/articles',
+    comments: '/api/comments',
+    admin: '/api/admin',
+    gallery: '/api/gallery'
+  });
+  res.status(404).json({ 
+    message: 'Endpoint tidak ditemukan',
+    path: req.path,
+    method: req.method
+  });
   next();
 });
 
