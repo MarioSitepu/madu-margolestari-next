@@ -143,19 +143,23 @@ export function GalleryManagement() {
       if (uploadResponse.data.success) {
         const imageUrl = uploadResponse.data.imageUrl;
         
-        // Fetch galleries first to get accurate count
-        let currentGalleries: Gallery[] = [];
+        // Fetch galleries first to get accurate max order
+        let maxOrder = -1;
         try {
           const response = await axios.get(`${API_URL}/gallery/all`);
           if (response.data.success) {
-            currentGalleries = response.data.galleries;
+            const allGalleries = response.data.galleries;
+            // Find maximum order value from all galleries
+            maxOrder = allGalleries.reduce((max: number, gallery: Gallery) => {
+              return Math.max(max, gallery.order ?? 0);
+            }, -1);
           }
         } catch (error) {
           console.error('Error fetching galleries:', error);
         }
         
-        // Auto-generate title based on actual gallery count
-        const nextOrder = currentGalleries.length;
+        // Next order is max order + 1 (never duplikat)
+        const nextOrder = maxOrder + 1;
         const title = `Gambar ${nextOrder + 1}`;
         
         // Create gallery entry with auto-generated title
