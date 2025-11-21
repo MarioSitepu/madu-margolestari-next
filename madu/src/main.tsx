@@ -11,10 +11,3 @@ createRoot(document.getElementById('root')!).render(
     </HelmetProvider>
   </StrictMode>,
 )
-
-// Dispatch event for prerender plugin
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    document.dispatchEvent(new Event('render-event'));
-  }, 1000);
-});

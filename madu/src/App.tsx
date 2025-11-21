@@ -26,6 +26,15 @@ import { default as ProductPage } from "@/pages/Product";
 const GOOGLE_CLIENT_ID =
   import.meta.env.VITE_GOOGLE_CLIENT_ID || "your-google-client-id-here";
 
+// Warning if Google Client ID is not configured
+if (!import.meta.env.VITE_GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID === "your-google-client-id-here") {
+  console.warn(
+    "⚠️ VITE_GOOGLE_CLIENT_ID tidak dikonfigurasi! " +
+    "Google login tidak akan berfungsi. " +
+    "Silakan set VITE_GOOGLE_CLIENT_ID di file .env"
+  );
+}
+
 export function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>

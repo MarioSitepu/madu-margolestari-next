@@ -80,21 +80,65 @@ export function Register() {
   };
 
   const handleGoogleSuccess = async (credentialResponse: any) => {
+    setIsLoading(true);
+    setError('');
+
     try {
+      if (!credentialResponse?.credential) {
+        setError('Google credential tidak ditemukan. Silakan coba lagi.');
+        setIsLoading(false);
+        return;
+      }
+
+      console.log('Mengirim Google credential ke backend...');
       const response = await axios.post(`${API_URL}/auth/google`, {
         credential: credentialResponse.credential
       });
+
       if (response.data.success) {
         login(response.data.token, response.data.user);
         navigate('/');
+      } else {
+        setError(response.data.message || 'Login dengan Google gagal');
       }
-    } catch (error) {
-        setError('Gagal login Google');
+    } catch (error: any) {
+      console.error('Google login error:', error);
+      
+      let errorMessage = 'Gagal login Google';
+      
+      // Handle network errors
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        errorMessage = 'Network Error: Tidak dapat terhubung ke server. Pastikan backend server berjalan.';
+      } 
+      // Handle response errors with detailed messages
+      else if (error.response?.data) {
+        const errorData = error.response.data;
+        errorMessage = errorData.message || 'Login dengan Google gagal';
+        
+        // Include additional details if available (for development)
+        if (errorData.details && import.meta.env.DEV) {
+          errorMessage += `\n\nDetail: ${JSON.stringify(errorData.details, null, 2)}`;
+        }
+        
+        // Handle specific error cases
+        if (errorData.message?.includes('GOOGLE_CLIENT_ID')) {
+          errorMessage = 'Konfigurasi Google OAuth tidak lengkap. Silakan hubungi administrator.';
+        }
+      } 
+      // Handle other errors
+      else if (error.message) {
+        errorMessage = `Error: ${error.message}`;
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleGoogleError = () => {
-    setError('Login dengan Google gagal. Silakan coba lagi.');
+  const handleGoogleError = (error: any) => {
+    console.error('Google OAuth error:', error);
+    setError('Login dengan Google gagal. Pastikan popup tidak diblokir dan coba lagi.');
   };
 
   return (
