@@ -1,0 +1,43 @@
+{
+  "name": "madu-server",
+  "version": "1.0.0",
+  "description": "Backend Express API untuk proyek madu dengan koneksi MongoDB",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "lint": "eslint \"src/**/*.js\"",
+    "generate:jwt-secret": "node scripts/generate-jwt-secret.js",
+    "create:admin": "node src/scripts/createAdmin.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.81.1",
+    "axios": "^1.13.2",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "google-auth-library": "^10.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.6.0",
+    "morgan": "^1.10.0",
+    "multer": "^2.0.2",
+    "sharp": "^0.34.5",
+    "sitemap": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.12.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^17.9.0",
+    "eslint-plugin-promise": "^6.4.0",
+    "nodemon": "^3.1.7"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

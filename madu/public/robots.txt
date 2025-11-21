@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /dashboard
+Disallow: /settings
+
+Sitemap: https://madumargolestari.vercel.app/sitemap.xml
+
