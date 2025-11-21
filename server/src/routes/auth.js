@@ -1,6 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import bcrypt from 'bcryptjs';
+import nodemailer from 'nodemailer';
 import { OAuth2Client } from 'google-auth-library';
 import User from '../models/user.js';
 import { generateToken, verifyToken } from '../lib/jwt.js';
@@ -14,6 +15,26 @@ if (!process.env.GOOGLE_CLIENT_ID) {
   console.warn('Peringatan: GOOGLE_CLIENT_ID tidak ditemukan di environment variables');
 }
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// Configure Nodemailer
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE || 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
+  }
+});
+
+// Verify transporter connection
+if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+  transporter.verify((error) => {
+    if (error) {
+      console.warn('⚠️ Email configuration error:', error.message);
+    } else {
+      console.log('✓ Email service ready');
+    }
+  });
+}
 
 // Admin emails - bisa diubah sesuai kebutuhan
 const ADMIN_EMAILS = [
@@ -715,6 +736,356 @@ router.put('/username', authenticateToken, async (req, res) => {
     res.status(500).json({
       success: false,
       message: error.message || 'Terjadi kesalahan saat mengupdate username'
+    });
+  }
+});
+
+// Forgot password route
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validate input
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email harus diisi'
+      });
+    }
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      // For security, don't reveal if email exists
+      return res.json({
+        success: true,
+        message: 'Jika email terdaftar, kami akan mengirimkan link reset password'
+      });
+    }
+
+    // Generate reset token (valid for 1 hour)
+    const resetToken = generateToken(user._id, '1h');
+    
+    // Save reset token to user
+    user.resetToken = resetToken;
+    user.resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save();
+
+    // Create reset link
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
+
+    // Send email if configured
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+      try {
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: user.email,
+          subject: 'Reset Password - Madu Margo Lestari',
+          html: `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <style>
+                  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+                  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                  .header { background: linear-gradient(135deg, #00b8a9 0%, #009c91 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+                  .header h1 { margin: 0; font-size: 28px; }
+                  .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                  .message { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #00b8a9; }
+                  .button-container { text-align: center; margin: 30px 0; }
+                  .reset-button { 
+                    display: inline-block;
+                    background: linear-gradient(135deg, #00b8a9 0%, #009c91 100%);
+                    color: white;
+                    padding: 15px 40px;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    font-weight: bold;
+                    transition: opacity 0.3s;
+                  }
+                  .reset-button:hover { opacity: 0.9; }
+                  .link { 
+                    display: block;
+                    background: white;
+                    padding: 15px;
+                    margin: 15px 0;
+                    border-radius: 5px;
+                    word-break: break-all;
+                    font-size: 12px;
+                    border: 1px solid #ddd;
+                  }
+                  .footer { 
+                    background: #f0f0f0;
+                    padding: 20px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #666;
+                    border-radius: 0 0 8px 8px;
+                  }
+                  .warning { 
+                    background: #fff3cd;
+                    border: 1px solid #ffc107;
+                    color: #856404;
+                    padding: 15px;
+                    border-radius: 5px;
+                    margin: 20px 0;
+                    font-size: 14px;
+                  }
+                </style>
+              </head>
+              <body>
+                <div class="container">
+                  <div class="header">
+                    <h1>Madu Margo Lestari</h1>
+                    <p style="margin: 10px 0 0 0; opacity: 0.9;">Reset Password</p>
+                  </div>
+                  
+                  <div class="content">
+                    <div class="message">
+                      <h2 style="margin-top: 0; color: #00b8a9;">Halo ${user.name},</h2>
+                      <p>Kami menerima permintaan untuk mengatur ulang password akun Anda. Klik tombol di bawah untuk melanjutkan:</p>
+                    </div>
+
+                    <div class="button-container">
+                      <a href="${resetLink}" class="reset-button">Reset Password Saya</a>
+                    </div>
+
+                    <p style="text-align: center; color: #666;">atau salin link di bawah:</p>
+                    <div class="link">${resetLink}</div>
+
+                    <div class="warning">
+                      <strong>⚠️ Penting:</strong> Link ini hanya berlaku selama 1 jam. Jika Anda tidak meminta reset password, abaikan email ini dan akun Anda akan tetap aman.
+                    </div>
+
+                    <p style="margin-top: 30px; font-size: 14px; color: #666;">
+                      Jika Anda mengalami masalah, hubungi tim dukungan kami di 
+                      <a href="mailto:support@madumargolestari.com">support@madumargolestari.com</a>
+                    </p>
+                  </div>
+
+                  <div class="footer">
+                    <p>© 2024 Madu Margo Lestari. Semua hak dilindungi.</p>
+                    <p>Email ini dikirim karena ada permintaan reset password untuk akun Anda.</p>
+                  </div>
+                </div>
+              </body>
+            </html>
+          `
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`✓ Reset password email sent to ${user.email}`);
+      } catch (emailError) {
+        console.error('Error sending email:', emailError.message);
+        // Don't fail the request if email sending fails, token is still saved
+      }
+    } else {
+      console.warn('⚠️ Email not configured. Reset token generated but email not sent.');
+      console.log(`Reset link for ${user.email}: ${resetLink}`);
+    }
+
+    res.json({
+      success: true,
+      message: 'Jika email terdaftar, kami akan mengirimkan link reset password'
+    });
+
+  } catch (error) {
+    console.error('Error in forgot password:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Terjadi kesalahan saat memproses permintaan reset password'
+    });
+  }
+});
+
+// Verify reset token route
+router.post('/verify-reset-token', async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token tidak ditemukan'
+      });
+    }
+
+    // Find user with valid reset token
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiry: { $gt: new Date() }
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Token tidak valid atau sudah kadaluarsa'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Token valid',
+      email: user.email
+    });
+
+  } catch (error) {
+    console.error('Error verifying reset token:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Terjadi kesalahan saat memverifikasi token'
+    });
+  }
+});
+
+// Reset password route
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, password, confirmPassword } = req.body;
+
+    // Validate input
+    if (!token || !password || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token, password, dan konfirmasi password harus diisi'
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password dan konfirmasi password tidak cocok'
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password harus minimal 6 karakter'
+      });
+    }
+
+    // Find user with valid reset token
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiry: { $gt: new Date() }
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Token tidak valid atau sudah kadaluarsa'
+      });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update user password and clear reset token
+    user.password = hashedPassword;
+    user.resetToken = null;
+    user.resetTokenExpiry = null;
+    await user.save();
+
+    // Send confirmation email
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+      try {
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: user.email,
+          subject: 'Password Reset Berhasil - Madu Margo Lestari',
+          html: `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <style>
+                  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+                  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                  .header { background: linear-gradient(135deg, #00b8a9 0%, #009c91 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+                  .header h1 { margin: 0; font-size: 28px; }
+                  .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                  .message { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #00b8a9; }
+                  .button-container { text-align: center; margin: 30px 0; }
+                  .login-button { 
+                    display: inline-block;
+                    background: linear-gradient(135deg, #00b8a9 0%, #009c91 100%);
+                    color: white;
+                    padding: 15px 40px;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    font-weight: bold;
+                  }
+                  .footer { 
+                    background: #f0f0f0;
+                    padding: 20px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #666;
+                  }
+                  .success-badge { 
+                    display: inline-block;
+                    background: #4caf50;
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 20px;
+                    margin: 10px 0;
+                    font-weight: bold;
+                  }
+                </style>
+              </head>
+              <body>
+                <div class="container">
+                  <div class="header">
+                    <h1>Madu Margo Lestari</h1>
+                    <p style="margin: 10px 0 0 0; opacity: 0.9;">Password Reset Berhasil</p>
+                  </div>
+                  
+                  <div class="content">
+                    <div class="message">
+                      <h2 style="margin-top: 0; color: #00b8a9;">Halo ${user.name},</h2>
+                      <p style="text-align: center;">
+                        <span class="success-badge">✓ Password berhasil diubah</span>
+                      </p>
+                      <p>Password akun Anda telah berhasil diubah. Anda sekarang dapat login dengan password baru Anda.</p>
+                    </div>
+
+                    <div class="button-container">
+                      <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/login" class="login-button">Masuk ke Akun Saya</a>
+                    </div>
+
+                    <p style="margin-top: 30px; font-size: 14px; color: #666;">
+                      Jika Anda tidak melakukan perubahan ini, segera hubungi tim dukungan kami di 
+                      <a href="mailto:support@madumargolestari.com">support@madumargolestari.com</a>
+                    </p>
+                  </div>
+
+                  <div class="footer">
+                    <p>© 2024 Madu Margo Lestari. Semua hak dilindungi.</p>
+                  </div>
+                </div>
+              </body>
+            </html>
+          `
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`✓ Password reset confirmation email sent to ${user.email}`);
+      } catch (emailError) {
+        console.error('Error sending confirmation email:', emailError.message);
+      }
+    }
+
+    res.json({
+      success: true,
+      message: 'Password berhasil diubah. Silakan login dengan password baru Anda.'
+    });
+
+  } catch (error) {
+    console.error('Error in reset password:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Terjadi kesalahan saat mengubah password'
     });
   }
 });

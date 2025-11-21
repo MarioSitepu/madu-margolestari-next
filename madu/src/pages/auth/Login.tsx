@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -12,6 +12,7 @@ declare global {
         id: {
           initialize: (config: Record<string, unknown>) => void;
           prompt: (momentListener?: (notification: any) => void) => void;
+          renderButton: (element: HTMLElement, config: Record<string, unknown>) => void;
         };
       };
     };
@@ -22,6 +23,7 @@ const API_URL = getApiUrl();
 
 export function Login() {
   const [isVisible, setIsVisible] = useState(false);
+  const hiddenButtonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsVisible(true);
@@ -35,6 +37,7 @@ export function Login() {
   const [error, setError] = useState('');
   const [isGoogleReady, setIsGoogleReady] = useState(false);
   const [isPromptingGoogle, setIsPromptingGoogle] = useState(false);
+  const [promptShown, setPromptShown] = React.useState(false);
   const navigate = useNavigate();
   const { login, getGoogleAccountHistory } = useAuth();
   const [googleAccounts, setGoogleAccounts] = useState(getGoogleAccountHistory());
@@ -81,11 +84,14 @@ export function Login() {
   };
 
   const handleGoogleSuccess = useCallback(async (credentialResponse: any) => {
-    setIsLoading(true);
+    console.log('Google success callback triggered');
+    setIsPromptingGoogle(false); // Stop prompting immediately
+    setPromptShown(false); // Reset prompt flag
     setError('');
 
     try {
       if (!credentialResponse?.credential) {
+        console.error('No credential in response');
         setError('Google credential tidak ditemukan. Silakan coba lagi.');
         setIsLoading(false);
         return;
@@ -96,14 +102,17 @@ export function Login() {
       console.log('API Base URL:', API_URL);
       console.log('Full endpoint:', googleEndpoint);
       
+      setIsLoading(true); // Set loading AFTER validation
       const response = await axios.post(googleEndpoint, {
         credential: credentialResponse.credential
       });
 
       if (response.data.success) {
+        setIsLoading(false);
         login(response.data.token, response.data.user);
         navigate('/');
       } else {
+        setIsLoading(false);
         setError(response.data.message || 'Login dengan Google gagal');
       }
     } catch (error: any) {
@@ -116,6 +125,7 @@ export function Login() {
         url: error.config?.url
       });
       
+      setIsLoading(false);
       let errorMessage = 'Gagal login Google';
       
       // Handle 404 errors specifically
@@ -154,9 +164,6 @@ export function Login() {
       }
       
       setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-      setIsPromptingGoogle(false);
     }
   }, [login, navigate]);
 
@@ -234,9 +241,24 @@ export function Login() {
     setGoogleAccounts(getGoogleAccountHistory());
   }, [getGoogleAccountHistory]);
 
+  // Cleanup hidden Google button container on unmount
+  useEffect(() => {
+    return () => {
+      const container = document.getElementById('google-signin-hidden-button');
+      if (container) {
+        document.body.removeChild(container);
+      }
+    };
+  }, []);
+
   const handleGoogleButtonClick = () => {
-    const preferredAccount = googleAccounts[0];
-    const isInitialized = initializeGoogleClient(preferredAccount?.email);
+    // Prevent multiple simultaneous requests
+    if (isPromptingGoogle || isLoading) {
+      console.log('Already prompting or loading');
+      return;
+    }
+
+    const isInitialized = initializeGoogleClient();
 
     if (!isInitialized) {
       setError('Google login belum siap. Mohon tunggu beberapa detik dan coba lagi.');
@@ -245,24 +267,57 @@ export function Login() {
 
     setIsPromptingGoogle(true);
     setError('');
+    setIsLoading(true);
 
     try {
-      window.google?.accounts?.id?.prompt((notification) => {
-        if (notification?.isDismissedMoment?.()) {
-          const reason = notification.getDismissedReason?.();
-          if (reason !== 'credential_returned') {
-            console.warn('Google prompt dismissed:', reason);
-            setIsPromptingGoogle(false);
+      console.log('Memicu Google Sign-In popup...');
+      
+      // Create a container for the hidden Google button if it doesn't exist
+      if (!hiddenButtonRef.current) {
+        const container = document.createElement('div');
+        container.id = 'google-signin-hidden-button';
+        container.style.display = 'none';
+        document.body.appendChild(container);
+        hiddenButtonRef.current = container;
+      }
+
+      // Render Google button into the hidden container
+      if (window.google?.accounts?.id?.renderButton && hiddenButtonRef.current) {
+        console.log('Rendering hidden Google button...');
+        window.google.accounts.id.renderButton(
+          hiddenButtonRef.current,
+          {
+            type: 'standard',
+            theme: 'outline',
+            size: 'large',
+            locale: 'id_ID'
           }
-        } else if (notification?.isNotDisplayedMoment?.()) {
-          console.warn('Google prompt not displayed:', notification.getNotDisplayedReason?.());
+        );
+
+        // Find and click the rendered button
+        const googleButton = hiddenButtonRef.current.querySelector('div[role="button"]') as HTMLElement;
+        if (googleButton) {
+          console.log('Clicking Google button...');
+          setTimeout(() => {
+            googleButton.click();
+          }, 100);
+        } else {
+          console.warn('Google button not found in container');
           setIsPromptingGoogle(false);
+          setIsLoading(false);
+          setError('Google Sign-In tidak tersedia. Silakan coba lagi.');
         }
-      });
-    } catch (promptError) {
-      console.error('Gagal membuka Google Sign-In prompt:', promptError);
-      setError('Tidak dapat membuka Google Sign-In. Pastikan popup tidak diblokir dan coba lagi.');
+      } else {
+        console.warn('renderButton not available');
+        setIsPromptingGoogle(false);
+        setIsLoading(false);
+        setError('Google Sign-In tidak tersedia di browser ini.');
+      }
+    } catch (error) {
+      console.error('Error membuka Google Sign-In:', error);
+      setError('Tidak dapat membuka Google Sign-In. Silakan coba lagi.');
       setIsPromptingGoogle(false);
+      setIsLoading(false);
     }
   };
 
