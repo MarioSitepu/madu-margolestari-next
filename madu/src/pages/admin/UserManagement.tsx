@@ -17,11 +17,85 @@ interface User {
   createdAt: string;
 }
 
+// Role Change Modal Component
+interface RoleModalProps {
+  isOpen: boolean;
+  userId: string;
+  userName: string;
+  currentRole: string;
+  onClose: () => void;
+  onConfirm: (role: string) => void;
+  isLoading: boolean;
+}
+
+const RoleChangeModal = ({ isOpen, userName, currentRole, onClose, onConfirm, isLoading }: RoleModalProps) => {
+  if (!isOpen) return null;
+
+  const newRole = currentRole === 'admin' ? 'user' : 'admin';
+  const actionText = currentRole === 'admin' ? 'menurunkan' : 'menaikkan';
+  const roleText = newRole === 'admin' ? 'Admin' : 'User Biasa';
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
+          <h3 className="text-lg font-bold text-white" style={{ fontFamily: 'Nort, sans-serif' }}>Ubah Role User</h3>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-6 space-y-4">
+          <p className="text-gray-700">
+            Apakah Anda yakin ingin <span className="font-bold">{actionText}</span> <span className="font-bold text-blue-600">{userName}</span> menjadi <span className="font-bold">{roleText}</span>?
+          </p>
+          <p className="text-sm text-gray-500">
+            {newRole === 'admin' 
+              ? 'User ini akan mendapatkan akses admin dashboard' 
+              : 'User ini akan kehilangan akses admin dashboard'}
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="bg-gray-50 px-6 py-4 flex gap-3 justify-end">
+          <button
+            onClick={onClose}
+            disabled={isLoading}
+            className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition-all duration-300 disabled:opacity-50"
+          >
+            Batal
+          </button>
+          <button
+            onClick={() => onConfirm(newRole)}
+            disabled={isLoading}
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
+          >
+            {isLoading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Mengubah...
+              </>
+            ) : (
+              'Ya, Ubah Role'
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export function UserManagement() {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+  const [roleModal, setRoleModal] = useState<{ isOpen: boolean; userId: string; userName: string; currentRole: string }>({
+    isOpen: false,
+    userId: '',
+    userName: '',
+    currentRole: ''
+  });
 
   useEffect(() => {
     if (!isLoading && (!user || user.role !== 'admin')) {
@@ -46,6 +120,53 @@ export function UserManagement() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const updateUserRole = async (userId: string, newRole: string) => {
+    try {
+      setUpdatingRole(userId);
+      const token = localStorage.getItem('token');
+      const response = await axios.put(
+        `${API_URL}/admin/users/${userId}/role`,
+        { role: newRole },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      if (response.data.success) {
+        // Update local state
+        setUsers(users.map(u => 
+          u._id === userId ? { ...u, role: newRole } : u
+        ));
+        setRoleModal({ isOpen: false, userId: '', userName: '', currentRole: '' });
+      }
+    } catch (error: any) {
+      console.error('Error updating user role:', error);
+      alert(error.response?.data?.message || 'Gagal mengubah role user');
+    } finally {
+      setUpdatingRole(null);
+    }
+  };
+
+  const openRoleModal = (userId: string, userName: string, currentRole: string) => {
+    // Prevent user from changing their own role
+    if (user?.id === userId) {
+      alert('Anda tidak bisa mengubah role Anda sendiri');
+      return;
+    }
+    setRoleModal({
+      isOpen: true,
+      userId,
+      userName,
+      currentRole
+    });
+  };
+
+  const closeRoleModal = () => {
+    setRoleModal({ isOpen: false, userId: '', userName: '', currentRole: '' });
   };
 
   if (loading) {
@@ -162,6 +283,26 @@ export function UserManagement() {
                       </span>
                     </div>
                   </div>
+                  <div className="flex gap-2 sm:gap-3">
+                    <button
+                      onClick={() => openRoleModal(userItem._id, userItem.name, userItem.role)}
+                      disabled={updatingRole === userItem._id || user?.id === userItem._id}
+                      className={`px-3 py-2 text-xs sm:text-sm rounded-lg font-semibold transition-all duration-300 whitespace-nowrap ${
+                        userItem.role === 'admin'
+                          ? 'bg-orange-100 hover:bg-orange-200 text-orange-700 disabled:opacity-50'
+                          : 'bg-green-100 hover:bg-green-200 text-green-700 disabled:opacity-50'
+                      }`}
+                    >
+                      {updatingRole === userItem._id ? (
+                        <span className="flex items-center gap-1">
+                          <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                          <span className="hidden sm:inline">Updating...</span>
+                        </span>
+                      ) : (
+                        userItem.role === 'admin' ? 'Jadikan User' : 'Jadikan Admin'
+                      )}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -169,6 +310,17 @@ export function UserManagement() {
         </Card>
       </div>
     </div>
+
+    {/* Role Change Modal */}
+    <RoleChangeModal
+      isOpen={roleModal.isOpen}
+      userId={roleModal.userId}
+      userName={roleModal.userName}
+      currentRole={roleModal.currentRole}
+      onClose={closeRoleModal}
+      onConfirm={(newRole) => updateUserRole(roleModal.userId, newRole)}
+      isLoading={updatingRole === roleModal.userId}
+    />
     </>
   );
 }
