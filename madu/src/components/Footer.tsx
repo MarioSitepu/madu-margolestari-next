@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import honeyLogo from "@/assets/1.svg";
 import honeycomb from "@/assets/2.png";
+
 export function Footer() {
   const [email, setEmail] = useState("");
   const handleSubscribe = (e: FormEvent<HTMLFormElement>) => {
@@ -57,7 +58,7 @@ export function Footer() {
                       <img
                         src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
                         alt=""
-                        className="w-4 h-4 mr-2 flex-shrink-0"
+                        className="w-4 h-4 mr-2 shrink-0"
                       />
                       <input
                         type="email"
@@ -205,7 +206,7 @@ export function Footer() {
                   <img
                     src="https://uploadthingy.s3.us-west-1.amazonaws.com/qtzmAPNGY8KKXCxbsKaGgN/239e916ef62ae36e3c81fd165260edd7033b0d3d.svg"
                     alt=""
-                    className="w-4 h-4 mr-2 flex-shrink-0"
+                    className="w-4 h-4 mr-2 shrink-0"
                   />
                   <span className="break-all">081262143242412</span>
                 </li>
@@ -213,7 +214,7 @@ export function Footer() {
                   <img
                     src="https://uploadthingy.s3.us-west-1.amazonaws.com/qsy7F41wDUnmVMRxW8eD61/dbdaf6bbb07247b278f897c9f4cb0dc4674a44a9.svg"
                     alt=""
-                    className="w-4 h-4 mr-2 flex-shrink-0"
+                    className="w-4 h-4 mr-2 shrink-0"
                   />
                   <span className="break-all">Support@dfwff.com</span>
                 </li>
@@ -230,7 +231,7 @@ export function Footer() {
               <img
                 src="https://uploadthingy.s3.us-west-1.amazonaws.com/1wBeAqm1RZJaTFgKYstpym/28269401c235d5b35d7e1ba2526ba68897b32d3a.svg"
                 alt=""
-                className="w-4 h-4 mr-2 flex-shrink-0"
+                className="w-4 h-4 mr-2 shrink-0"
               />
               <span className="text-center sm:text-left">Copyright By CodeUI.All right Reserved</span>
             </div>

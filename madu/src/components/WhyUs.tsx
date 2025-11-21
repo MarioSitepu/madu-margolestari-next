@@ -4,9 +4,19 @@ export function WhyUs() {
       <div className="container mx-auto px-4 md:px-8 pb-4 md:pb-6">
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-center mb-10 md:mb-12">
           Kenapa Harus Madu{' '}
-          <span className="text-[#00b8a9] relative">
+          <span 
+            className="text-[#00b8a9] relative inline-block"
+            style={{ fontFamily: 'Nort, sans-serif' }}
+          >
             Margo Lestari
-            <span className="absolute bottom-0 left-0 w-full h-1 bg-[#00b8a9]"></span>
+            <span 
+              className="absolute left-0 bg-black"
+              style={{ 
+                width: '100%', 
+                height: 'clamp(8px, 0.76vw, 11px)',
+                bottom: 'clamp(-8px, -0.76vw, -11px)'
+              }}
+            ></span>
           </span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 max-w-5xl mx-auto">

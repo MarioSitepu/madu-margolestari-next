@@ -1,8 +1,11 @@
 import { ArrowRight } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import headerImage from "@/assets/header-image-1a216d.png";
+
 export function Documentation() {
   return <section className="w-full bg-white py-0 relative">
       <div className="relative w-full h-[500px] md:h-[600px]">
-        <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?w=1600&h=800&fit=crop" alt="Peternak lebah memeriksa sarang" className="w-full h-full object-cover" />
+        <img src={headerImage} alt="Peternak lebah memeriksa sarang" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/30"></div>
         <div className="absolute inset-0 flex items-center">
           <div className="container mx-auto px-4 md:px-8">
@@ -13,15 +16,24 @@ export function Documentation() {
                 Pengerjaan Dan
                 <br />
                 Artikel{' '}
-                <span className="text-[#ffde7d] relative">
+                <span className="text-[#ffde7d]">
                   Kami
-                  <span className="absolute bottom-0 left-0 w-full h-1 bg-[#ffde7d]"></span>
                 </span>
               </h2>
-              <button className="bg-white text-black px-8 py-3 rounded-lg flex items-center hover:bg-gray-100 transition-all duration-300 font-bold text-sm shadow-xl">
-                <span className="mr-2">Kunjungi Sekarang</span>
-                <ArrowRight size={20} />
-              </button>
+              <div className="w-full md:w-[240px] h-[47px]">
+                <Button
+                  className="w-full h-full bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none flex items-center justify-center gap-2 px-8 whitespace-nowrap"
+                  style={{ 
+                    fontFamily: 'Nort, sans-serif', 
+                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
+                    fontSize: '14px',
+                    lineHeight: '1.342'
+                  }}
+                >
+                  <span>Kunjungi Sekarang</span>
+                  <ArrowRight className="w-[9.92px] h-[10px]" strokeWidth={2} />
+                </Button>
+              </div>
             </div>
           </div>
         </div>

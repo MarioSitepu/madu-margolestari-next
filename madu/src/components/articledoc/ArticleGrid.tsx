@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ArticleCard } from './ArticleCard';
+import defaultArticleImage from "@/assets/marles-honey.png";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -81,7 +82,7 @@ export function ArticleGrid() {
             <ArticleCard 
               article={{
                 id: article._id,
-                image: article.image || article.backgroundImage || "https://images.unsplash.com/photo-1587049633312-d628ae50a8ae?w=800&h=600&fit=crop&crop=center",
+                image: article.image || article.backgroundImage || defaultArticleImage,
                 date: formatDate(article.createdAt),
                 participants: article.views || 0,
                 title: article.title,

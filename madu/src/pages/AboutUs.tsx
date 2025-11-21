@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { MapPin, Phone, Mail, Clock, Award, Users, Heart, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Footer } from "@/components/Footer";
+import marlesHoney from "@/assets/marles-honey.png";
+import honeyBg from "@/assets/honey-bg-6badc9.png";
 
 export const AboutUs = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -66,7 +70,7 @@ export const AboutUs = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900">
       {/* Hero Section with Honey Image */}
-      <section className="relative min-h-[70vh] overflow-hidden bg-linear-to-br from-[#f4d58d] to-[#ffde7d] text-black lg:min-h-[80vh]">
+      <section className="relative min-h-[70vh] overflow-hidden bg-[#ffde7d] text-black lg:min-h-[80vh]">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div
@@ -92,7 +96,10 @@ export const AboutUs = () => {
               </Badge>
 
               <div>
-                <h1 className="font-display text-4xl font-black leading-tight text-black sm:text-5xl lg:mb-6 lg:text-7xl">
+                <h1 
+                  className="text-4xl font-black leading-tight text-black sm:text-5xl lg:mb-6 lg:text-7xl"
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
                   Tentang{" "}
                   <span className="relative inline-block">
                     <span className="relative z-10 text-[#00b8a9]">Kami</span>
@@ -115,36 +122,40 @@ export const AboutUs = () => {
               </div>
 
               <div className="flex flex-col gap-4 pt-4 sm:flex-row">
-                <Button className="rounded-xl bg-black px-8 py-6 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-black/80" size="lg">
+                <Button 
+                  className="rounded-xl bg-[#00b8a9] px-8 py-6 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#009a8d]" 
+                  size="lg"
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
                   Hubungi Kami
                 </Button>
-                <Button
-                  className="rounded-xl border border-black/30 bg-white px-8 py-6 text-base font-semibold text-black transition-all duration-300 hover:bg-black/5"
-                  size="lg"
-                  variant="outline"
-                >
-                  Lihat Produk
-                </Button>
+                <Link to="/product">
+                  <Button
+                    className="rounded-xl border-2 border-[#00b8a9] bg-white px-8 py-6 text-base font-semibold text-[#00b8a9] transition-all duration-300 hover:bg-[#00b8a9]/10 hover:border-[#009a8d]"
+                    size="lg"
+                    variant="outline"
+                    style={{ fontFamily: 'Nort, sans-serif' }}
+                  >
+                    Lihat Produk
+                  </Button>
+                </Link>
               </div>
             </div>
 
-            {/* Right Content - Honey Image Placeholder */}
+            {/* Right Content - Honey Image */}
             <div
               className={`relative transition-all duration-1000 delay-200 ${
                 isVisible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
               }`}
             >
               <div className="relative aspect-square overflow-hidden rounded-3xl border border-white/40 bg-white/40 shadow-2xl backdrop-blur lg:aspect-4/5">
-                {/* Honey drip effect - using gradient to simulate honey */}
-                <div className="absolute inset-0 bg-linear-to-b from-[#ffde7d] via-[#f4d58d] to-[#f1bc64] opacity-90" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="space-y-4 p-8 text-center">
-                    <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-white/40 backdrop-blur-sm">
-                      <Sparkles className="h-12 w-12 text-[#00b8a9]" />
-                    </div>
-                    <p className="text-lg font-medium text-black/80">Madu Murni Berkualitas</p>
-                  </div>
-                </div>
+                <img 
+                  src={marlesHoney} 
+                  alt="Madu Margo Lestari" 
+                  className="w-full h-full object-cover"
+                />
+                {/* Overlay gradient untuk efek */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20" />
                 {/* Decorative elements */}
                 <div className="absolute right-10 top-10 h-20 w-20 animate-float rounded-full bg-white/40 blur-2xl" />
                 <div
@@ -176,10 +187,18 @@ export const AboutUs = () => {
                 key={index}
                 className="border border-[#00b8a9]/20 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-8"
               >
-                <div className="mb-2 text-3xl font-display font-black text-[#00b8a9] lg:text-5xl">
+                <div 
+                  className="mb-2 text-3xl font-black text-[#00b8a9] lg:text-5xl"
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
                   {stat.value}
                 </div>
-                <div className="text-sm font-medium text-black/60 lg:text-base">{stat.label}</div>
+                <div 
+                  className="text-sm font-medium text-gray-700 lg:text-base"
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
+                  {stat.label}
+                </div>
               </Card>
             ))}
           </div>
@@ -187,38 +206,42 @@ export const AboutUs = () => {
       </section>
 
       {/* Features Section */}
-      <section className="bg-linear-to-b from-white to-[#fff5d6] py-16 lg:py-24">
+      <section className="bg-[#ffde7d] py-16 lg:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center lg:mb-16">
-            <Badge className="mb-4 border-[#00b8a9]/40 bg-white/70 px-4 py-2 text-[#00b8a9] shadow">
-              Keunggulan Kami
-            </Badge>
-            <h2 className="font-display text-3xl font-bold text-black sm:text-4xl lg:text-5xl">
-              Mengapa Memilih <span className="text-[#00b8a9]">Kami?</span>
+            <h2 
+              className="text-4xl md:text-5xl lg:text-6xl font-black text-center mb-10 md:mb-12"
+              style={{ fontFamily: 'Nort, sans-serif' }}
+            >
+              Mengapa Memilih{" "}
+              <span className="text-[#00b8a9] relative">
+                Kami?
+                <span className="absolute bottom-0 left-0 w-full h-1 bg-[#00b8a9]"></span>
+              </span>
             </h2>
-            <p className="mx-auto max-w-2xl text-base text-black/70 lg:text-lg">
-              Sebagai UMKM yang berbasis di lokasi strategis, kami bekerja sama dengan peternak lebah lokal
-            </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 max-w-6xl mx-auto">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card
-                  key={index}
-                  className="group border border-[#00b8a9]/20 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl lg:p-8"
-                >
-                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#00b8a9] shadow-md transition-transform duration-300 group-hover:scale-110 lg:mb-6 lg:h-16 lg:w-16">
-                    <Icon className="h-7 w-7 text-white lg:h-8 lg:w-8" />
+                <div key={index} className="flex flex-col items-center text-center">
+                  <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center mb-4 md:mb-5 shadow-xl border-4 border-white">
+                    <Icon size={56} stroke="#00b8a9" strokeWidth={2.5} />
                   </div>
-                  <h3 className="font-display text-lg font-bold text-black lg:text-xl">
+                  <h3 
+                    className="text-xl md:text-2xl font-black mb-2 md:mb-3"
+                    style={{ fontFamily: 'Nort, sans-serif' }}
+                  >
                     {feature.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-black/65 lg:text-base">
+                  <p 
+                    className="text-xs md:text-sm leading-relaxed text-gray-800"
+                    style={{ fontFamily: 'Nort, sans-serif' }}
+                  >
                     {feature.description}
                   </p>
-                </Card>
+                </div>
               );
             })}
           </div>
@@ -226,24 +249,31 @@ export const AboutUs = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="relative overflow-hidden bg-[#fff5d6] py-16 lg:py-24">
-        {/* Decorative Background */}
-        <div className="absolute right-10 top-10 h-64 w-64 rounded-full bg-white/60 blur-3xl" />
-        <div className="absolute bottom-10 left-10 h-96 w-96 rounded-full bg-[#f4d58d]/40 blur-3xl" />
-
-        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 md:py-24">
+        {/* Background image */}
+        <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
+          <img src={honeyBg} alt="Honey drip background" className="object-cover w-full h-full opacity-30" />
+        </div>
+        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="mb-12 text-center lg:mb-16">
-            <Badge className="mb-4 border-[#ffde7d]/50 bg-white/70 px-4 py-2 text-[#00b8a9] shadow">
-              Testimonial
-            </Badge>
-            <h2 className="font-display text-3xl font-bold text-black sm:text-4xl lg:text-5xl">
-              Apa Kata{" "}
-              <span className="relative inline-block">
-                <span className="relative z-10 text-[#00b8a9]">Mereka?</span>
-                <span className="absolute bottom-1 left-0 h-2 w-full bg-[#ffde7d]/70" />
-              </span>
-            </h2>
-            <p className="mx-auto max-w-2xl text-base text-black/70 lg:text-lg">
+            <div className="flex flex-wrap justify-center items-baseline mb-8">
+              <h2 
+                className="text-4xl md:text-5xl font-bold text-white mr-3"
+                style={{ fontFamily: 'Nort, sans-serif' }}
+              >
+                Apa Kata
+              </h2>
+              <div className="flex flex-col">
+                <h2 
+                  className="text-4xl md:text-5xl font-bold text-[#ffde7d]"
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
+                  Mereka?
+                </h2>
+                <div className="h-1 bg-white w-full mt-2"></div>
+              </div>
+            </div>
+            <p className="mx-auto max-w-2xl text-base text-white/90 lg:text-lg">
               Kepuasan pelanggan adalah prioritas utama kami
             </p>
           </div>
@@ -252,7 +282,7 @@ export const AboutUs = () => {
             {testimonials.map((testimonial, index) => (
               <Card
                 key={index}
-                className="border border-[#00b8a9]/15 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl lg:p-8"
+                className="border border-white/20 bg-white/95 backdrop-blur-sm p-6 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl lg:p-8"
               >
                 <div className="mb-4 flex gap-1">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
@@ -261,7 +291,10 @@ export const AboutUs = () => {
                     </svg>
                   ))}
                 </div>
-                <p className="mb-6 text-sm italic leading-relaxed text-black/65 lg:text-base">
+                <p 
+                  className="mb-6 text-sm italic leading-relaxed text-gray-700 lg:text-base"
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
                   "{testimonial.quote}"
                 </p>
                 <div className="flex items-center gap-3">
@@ -269,8 +302,18 @@ export const AboutUs = () => {
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
-                    <div className="font-semibold text-black">{testimonial.name}</div>
-                    <div className="text-sm text-black/60">{testimonial.role}</div>
+                    <div 
+                      className="font-semibold text-gray-900"
+                      style={{ fontFamily: 'Nort, sans-serif' }}
+                    >
+                      {testimonial.name}
+                    </div>
+                    <div 
+                      className="text-sm text-gray-600"
+                      style={{ fontFamily: 'Nort, sans-serif' }}
+                    >
+                      {testimonial.role}
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -280,15 +323,19 @@ export const AboutUs = () => {
       </section>
 
       {/* Visit Us Section */}
-      <section className="bg-linear-to-br from-[#00b8a9] via-[#00a399] to-[#007f7a] py-16 text-white lg:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 text-white lg:py-24">
+        {/* Background image */}
+        <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
+          <img src={honeyBg} alt="Honey drip background" className="object-cover w-full h-full opacity-20" />
+        </div>
+        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
             <div className="space-y-6 lg:space-y-8">
               <div>
-                <Badge className="mb-4 border-white/30 bg-white/20 px-4 py-2 text-white">
-                  Lokasi Kami
-                </Badge>
-                <h2 className="font-display text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+                <h2 
+                  className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl"
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
                   Kunjungi{" "}
                   <span className="relative inline-block">
                     <span className="relative z-10 text-[#ffde7d]">Kami</span>
@@ -347,13 +394,19 @@ export const AboutUs = () => {
               <div className="mb-6 flex aspect-video items-center justify-center rounded-xl bg-linear-to-br from-[#ffde7d] to-[#f4d58d]">
                 <MapPin className="h-16 w-16 text-[#00b8a9]" />
               </div>
-              <h3 className="font-display text-xl font-bold text-black lg:text-2xl">
+              <h3 
+                className="text-xl font-bold text-black lg:text-2xl"
+                style={{ fontFamily: 'Nort, sans-serif' }}
+              >
                 Temukan Lokasi Kami
               </h3>
               <p className="mb-6 text-sm text-black/65 lg:text-base">
                 Kunjungi farm kami dan lihat langsung proses pembuatan madu berkualitas tinggi
               </p>
-              <Button className="w-full rounded-xl bg-[#00b8a9] py-6 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#009c91]">
+              <Button 
+                className="w-full rounded-xl bg-[#00b8a9] py-6 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#009a8d]"
+                style={{ fontFamily: 'Nort, sans-serif' }}
+              >
                 Buka di Google Maps
               </Button>
             </Card>
@@ -362,47 +415,7 @@ export const AboutUs = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#00b8a9] py-12 text-white lg:py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h3 className="font-display text-2xl font-bold lg:text-3xl">
-              UMKM <span className="text-[#ffde7d]">Lebah Madu</span>
-            </h3>
-            <p className="mx-auto mb-8 max-w-2xl text-white/80">
-              Menyediakan madu murni berkualitas tinggi untuk kesehatan keluarga Indonesia
-            </p>
-            <div className="mb-8 flex justify-center gap-4">
-              <a
-                href="#"
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 transition-colors duration-300 hover:bg-[#ffde7d]"
-              >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                </svg>
-              </a>
-              <a
-                href="#"
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 transition-colors duration-300 hover:bg-[#ffde7d]"
-              >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                </svg>
-              </a>
-              <a
-                href="#"
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 transition-colors duration-300 hover:bg-[#ffde7d]"
-              >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-                </svg>
-              </a>
-            </div>
-            <div className="border-t border-white/30 pt-8">
-              <p className="text-sm text-white/70">© 2024 UMKM Lebah Madu. All rights reserved.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

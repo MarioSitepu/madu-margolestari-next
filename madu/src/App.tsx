@@ -3,6 +3,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import { AuthProvider } from "@/context/AuthContext";
 import { Navigation } from "@/components/Navigation";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import Home from "@/pages/Home";
 import { AboutUs } from "@/pages/AboutUs";
 import ArticleDoc from "@/pages/ArticleDoc";
@@ -30,6 +31,7 @@ export function App() {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <AuthProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <div className="flex min-h-screen w-full flex-col">
             <Routes>
               {/* Auth routes without navigation */}

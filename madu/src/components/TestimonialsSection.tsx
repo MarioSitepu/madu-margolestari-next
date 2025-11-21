@@ -1,4 +1,6 @@
 import { TestimonialCard } from './TestimonialCard';
+import honeyBg from "@/assets/honey-bg-6badc9.png";
+
 export const TestimonialsSection = () => {
   const testimonials = [{
     id: 1,
@@ -25,7 +27,7 @@ export const TestimonialsSection = () => {
   return <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 md:py-24">
       {/* Background image */}
       <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
-        <img src="/33a48424309f25d4655f436f9680723a63d5bbc4.png" alt="Honey drip background" className="object-cover w-full h-full" />
+        <img src={honeyBg} alt="Honey drip background" className="object-cover w-full h-full opacity-40" />
       </div>
       <div className="container mx-auto px-4 relative z-10">
         {/* Section title */}

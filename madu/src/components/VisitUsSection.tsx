@@ -1,3 +1,6 @@
+import { MapPin } from "lucide-react";
+import headerImage from "@/assets/header-image-1a216d.png";
+
 export const VisitUsSection = () => {
   return <section className="w-full bg-[#ffde7d] py-16 md:py-24">
       <div className="container mx-auto px-4">
@@ -21,10 +24,19 @@ export const VisitUsSection = () => {
               sarangnya
             </p>
           </div>
-          {/* Right side - Map placeholder */}
+          {/* Right side - Map */}
           <div className="w-full md:w-1/2">
-            <div className="border-4 border-[#00b8a9] rounded-lg h-64 md:h-80 bg-[#ffde7d]">
-              {/* This is a placeholder for a map or additional content */}
+            <div className="border-4 border-[#00b8a9] rounded-lg h-64 md:h-80 bg-[#ffde7d] relative overflow-hidden">
+              <img 
+                src={headerImage} 
+                alt="Lokasi Madu Margo Lestari" 
+                className="w-full h-full object-cover opacity-60"
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="bg-white/90 backdrop-blur-sm rounded-full p-6 shadow-lg">
+                  <MapPin className="w-12 h-12 text-[#00b8a9]" />
+                </div>
+              </div>
             </div>
           </div>
         </div>

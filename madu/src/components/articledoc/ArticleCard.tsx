@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { CalendarIcon, UserIcon, UserCircleIcon, ArrowRightIcon, Tag } from 'lucide-react';
+import defaultArticleImage from "@/assets/marles-honey.png";
 
 interface ArticleData {
   id: string | number;
@@ -22,7 +23,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
   // Default data if no article prop is provided
   const defaultArticle: ArticleData = {
     id: 1,
-    image: "https://images.unsplash.com/photo-1587049633312-d628ae50a8ae?w=800&h=600&fit=crop&crop=center",
+    image: defaultArticleImage,
     date: "26 Desember 2024",
     participants: 60,
     title: "Pengambilan Madu",

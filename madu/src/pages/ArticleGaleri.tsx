@@ -697,7 +697,7 @@ export function ArticleGaleri() {
                 >
                   <div className="overflow-hidden">
                     <img
-                      src={relatedArticle.image || "https://images.unsplash.com/photo-1587049633312-d628ae50a8ae?w=800&h=600&fit=crop&crop=center"}
+                      src={relatedArticle.image || marlesHoney}
                       alt={relatedArticle.title}
                       className="w-full h-44 object-cover"
                     />
