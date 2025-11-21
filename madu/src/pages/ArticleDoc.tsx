@@ -4,6 +4,7 @@ import { SearchSection } from '@/components/articledoc/SearchSection'
 import { ArticleGrid } from '@/components/articledoc/ArticleGrid'
 import { Gallery } from '@/components/articledoc/Gallery'
 import { SEO } from '@/components/SEO'
+import { ScrollToTopButton } from '@/components/ScrollToTopButton'
 
 export function ArticleDoc() {
   const [isVisible, setIsVisible] = useState(false);
@@ -33,6 +34,7 @@ export function ArticleDoc() {
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-400'}>
         <Gallery />
       </div>
+      <ScrollToTopButton />
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Footer } from "@/components/Footer";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import marlesHoney from "@/assets/marles-honey.png";
 import { API_URL } from '@/lib/api';
 
@@ -779,6 +780,7 @@ export function ArticleGaleri() {
         </div>
       </section>
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 }

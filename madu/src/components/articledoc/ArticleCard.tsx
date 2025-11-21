@@ -37,7 +37,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
     navigate(`/article-galeri/${articleData.id}`);
   };
 
-  return <div className="bg-[#00b8a9] border-[6px] border-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+  return <div className="bg-[#00b8a9] border-[6px] border-[#ffde7d] rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
       <div className="h-56 relative overflow-hidden">
         <img 
           src={articleData.image} 
@@ -65,28 +65,28 @@ export function ArticleCard({ article }: ArticleCardProps) {
             {articleData.tags.slice(0, 3).map((tag, index) => (
               <span
                 key={index}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-white/20 text-white text-xs rounded-full"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-[#ffde7d]/30 text-white text-xs rounded-full"
               >
                 <Tag className="w-3 h-3" />
                 {tag}
               </span>
             ))}
             {articleData.tags.length > 3 && (
-              <span className="inline-flex items-center px-2 py-1 bg-white/20 text-white text-xs rounded-full">
+              <span className="inline-flex items-center px-2 py-1 bg-[#ffde7d]/30 text-white text-xs rounded-full">
                 +{articleData.tags.length - 3}
               </span>
             )}
           </div>
         )}
 
-        <div className="flex justify-between items-center pt-4 border-t border-white/20">
+        <div className="flex justify-between items-center pt-4 border-t border-[#ffde7d]/30">
           <div className="flex items-center">
             <UserCircleIcon className="h-5 w-5 mr-2" />
             <span className="text-sm font-semibold text-[#ffde7d]">{articleData.author}</span>
           </div>
           <button 
             onClick={handleLihatGaleri}
-            className="bg-white text-[#00b8a9] text-sm font-semibold py-2.5 px-5 rounded-lg shadow-md flex items-center gap-2 hover:bg-[#ffde7d] hover:text-[#00b8a9] transition-all duration-300 hover:scale-105"
+            className="bg-[#ffde7d] text-[#00b8a9] text-sm font-semibold py-2.5 px-5 rounded-lg shadow-md flex items-center gap-2 hover:bg-[#f5c869] hover:text-[#00b8a9] transition-all duration-300 hover:scale-105"
           >
             <span>Lihat Galeri</span>
             <ArrowRightIcon className="h-4 w-4" />

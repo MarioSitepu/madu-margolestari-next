@@ -7,6 +7,7 @@ import { Documentation } from "@/components/Documentation";
 import { WhyUs } from "@/components/WhyUs";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 
 export function Home() {
   const [isVisible, setIsVisible] = useState(false);
@@ -44,6 +45,7 @@ export function Home() {
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-700'}>
         <Footer />
       </div>
+      <ScrollToTopButton />
     </div>
   );
 }

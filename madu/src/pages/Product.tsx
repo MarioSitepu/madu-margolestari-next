@@ -3,6 +3,7 @@ import { ArrowRight, ShoppingCart } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/SEO";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import productBottlesHero from "@/assets/product-bottles-hero.png";
 import productBottleCard from "@/assets/product-bottle-card.png";
 import axios from "axios";
@@ -243,6 +244,7 @@ export function ProductPage() {
 
       {/* Footer */}
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 }
