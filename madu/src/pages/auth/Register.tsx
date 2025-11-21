@@ -136,8 +136,8 @@ export function Register() {
     }
   };
 
-  const handleGoogleError = (error: any) => {
-    console.error('Google OAuth error:', error);
+  const handleGoogleError = () => {
+    console.error('Google OAuth error occurred');
     setError('Login dengan Google gagal. Pastikan popup tidak diblokir dan coba lagi.');
   };
 
