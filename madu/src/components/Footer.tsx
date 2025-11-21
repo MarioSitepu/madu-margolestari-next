@@ -236,7 +236,7 @@ export function Footer() {
                 <li className="flex items-start gap-2">
                   <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
                   <span className="break-all">
-                    Jl. Lebah Madu No. 123, Kota Bandung, Jawa Barat 40123
+                    Margo Lestari, Kec. Jati Agung, Kabupaten Lampung Selatan, Lampung 35365
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
@@ -254,35 +254,6 @@ export function Footer() {
                 <li className="flex items-center gap-2">
                   <Clock className="w-4 h-4 shrink-0" />
                   <span>Senin - Sabtu: 08:00 - 17:00 WIB</span>
-                </li>
-                <li className="flex items-center gap-3 pt-2">
-                  <a 
-                    href="https://www.facebook.com/madumargolestari" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-[#ffde7d] transition-colors"
-                    aria-label="Facebook"
-                  >
-                    <Facebook className="w-5 h-5" />
-                  </a>
-                  <a 
-                    href="https://www.instagram.com/madumargolestari" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-[#ffde7d] transition-colors"
-                    aria-label="Instagram"
-                  >
-                    <Instagram className="w-5 h-5" />
-                  </a>
-                  <a 
-                    href="https://twitter.com/madumargolestari" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-[#ffde7d] transition-colors"
-                    aria-label="Twitter"
-                  >
-                    <Twitter className="w-5 h-5" />
-                  </a>
                 </li>
               </ul>
             </div>

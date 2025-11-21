@@ -26,7 +26,8 @@
     "mongoose": "^8.6.0",
     "morgan": "^1.10.0",
     "multer": "^2.0.2",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "sitemap": "^9.0.0"
   },
   "devDependencies": {
     "eslint": "^9.12.0",

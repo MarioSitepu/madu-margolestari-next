@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ArrowRight, ShoppingCart } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { SEO } from "@/components/SEO";
 import productBottlesHero from "@/assets/product-bottles-hero.png";
 import productBottleCard from "@/assets/product-bottle-card.png";
 import axios from "axios";
@@ -50,6 +51,12 @@ export function ProductPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO 
+        title="Produk Madu Margo Lestari - Beli Madu Murni Online"
+        description="Jelajahi koleksi produk madu murni berkualitas tinggi dari Madu Margo Lestari. Dapatkan madu asli 100% tanpa campuran, dipanen langsung dari peternakan lebah terbaik. Pesan sekarang dan nikmati manfaat kesehatan yang luar biasa."
+        keywords="produk madu, beli madu online, madu murni lampung, madu asli lampung selatan, harga madu, jual madu murni, madu kesehatan, madu organik indonesia, madu margo lestari produk, madu jati agung"
+        url="https://madumargolestari.vercel.app/product"
+      />
       {/* Bottom CTA Section - Teal Background */}
       <section className="bg-[#00b8a9] relative w-full min-h-[498px] py-8 md:py-0">
         <div className="relative max-w-[1440px] mx-auto px-4 md:px-0">

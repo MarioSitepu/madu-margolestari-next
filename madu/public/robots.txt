@@ -1,5 +1,25 @@
+# Robots.txt untuk Madu Margo Lestari
+# Optimized for SEO
+
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /dashboard
+Disallow: /settings
 
+# Allow Google Bot full access
+User-agent: Googlebot
+Allow: /
+
+# Allow Bing Bot
+User-agent: Bingbot
+Allow: /
+
+# Sitemap location
 Sitemap: https://madumargolestari.vercel.app/sitemap.xml
+
+# Crawl delay (optional, helps prevent server overload)
+Crawl-delay: 1
 

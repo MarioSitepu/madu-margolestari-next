@@ -9,6 +9,7 @@ import articleRouter from './routes/articles.js';
 import commentRouter from './routes/comments.js';
 import adminRouter from './routes/admin.js';
 import galleryRouter from './routes/gallery.js';
+import sitemapRouter from './routes/sitemap.js';
 
 const app = express();
 
@@ -79,6 +80,7 @@ app.use('/api/articles', articleRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/gallery', galleryRouter);
+app.use('/', sitemapRouter); // Sitemap at root level /sitemap.xml
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Endpoint tidak ditemukan' });

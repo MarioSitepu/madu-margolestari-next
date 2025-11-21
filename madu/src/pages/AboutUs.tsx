@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 import marlesHoney from "@/assets/marles-honey.png";
 import honeyBg from "@/assets/honey-bg-6badc9.png";
 
@@ -68,6 +69,12 @@ export const AboutUs = () => {
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
+      <SEO 
+        title="Tentang Kami - Madu Margo Lestari"
+        description="Kenali Madu Margo Lestari - UMKM madu terpercaya dengan lebih dari 10 tahun pengalaman. Kami menyediakan madu murni 100% asli dari peternakan lebah terbaik di Margo Lestari, Jati Agung, Lampung Selatan. Komitmen kami adalah memberikan produk berkualitas tinggi dengan standar kebersihan ketat."
+        keywords="tentang madu margo lestari, profil perusahaan madu, sejarah madu margo lestari, visi misi madu, umkm madu lampung, peternakan lebah lampung selatan, madu jati agung"
+        url="https://madumargolestari.vercel.app/about"
+      />
       {/* Hero Section with Honey Image */}
       <section className="relative min-h-[50vh] overflow-hidden bg-[#ffde7d] text-black lg:min-h-[60vh]">
         {/* Background Pattern */}
@@ -380,7 +387,7 @@ export const AboutUs = () => {
                   </div>
                   <div>
                     <div className="mb-1 font-semibold text-white">Alamat</div>
-                    <div className="text-sm text-white">Jl. Lebah Madu No. 123, Kota Bandung, Jawa Barat 40123</div>
+                    <div className="text-sm text-white">Margo Lestari, Kec. Jati Agung, Kabupaten Lampung Selatan, Lampung 35365</div>
                   </div>
                 </div>
 
