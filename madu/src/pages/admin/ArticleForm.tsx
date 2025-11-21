@@ -87,6 +87,11 @@ export function ArticleForm() {
     isOpen: false,
     message: ''
   });
+  const [submitSuccessModal, setSubmitSuccessModal] = useState<{ isOpen: boolean; message: string }>({
+    isOpen: false,
+    message: ''
+  });
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     if (!isLoading && (!user || user.role !== 'admin')) {
@@ -182,6 +187,38 @@ export function ArticleForm() {
     setSuccessModal({ isOpen: false, message: '' });
   };
 
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (!file.type.startsWith('image/')) {
+        alert('File harus berupa gambar');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Ukuran file maksimal 10MB');
+        return;
+      }
+      handleImageUpload(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -208,20 +245,29 @@ export function ArticleForm() {
             Authorization: `Bearer ${token}`
           }
         });
-        alert('Artikel berhasil diupdate');
+        setSubmitSuccessModal({ 
+          isOpen: true, 
+          message: 'Artikel berhasil diupdate!' 
+        });
       } else {
         await axios.post(`${API_URL}/articles`, data, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        alert('Artikel berhasil dibuat');
+        setSubmitSuccessModal({ 
+          isOpen: true, 
+          message: 'Artikel berhasil dibuat!' 
+        });
       }
-      navigate('/admin/articles');
+
+      // Navigate after modal closes
+      setTimeout(() => {
+        navigate('/admin/articles');
+      }, 1500);
     } catch (error: any) {
       console.error('Error saving article:', error);
       alert(error.response?.data?.message || 'Gagal menyimpan artikel');
-    } finally {
       setLoading(false);
     }
   };
@@ -362,7 +408,7 @@ export function ArticleForm() {
               </p>
               <div className="space-y-4">
                 {imagePreview ? (
-                  <div className="relative group">
+                  <div className="relative group inline-block">
                     <img
                       src={imagePreview}
                       alt="Preview"
@@ -371,15 +417,25 @@ export function ArticleForm() {
                     <button
                       type="button"
                       onClick={removeImage}
-                      className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300 hover:scale-110 shadow-lg"
+                      className="absolute -top-3 -right-3 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300 hover:scale-110 shadow-lg"
                     >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-all duration-300 hover:border-[#00b8a9] hover:bg-[#00b8a9]/5">
+                  <div 
+                    className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-300 ${
+                      isDragging
+                        ? 'border-[#00b8a9] bg-[#00b8a9]/10 scale-105'
+                        : 'border-gray-300 hover:border-[#00b8a9] hover:bg-[#00b8a9]/5'
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                  >
                     <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600 mb-4">Belum ada gambar</p>
+                    <p className="text-gray-600 mb-2">Drag and drop gambar di sini</p>
+                    <p className="text-xs text-gray-500">atau gunakan tombol di bawah</p>
                   </div>
                 )}
                 <div className="flex gap-4 flex-col sm:flex-row">
@@ -468,6 +524,14 @@ export function ArticleForm() {
         <SuccessModal
           message={successModal.message}
           onClose={closeSuccessModal}
+        />
+      )}
+
+      {/* Submit Success Modal */}
+      {submitSuccessModal.isOpen && (
+        <SuccessModal
+          message={submitSuccessModal.message}
+          onClose={() => setSubmitSuccessModal({ isOpen: false, message: '' })}
         />
       )}
     </>
