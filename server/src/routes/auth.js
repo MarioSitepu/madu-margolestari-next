@@ -17,16 +17,66 @@ if (!process.env.GOOGLE_CLIENT_ID) {
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Configure Nodemailer
-const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE || 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
-});
+let transporter;
 
-// Verify transporter connection
-if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+// Initialize email transporter
+const initializeTransporter = async () => {
+  if (process.env.EMAIL_SERVICE === 'ethereal') {
+    // Generate Ethereal test account automatically
+    try {
+      const testAccount = await nodemailer.createTestAccount();
+      transporter = nodemailer.createTransport({
+        host: testAccount.smtp.host,
+        port: testAccount.smtp.port,
+        secure: testAccount.smtp.secure,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass
+        }
+      });
+      console.log('✓ Ethereal Email test account created');
+      console.log(`📧 Test email account: ${testAccount.user}`);
+      console.log(`📧 Preview URL format: https://ethereal.email/messages`);
+    } catch (error) {
+      console.error('Failed to create Ethereal account:', error.message);
+      transporter = nodemailer.createTransport({
+        streamTransport: true,
+        newline: 'unix'
+      });
+    }
+  } else if (process.env.EMAIL_SMTP_HOST && process.env.EMAIL_SMTP_PORT) {
+    // Use custom SMTP
+    const auth = process.env.EMAIL_USER && process.env.EMAIL_PASSWORD ? {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
+    } : undefined;
+
+    transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_SMTP_HOST,
+      port: parseInt(process.env.EMAIL_SMTP_PORT),
+      secure: process.env.EMAIL_SMTP_PORT === '465',
+      ...(auth && { auth })
+    });
+    console.log(`✓ Using custom SMTP: ${process.env.EMAIL_SERVICE || 'SMTP'}`);
+  } else if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+    // Use service-based (Gmail, etc)
+    transporter = nodemailer.createTransport({
+      service: process.env.EMAIL_SERVICE || 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    });
+    console.log(`✓ Using ${process.env.EMAIL_SERVICE || 'Gmail'} email service`);
+  } else {
+    console.warn('⚠️ Email service not configured - using dummy transporter');
+    transporter = nodemailer.createTransport({
+      streamTransport: true,
+      newline: 'unix'
+    });
+  }
+
+  // Verify connection
   transporter.verify((error) => {
     if (error) {
       console.warn('⚠️ Email configuration error:', error.message);
@@ -34,7 +84,10 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
       console.log('✓ Email service ready');
     }
   });
-}
+};
+
+// Initialize on startup
+await initializeTransporter();
 
 // Admin emails - bisa diubah sesuai kebutuhan
 const ADMIN_EMAILS = [
@@ -882,8 +935,13 @@ router.post('/forgot-password', async (req, res) => {
           `
         };
 
-        await transporter.sendMail(mailOptions);
+        const info = await transporter.sendMail(mailOptions);
         console.log(`✓ Reset password email sent to ${user.email}`);
+        
+        // Show Ethereal preview URL if using test account
+        if (process.env.EMAIL_SERVICE === 'ethereal') {
+          console.log(`📧 Preview: ${nodemailer.getTestMessageUrl(info)}`);
+        }
       } catch (emailError) {
         console.error('Error sending email:', emailError.message);
         // Don't fail the request if email sending fails, token is still saved
@@ -1077,8 +1135,13 @@ router.post('/reset-password', async (req, res) => {
           `
         };
 
-        await transporter.sendMail(mailOptions);
+        const info = await transporter.sendMail(mailOptions);
         console.log(`✓ Password reset confirmation email sent to ${user.email}`);
+        
+        // Show Ethereal preview URL if using test account
+        if (process.env.EMAIL_SERVICE === 'ethereal') {
+          console.log(`📧 Preview: ${nodemailer.getTestMessageUrl(info)}`);
+        }
       } catch (emailError) {
         console.error('Error sending confirmation email:', emailError.message);
       }
