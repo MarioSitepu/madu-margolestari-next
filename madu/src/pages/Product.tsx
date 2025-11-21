@@ -6,8 +6,7 @@ import { SEO } from "@/components/SEO";
 import productBottlesHero from "@/assets/product-bottles-hero.png";
 import productBottleCard from "@/assets/product-bottle-card.png";
 import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import { API_URL } from '@/lib/api';
 
 interface Product {
   _id: string;

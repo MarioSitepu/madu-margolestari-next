@@ -6,8 +6,7 @@ import { Trash2, Upload, X, Image as ImageIcon, Eye, EyeOff, ArrowLeft } from 'l
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import honeyBg from "@/assets/honey-bg-6badc9.png";
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import { API_URL } from '@/lib/api';
 
 interface Gallery {
   _id: string;

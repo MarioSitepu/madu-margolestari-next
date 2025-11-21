@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Camera, X, User, Mail, Calendar, Shield, ArrowLeft, Save, Edit2, Check, X as XIcon } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import { API_URL } from '@/lib/api';
 
 interface UserProfile {
   id: string;
