@@ -55,7 +55,7 @@ export function InfoSection() {
             >
               <img
                 src={apakahKamuTahuImage1}
-                alt="Honey illustration"
+                alt="Ilustrasi madu murni dari peternakan lebah Madu Margo Lestari - Produk madu berkualitas tinggi"
                 className="w-full h-full object-contain"
               />
             </div>
@@ -70,7 +70,7 @@ export function InfoSection() {
             >
               <img
                 src={apakahKamuTahuImage2}
-                alt="Honey illustration"
+                alt="Ilustrasi manfaat madu murni untuk kesehatan dari Madu Margo Lestari"
                 className="w-full h-full object-contain"
               />
             </div>
@@ -185,7 +185,7 @@ export function InfoSection() {
           >
             <img
               src={apakahKamuTahuImage1}
-              alt="Honey illustration"
+              alt="Ilustrasi madu murni dari peternakan lebah Madu Margo Lestari - Produk madu berkualitas tinggi"
               className="w-full h-full object-contain"
             />
           </div>
@@ -202,7 +202,7 @@ export function InfoSection() {
           >
             <img
               src={apakahKamuTahuImage2}
-              alt="Honey illustration"
+              alt="Ilustrasi manfaat madu murni untuk kesehatan dari Madu Margo Lestari"
               className="w-full h-full object-contain"
             />
           </div>

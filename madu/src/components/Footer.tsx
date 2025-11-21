@@ -31,7 +31,7 @@ export function Footer() {
             <div className="absolute -top-4 sm:-top-6 md:-top-8 lg:-top-10 xl:-top-12 left-0 md:-left-6 w-28 sm:w-40 md:w-56 lg:w-80 xl:w-96 hidden md:block">
               <img
                 src={honeycomb}
-                alt="Honeycomb with honey"
+                alt="Sarang lebah madu alami dari peternakan Madu Margo Lestari - Produk madu murni berkualitas tinggi"
                 className="w-full h-auto"
               />
             </div>
@@ -122,7 +122,7 @@ export function Footer() {
               <div className="flex items-center -ml-2 sm:-ml-4 md:-ml-7">
                 <img
                   src={honeyLogo}
-                  alt="Honeycomb logo"
+                  alt="Logo Madu Margo Lestari - UMKM madu murni asli dari Lampung Selatan"
                   className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
                 />
                 <h3 className="text-[#ffde7d] text-xl sm:text-2xl font-bold mt-2 -ml-2 sm:-ml-3">

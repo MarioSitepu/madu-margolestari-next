@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Footer } from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 import marlesHoney from "@/assets/marles-honey.png";
 import { API_URL } from '@/lib/api';
 
@@ -294,8 +295,33 @@ export function ArticleGaleri() {
 
   const readingTime = article.content ? calculateReadingTime(article.content) : 1;
 
+  // Format dates for SEO
+  const publishedTime = article.createdAt ? new Date(article.createdAt).toISOString() : undefined;
+  const articleImage = article.image || article.backgroundImage || 'https://madumargolestari.vercel.app/marles-honey.png';
+  const articleUrl = `https://madumargolestari.vercel.app/article-galeri/${id}`;
+
   return (
     <div className="bg-[#ffde7d] min-h-screen">
+      <SEO 
+        title={`${article.title} | Madu Margo Lestari`}
+        description={article.description || article.content.substring(0, 160) + '...'}
+        keywords={article.tags ? article.tags.join(', ') : 'artikel madu, informasi madu, madu margo lestari'}
+        url={articleUrl}
+        type="article"
+        image={articleImage}
+        breadcrumbs={[
+          { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' },
+          { name: 'Artikel', url: 'https://madumargolestari.vercel.app/article' },
+          { name: article.title, url: articleUrl }
+        ]}
+        article={{
+          publishedTime: publishedTime,
+          modifiedTime: publishedTime,
+          author: article.authorName || 'Madu Margo Lestari',
+          section: 'Artikel Madu',
+          tags: article.tags || []
+        }}
+      />
       {/* Header Section */}
       <section className="py-12 px-4">
         <div className="max-w-5xl mx-auto">
@@ -330,7 +356,7 @@ export function ArticleGaleri() {
             <div className="mb-8">
               <img
                 src={article.image || article.backgroundImage || "/images/beekeeper-main.jpg"}
-                alt={article.title}
+                alt={`Gambar utama artikel ${article.title} - Dokumentasi lengkap tentang madu dan peternakan lebah dari Madu Margo Lestari`}
                 className="w-full h-[500px] md:h-[600px] object-cover rounded-lg"
               />
             </div>
@@ -448,7 +474,7 @@ export function ArticleGaleri() {
           <div className="absolute left-6 top-0 -translate-y-1/2 z-30 pointer-events-none">
             <img
               src={marlesHoney}
-              alt="Madu Margo Lestari Honey"
+              alt="Logo Madu Margo Lestari - Madu murni asli dari peternakan lebah Lampung Selatan"
               className="w-28 md:w-36 lg:w-25 object-contain drop-shadow-2xl"
             />
           </div>
@@ -697,7 +723,7 @@ export function ArticleGaleri() {
                   <div className="overflow-hidden">
                     <img
                       src={relatedArticle.image || marlesHoney}
-                      alt={relatedArticle.title}
+                      alt={`Gambar artikel terkait ${relatedArticle.title} - Artikel madu dan peternakan lebah dari Madu Margo Lestari`}
                       className="w-full h-44 object-cover"
                     />
                   </div>

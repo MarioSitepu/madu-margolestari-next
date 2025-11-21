@@ -174,7 +174,7 @@ export function ProductHighlight() {
               )}
               <img
                 src={product.imageUrl || productBottleCard}
-                alt={product.name}
+                alt={`Botol Madu Murni ${product.name} Asli Lampung dari Madu Margo Lestari - Produk Best Seller Madu Berkualitas Tinggi`}
                 className={`w-full h-full object-contain transition-opacity duration-500 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
@@ -269,7 +269,7 @@ export function ProductHighlight() {
           <div className="relative w-full h-full">
             <img
               src={honeyBg}
-              alt="Honey background"
+              alt="Background tetesan madu alami dari peternakan lebah Madu Margo Lestari Lampung"
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
             />
             {/* Gradient overlay for better text readability */}

@@ -7,7 +7,7 @@ export function Header() {
       <div className="absolute inset-0 overflow-hidden">
         <img 
           src={articleImage} 
-          alt="Bee Farmer's Delight" 
+          alt="Header artikel dan dokumentasi Madu Margo Lestari - Informasi lengkap tentang madu dan peternakan lebah" 
           className="w-full h-full object-cover object-center" 
           style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
         />
