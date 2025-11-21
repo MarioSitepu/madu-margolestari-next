@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
-import { ArrowLeft, Shield, User as UserIcon } from 'lucide-react';
+import { ArrowLeft, Shield, User as UserIcon, Trash2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { API_URL } from '@/lib/api';
@@ -27,6 +27,66 @@ interface RoleModalProps {
   onConfirm: (role: string) => void;
   isLoading: boolean;
 }
+
+// Delete Modal Component
+interface DeleteModalProps {
+  isOpen: boolean;
+  userId: string;
+  userName: string;
+  onClose: () => void;
+  onConfirm: () => void;
+  isLoading: boolean;
+}
+
+const DeleteUserModal = ({ isOpen, userName, onClose, onConfirm, isLoading }: DeleteModalProps) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-red-500 to-red-600 px-6 py-4">
+          <h3 className="text-lg font-bold text-white" style={{ fontFamily: 'Nort, sans-serif' }}>Hapus User</h3>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-6 space-y-4">
+          <p className="text-gray-700">
+            Apakah Anda yakin ingin menghapus user <span className="font-bold text-red-600">{userName}</span>?
+          </p>
+          <p className="text-sm text-gray-500">
+            Tindakan ini tidak dapat dibatalkan dan semua data user akan dihapus.
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="bg-gray-50 px-6 py-4 flex gap-3 justify-end">
+          <button
+            onClick={onClose}
+            disabled={isLoading}
+            className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition-all duration-300 disabled:opacity-50"
+          >
+            Batal
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={isLoading}
+            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
+          >
+            {isLoading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Menghapus...
+              </>
+            ) : (
+              'Ya, Hapus User'
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const RoleChangeModal = ({ isOpen, userName, currentRole, onClose, onConfirm, isLoading }: RoleModalProps) => {
   if (!isOpen) return null;
@@ -96,6 +156,12 @@ export function UserManagement() {
     userName: '',
     currentRole: ''
   });
+  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; userId: string; userName: string }>({
+    isOpen: false,
+    userId: '',
+    userName: ''
+  });
+  const [deletingUser, setDeletingUser] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLoading && (!user || user.role !== 'admin')) {
@@ -167,6 +233,49 @@ export function UserManagement() {
 
   const closeRoleModal = () => {
     setRoleModal({ isOpen: false, userId: '', userName: '', currentRole: '' });
+  };
+
+  const openDeleteModal = (userId: string, userName: string) => {
+    // Prevent user from deleting themselves
+    if (user?.id === userId) {
+      alert('Anda tidak bisa menghapus akun Anda sendiri');
+      return;
+    }
+    setDeleteModal({
+      isOpen: true,
+      userId,
+      userName
+    });
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModal({ isOpen: false, userId: '', userName: '' });
+  };
+
+  const deleteUser = async (userId: string) => {
+    try {
+      setDeletingUser(userId);
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(
+        `${API_URL}/admin/users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      if (response.data.success) {
+        // Remove user from list
+        setUsers(users.filter(u => u._id !== userId));
+        closeDeleteModal();
+      }
+    } catch (error: any) {
+      console.error('Error deleting user:', error);
+      alert(error.response?.data?.message || 'Gagal menghapus user');
+    } finally {
+      setDeletingUser(null);
+    }
   };
 
   if (loading) {
@@ -302,6 +411,23 @@ export function UserManagement() {
                         userItem.role === 'admin' ? 'Jadikan User' : 'Jadikan Admin'
                       )}
                     </button>
+                    <button
+                      onClick={() => openDeleteModal(userItem._id, userItem.name)}
+                      disabled={deletingUser === userItem._id || user?.id === userItem._id}
+                      className="px-3 py-2 text-xs sm:text-sm rounded-lg font-semibold transition-all duration-300 bg-red-100 hover:bg-red-200 text-red-700 disabled:opacity-50 whitespace-nowrap flex items-center gap-1"
+                    >
+                      {deletingUser === userItem._id ? (
+                        <>
+                          <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                          <span className="hidden sm:inline">Deleting...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Trash2 className="w-4 h-4" />
+                          <span className="hidden sm:inline">Hapus</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               ))}
@@ -320,6 +446,16 @@ export function UserManagement() {
       onClose={closeRoleModal}
       onConfirm={(newRole) => updateUserRole(roleModal.userId, newRole)}
       isLoading={updatingRole === roleModal.userId}
+    />
+
+    {/* Delete User Modal */}
+    <DeleteUserModal
+      isOpen={deleteModal.isOpen}
+      userId={deleteModal.userId}
+      userName={deleteModal.userName}
+      onClose={closeDeleteModal}
+      onConfirm={() => deleteUser(deleteModal.userId)}
+      isLoading={deletingUser === deleteModal.userId}
     />
     </>
   );

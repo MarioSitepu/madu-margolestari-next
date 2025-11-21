@@ -97,6 +97,34 @@ router.put('/users/:userId/role', authenticateToken, verifyAdmin, async (req, re
   }
 });
 
+// Delete user (admin only)
+router.delete('/users/:userId', authenticateToken, verifyAdmin, async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find and delete user
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User tidak ditemukan'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'User berhasil dihapus'
+    });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
+  }
+});
+
 export default router;
 
 
