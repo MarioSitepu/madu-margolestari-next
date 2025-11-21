@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Footer } from "@/components/Footer";
 import marlesHoney from "@/assets/marles-honey.png";
 import honeyBg from "@/assets/honey-bg-6badc9.png";
@@ -70,7 +69,7 @@ export const AboutUs = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900">
       {/* Hero Section with Honey Image */}
-      <section className="relative min-h-[70vh] overflow-hidden bg-[#ffde7d] text-black lg:min-h-[80vh]">
+      <section className="relative min-h-[50vh] overflow-hidden bg-[#ffde7d] text-black lg:min-h-[60vh]">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div
@@ -83,36 +82,39 @@ export const AboutUs = () => {
         </div>
 
         <div className="container relative mx-auto h-full px-4 sm:px-6 lg:px-8">
-          <div className="grid min-h-[70vh] items-center gap-8 py-12 lg:min-h-[80vh] lg:grid-cols-2 lg:gap-12 lg:py-20">
+          <div className="grid min-h-[50vh] items-center gap-6 py-8 lg:min-h-[60vh] lg:grid-cols-2 lg:gap-8 lg:py-12">
             {/* Left Content */}
             <div
-              className={`z-10 space-y-6 transition-all duration-1000 lg:space-y-8 ${
+              className={`z-10 space-y-4 transition-all duration-1000 lg:space-y-5 ${
                 isVisible ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
               }`}
             >
-              <Badge className="border-[#00b8a9]/40 bg-white/70 px-4 py-2 text-sm text-[#00b8a9] shadow hover:bg-white sm:text-base">
-                <Sparkles className="mr-2 h-4 w-4" />
-                UMKM Terpercaya
-              </Badge>
-
               <div>
                 <h1 
-                  className="text-4xl font-black leading-tight text-black sm:text-5xl lg:mb-6 lg:text-7xl"
+                  className="text-3xl font-black leading-tight text-black sm:text-4xl lg:mb-4 lg:text-5xl"
                   style={{ fontFamily: 'Nort, sans-serif' }}
                 >
                   Tentang{" "}
                   <span className="relative inline-block">
                     <span className="relative z-10 text-[#00b8a9]">Kami</span>
-                    <span className="absolute bottom-1 left-0 h-2 w-full bg-[#00b8a9]/30" />
+                    {/* Underline matching home page style */}
+                    <span 
+                      className="absolute left-0 bg-black"
+                      style={{ 
+                        width: 'clamp(80px, 12vw, 150px)', 
+                        height: 'clamp(6px, 0.6vw, 9px)',
+                        bottom: 'clamp(-6px, -0.6vw, -9px)'
+                      }}
+                    ></span>
                   </span>
                 </h1>
-                <p className="text-base leading-relaxed text-black/70 sm:text-lg lg:text-xl">
+                <p className="text-sm leading-relaxed text-black/70 sm:text-base lg:text-lg">
                   Selamat datang di <span className="font-semibold text-[#00b8a9]">UMKM Lebah Madu</span>, penyedia madu alami terbaik
                   yang berasal dari lebah pilihan.
                 </p>
               </div>
 
-              <div className="space-y-4 text-sm leading-relaxed text-black/70 sm:text-base lg:max-w-2xl lg:text-lg">
+              <div className="space-y-3 text-xs leading-relaxed text-black/70 sm:text-sm lg:max-w-2xl lg:text-base">
                 <p>
                   Kami berkomitmen untuk menyediakan produk madu berkualitas tinggi, murni, dan kaya akan manfaat kesehatan.
                 </p>
@@ -121,20 +123,27 @@ export const AboutUs = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-4 pt-4 sm:flex-row">
+              <div className="flex flex-col gap-3 pt-2 sm:flex-row">
                 <Button 
-                  className="rounded-xl bg-[#00b8a9] px-8 py-6 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#009a8d]" 
-                  size="lg"
-                  style={{ fontFamily: 'Nort, sans-serif' }}
+                  className="bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none px-10 py-4 text-sm"
+                  style={{ 
+                    fontFamily: 'Nort, sans-serif',
+                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
+                    fontSize: '12px',
+                    lineHeight: '1.342'
+                  }}
                 >
                   Hubungi Kami
                 </Button>
                 <Link to="/product">
                   <Button
-                    className="rounded-xl border-2 border-[#00b8a9] bg-white px-8 py-6 text-base font-semibold text-[#00b8a9] transition-all duration-300 hover:bg-[#00b8a9]/10 hover:border-[#009a8d]"
-                    size="lg"
-                    variant="outline"
-                    style={{ fontFamily: 'Nort, sans-serif' }}
+                    className="bg-white text-[#00B8A9] hover:bg-gray-50 font-bold rounded-none px-10 py-4 text-sm"
+                    style={{ 
+                      fontFamily: 'Nort, sans-serif',
+                      boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
+                      fontSize: '12px',
+                      lineHeight: '1.342'
+                    }}
                   >
                     Lihat Produk
                   </Button>
@@ -148,7 +157,7 @@ export const AboutUs = () => {
                 isVisible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
               }`}
             >
-              <div className="relative aspect-square overflow-hidden rounded-3xl border border-white/40 bg-white/40 shadow-2xl backdrop-blur lg:aspect-4/5">
+              <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/40 bg-white/40 shadow-xl backdrop-blur lg:aspect-4/5 max-w-md mx-auto">
                 <img 
                   src={marlesHoney} 
                   alt="Madu Margo Lestari" 
@@ -157,9 +166,9 @@ export const AboutUs = () => {
                 {/* Overlay gradient untuk efek */}
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20" />
                 {/* Decorative elements */}
-                <div className="absolute right-10 top-10 h-20 w-20 animate-float rounded-full bg-white/40 blur-2xl" />
+                <div className="absolute right-6 top-6 h-12 w-12 animate-float rounded-full bg-white/40 blur-xl" />
                 <div
-                  className="absolute left-10 bottom-20 h-32 w-32 animate-float rounded-full bg-white/30 blur-3xl"
+                  className="absolute left-6 bottom-12 h-20 w-20 animate-float rounded-full bg-white/30 blur-2xl"
                   style={{ animationDelay: "1s" }}
                 />
               </div>
@@ -214,9 +223,17 @@ export const AboutUs = () => {
               style={{ fontFamily: 'Nort, sans-serif' }}
             >
               Mengapa Memilih{" "}
-              <span className="text-[#00b8a9] relative">
+              <span className="text-[#00b8a9] relative inline-block">
                 Kami?
-                <span className="absolute bottom-0 left-0 w-full h-1 bg-[#00b8a9]"></span>
+                {/* Underline matching home page style */}
+                <span 
+                  className="absolute left-0 bg-black"
+                  style={{ 
+                    width: 'clamp(100px, 15vw, 200px)', 
+                    height: 'clamp(8px, 0.77vw, 11.02px)',
+                    bottom: 'clamp(-8px, -0.77vw, -11.02px)'
+                  }}
+                ></span>
               </span>
             </h2>
           </div>
@@ -323,75 +340,99 @@ export const AboutUs = () => {
       </section>
 
       {/* Visit Us Section */}
-      <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 text-white lg:py-24">
-        {/* Background image */}
-        <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
-          <img src={honeyBg} alt="Honey drip background" className="object-cover w-full h-full opacity-20" />
-        </div>
+      <section className="relative w-full overflow-hidden bg-[#ffde7d] py-16 text-black lg:py-24">
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
             <div className="space-y-6 lg:space-y-8">
               <div>
                 <h2 
-                  className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl"
+                  className="text-3xl font-bold text-black sm:text-4xl lg:text-5xl"
                   style={{ fontFamily: 'Nort, sans-serif' }}
                 >
                   Kunjungi{" "}
                   <span className="relative inline-block">
-                    <span className="relative z-10 text-[#ffde7d]">Kami</span>
-                    <span className="absolute bottom-1 left-0 h-2 w-full bg-[#ffde7d]/60" />
+                    <span className="relative z-10 text-[#00b8a9]">Kami</span>
+                    {/* Underline matching home page style */}
+                    <span 
+                      className="absolute left-0 bg-black"
+                      style={{ 
+                        width: 'clamp(80px, 12vw, 150px)', 
+                        height: 'clamp(6px, 0.6vw, 9px)',
+                        bottom: 'clamp(-6px, -0.6vw, -9px)'
+                      }}
+                    ></span>
                   </span>
                 </h2>
-                <p className="text-base leading-relaxed text-white/80 lg:text-lg">
+                <p className="text-base leading-relaxed text-black lg:text-lg">
                   Ayo kunjungi kami di tempat ini untuk melihat proses pengerjaan serta melihat langsung dari sarangnya
                 </p>
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-start gap-4 rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#ffde7d]">
-                    <MapPin className="h-6 w-6 text-black" />
+                <div 
+                  className="flex items-start gap-4 rounded-none bg-[#00B8A9] p-4"
+                  style={{ 
+                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
+                  }}
+                >
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white">
+                    <MapPin className="h-6 w-6 text-[#00b8a9]" />
                   </div>
                   <div>
-                    <div className="mb-1 font-semibold">Alamat</div>
-                    <div className="text-sm text-white/80">Jl. Lebah Madu No. 123, Kota Bandung, Jawa Barat 40123</div>
+                    <div className="mb-1 font-semibold text-white">Alamat</div>
+                    <div className="text-sm text-white">Jl. Lebah Madu No. 123, Kota Bandung, Jawa Barat 40123</div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#ffde7d]">
-                    <Phone className="h-6 w-6 text-black" />
+                <div 
+                  className="flex items-start gap-4 rounded-none bg-[#00B8A9] p-4"
+                  style={{ 
+                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
+                  }}
+                >
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white">
+                    <Phone className="h-6 w-6 text-[#00b8a9]" />
                   </div>
                   <div>
-                    <div className="mb-1 font-semibold">Telepon</div>
-                    <div className="text-sm text-white/80">+62 812-3456-7890</div>
+                    <div className="mb-1 font-semibold text-white">Telepon</div>
+                    <div className="text-sm text-white">+62 812-3456-7890</div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#ffde7d]">
-                    <Mail className="h-6 w-6 text-black" />
+                <div 
+                  className="flex items-start gap-4 rounded-none bg-[#00B8A9] p-4"
+                  style={{ 
+                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
+                  }}
+                >
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white">
+                    <Mail className="h-6 w-6 text-[#00b8a9]" />
                   </div>
                   <div>
-                    <div className="mb-1 font-semibold">Email</div>
-                    <div className="text-sm text-white/80">info@lebahmadu.co.id</div>
+                    <div className="mb-1 font-semibold text-white">Email</div>
+                    <div className="text-sm text-white">info@lebahmadu.co.id</div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#ffde7d]">
-                    <Clock className="h-6 w-6 text-black" />
+                <div 
+                  className="flex items-start gap-4 rounded-none bg-[#00B8A9] p-4"
+                  style={{ 
+                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
+                  }}
+                >
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white">
+                    <Clock className="h-6 w-6 text-[#00b8a9]" />
                   </div>
                   <div>
-                    <div className="mb-1 font-semibold">Jam Operasional</div>
-                    <div className="text-sm text-white/80">Senin - Sabtu: 08:00 - 17:00 WIB</div>
+                    <div className="mb-1 font-semibold text-white">Jam Operasional</div>
+                    <div className="text-sm text-white">Senin - Sabtu: 08:00 - 17:00 WIB</div>
                   </div>
                 </div>
               </div>
             </div>
 
             <Card className="border-0 bg-white p-6 text-left text-black shadow-2xl lg:p-8">
-              <div className="mb-6 flex aspect-video items-center justify-center rounded-xl bg-linear-to-br from-[#ffde7d] to-[#f4d58d]">
+              <div className="mb-6 flex aspect-video items-center justify-center rounded-xl bg-gradient-to-br from-[#ffde7d] to-[#f4d58d]">
                 <MapPin className="h-16 w-16 text-[#00b8a9]" />
               </div>
               <h3 
@@ -400,12 +441,17 @@ export const AboutUs = () => {
               >
                 Temukan Lokasi Kami
               </h3>
-              <p className="mb-6 text-sm text-black/65 lg:text-base">
+              <p className="mb-6 text-sm text-black lg:text-base">
                 Kunjungi farm kami dan lihat langsung proses pembuatan madu berkualitas tinggi
               </p>
               <Button 
-                className="w-full rounded-xl bg-[#00b8a9] py-6 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#009a8d]"
-                style={{ fontFamily: 'Nort, sans-serif' }}
+                className="w-full bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none py-6"
+                style={{ 
+                  fontFamily: 'Nort, sans-serif',
+                  boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
+                  fontSize: '14px',
+                  lineHeight: '1.342'
+                }}
               >
                 Buka di Google Maps
               </Button>

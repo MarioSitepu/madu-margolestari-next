@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import honeyBg from "@/assets/honey-bg-6badc9.png";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -296,7 +297,7 @@ export function Dashboard() {
       <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <div className="text-white text-xl font-semibold">Memuat...</div>
+          <div className="text-white text-xl font-semibold" style={{ fontFamily: 'Nort, sans-serif' }}>Memuat...</div>
         </div>
       </div>
     );
@@ -318,76 +319,137 @@ export function Dashboard() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
-      <div className="container mx-auto max-w-6xl">
-        {/* Header */}
-        <div className="mb-8 animate-fade-in">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-2">
-            {isAdmin ? 'Admin Dashboard' : 'Dashboard'}
-          </h1>
-          <p className="text-white/90 text-lg">
-            Selamat datang kembali, {userProfile.name}!
-          </p>
+    <>
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.6s ease-out forwards;
+        }
+        .animate-fade-up {
+          animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .animate-scale-in {
+          animation: scaleIn 0.5s ease-out forwards;
+        }
+      `}</style>
+      <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
+        {/* Background Honey Image */}
+        <div className="absolute inset-0 overflow-hidden opacity-30">
+          <img 
+            src={honeyBg} 
+            alt="Honey background" 
+            className="w-full h-full object-cover"
+            style={{ transform: 'scale(1.1)' }}
+          />
         </div>
+        
+        {/* Background Pattern Overlay */}
+        <div className="absolute inset-0 opacity-10">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 20px 20px, white 2px, transparent 0)`,
+              backgroundSize: "40px 40px",
+            }}
+          />
+        </div>
+
+        <div className="container mx-auto max-w-6xl relative z-10">
+          {/* Header */}
+          <div className="mb-8 animate-fade-in">
+            <h1 className="text-4xl md:text-5xl font-black text-white mb-2 drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>
+              {isAdmin ? 'Admin Dashboard' : 'Dashboard'}
+            </h1>
+            <p className="text-white/90 text-lg drop-shadow-md" style={{ fontFamily: 'Nort, sans-serif' }}>
+              Selamat datang kembali, {userProfile.name}!
+            </p>
+          </div>
 
         {/* Admin Stats Cards - Only for Admin */}
         {isAdmin && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6 animate-fade-up">
-            <Card className="p-6 bg-white/95">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+            <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 animate-fade-up" style={{ animationDelay: '0.1s', opacity: 0 }}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Artikel</p>
-                  <p className="text-3xl font-black text-[#00b8a9]">{adminStatsCards.articles}</p>
+                  <p className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Nort, sans-serif' }}>Artikel</p>
+                  <p className="text-3xl font-black text-[#00b8a9]" style={{ fontFamily: 'Nort, sans-serif' }}>{adminStatsCards.articles}</p>
                 </div>
-                <div className="p-3 bg-[#00b8a9]/10 rounded-lg">
+                <div className="p-3 bg-gradient-to-br from-[#00b8a9]/20 to-[#00b8a9]/10 rounded-xl shadow-md">
                   <FileText className="w-6 h-6 text-[#00b8a9]" />
                 </div>
               </div>
             </Card>
 
-            <Card className="p-6 bg-white/95">
+            <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 animate-fade-up" style={{ animationDelay: '0.2s', opacity: 0 }}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Produk</p>
-                  <p className="text-3xl font-black text-[#ffde7d]">{adminStatsCards.products}</p>
+                  <p className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Nort, sans-serif' }}>Produk</p>
+                  <p className="text-3xl font-black text-[#b8860b]" style={{ fontFamily: 'Nort, sans-serif' }}>{adminStatsCards.products}</p>
                 </div>
-                <div className="p-3 bg-[#ffde7d]/20 rounded-lg">
+                <div className="p-3 bg-gradient-to-br from-[#ffde7d]/30 to-[#ffde7d]/20 rounded-xl shadow-md">
                   <Package className="w-6 h-6 text-[#b8860b]" />
                 </div>
               </div>
             </Card>
 
-            <Card className="p-6 bg-white/95">
+            <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 animate-fade-up" style={{ animationDelay: '0.3s', opacity: 0 }}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Pengguna</p>
-                  <p className="text-3xl font-black text-[#00b8a9]">{adminStatsCards.users}</p>
+                  <p className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Nort, sans-serif' }}>Pengguna</p>
+                  <p className="text-3xl font-black text-[#00b8a9]" style={{ fontFamily: 'Nort, sans-serif' }}>{adminStatsCards.users}</p>
                 </div>
-                <div className="p-3 bg-[#00b8a9]/10 rounded-lg">
+                <div className="p-3 bg-gradient-to-br from-[#00b8a9]/20 to-[#00b8a9]/10 rounded-xl shadow-md">
                   <Users className="w-6 h-6 text-[#00b8a9]" />
                 </div>
               </div>
             </Card>
 
-            <Card className="p-6 bg-white/95">
+            <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 animate-fade-up" style={{ animationDelay: '0.4s', opacity: 0 }}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Komentar</p>
-                  <p className="text-3xl font-black text-[#00b8a9]">{adminStatsCards.comments}</p>
+                  <p className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Nort, sans-serif' }}>Komentar</p>
+                  <p className="text-3xl font-black text-[#00b8a9]" style={{ fontFamily: 'Nort, sans-serif' }}>{adminStatsCards.comments}</p>
                 </div>
-                <div className="p-3 bg-[#00b8a9]/10 rounded-lg">
+                <div className="p-3 bg-gradient-to-br from-[#00b8a9]/20 to-[#00b8a9]/10 rounded-xl shadow-md">
                   <MessageCircle className="w-6 h-6 text-[#00b8a9]" />
                 </div>
               </div>
             </Card>
 
-            <Card className="p-6 bg-white/95">
+            <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 animate-fade-up" style={{ animationDelay: '0.5s', opacity: 0 }}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Galeri</p>
-                  <p className="text-3xl font-black text-[#00b8a9]">{adminStatsCards.gallery}</p>
+                  <p className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Nort, sans-serif' }}>Galeri</p>
+                  <p className="text-3xl font-black text-[#00b8a9]" style={{ fontFamily: 'Nort, sans-serif' }}>{adminStatsCards.gallery}</p>
                 </div>
-                <div className="p-3 bg-[#00b8a9]/10 rounded-lg">
+                <div className="p-3 bg-gradient-to-br from-[#00b8a9]/20 to-[#00b8a9]/10 rounded-xl shadow-md">
                   <ImageIcon className="w-6 h-6 text-[#00b8a9]" />
                 </div>
               </div>
@@ -396,7 +458,7 @@ export function Dashboard() {
         )}
 
         {/* User Profile Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 mb-6 animate-scale-in">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border-2 border-white/50 p-6 md:p-8 mb-6 animate-scale-in hover:shadow-3xl transition-all duration-300">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             {/* Avatar */}
             <div className="relative">
@@ -422,7 +484,7 @@ export function Dashboard() {
 
             {/* User Info */}
             <div className="flex-1">
-              <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-2">
+              <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-2" style={{ fontFamily: 'Nort, sans-serif' }}>
                 {userProfile.name}
               </h2>
               <div className="space-y-2">
@@ -450,14 +512,16 @@ export function Dashboard() {
             <div className="flex flex-col gap-3 w-full md:w-auto">
               <button
                 onClick={() => navigate('/settings')}
-                className="flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+                className="flex items-center justify-center gap-2 bg-[#ffde7d] hover:bg-[#f4d58d] text-gray-900 px-6 py-3 rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg"
+                style={{ fontFamily: 'Nort, sans-serif' }}
               >
                 <Settings className="w-5 h-5" />
                 Pengaturan
               </button>
               <button
                 onClick={handleLogout}
-                className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+                className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg"
+                style={{ fontFamily: 'Nort, sans-serif' }}
               >
                 <LogOut className="w-5 h-5" />
                 Logout
@@ -467,15 +531,15 @@ export function Dashboard() {
         </div>
 
         {/* Comment History Section */}
-        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 mb-6 animate-fade-up" style={{ animationDelay: '200ms' }}>
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border-2 border-white/50 p-6 md:p-8 mb-6 animate-fade-up hover:shadow-3xl transition-all duration-300" style={{ animationDelay: '0.2s', opacity: 0 }}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-[#00b8a9]/10 rounded-lg">
                 <MessageCircle className="w-6 h-6 text-[#00b8a9]" />
               </div>
               <div>
-                <h3 className="text-2xl font-black text-gray-900">Komentar Saya</h3>
-                <p className="text-gray-600 text-sm">Riwayat komentar yang Anda buat</p>
+                <h3 className="text-2xl font-black text-gray-900" style={{ fontFamily: 'Nort, sans-serif' }}>Komentar Saya</h3>
+                <p className="text-gray-600 text-sm" style={{ fontFamily: 'Nort, sans-serif' }}>Riwayat komentar yang Anda buat</p>
               </div>
             </div>
             <span className="text-2xl font-black text-[#00b8a9]">{commentHistory.length}</span>
@@ -484,7 +548,7 @@ export function Dashboard() {
           {commentHistory.length > 0 ? (
             <div className="space-y-4">
               {commentHistory.slice(0, 5).map((comment) => (
-                <Card key={comment.id} className="border border-[#00b8a9]/20 p-4 hover:shadow-md transition-all duration-300">
+                <Card key={comment.id} className="border-2 border-[#00b8a9]/20 p-4 hover:shadow-lg hover:border-[#00b8a9]/40 transition-all duration-300 bg-white/80 backdrop-blur-sm">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
@@ -530,15 +594,15 @@ export function Dashboard() {
         </div>
 
         {/* Liked Comments Section */}
-        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 mb-6 animate-fade-up" style={{ animationDelay: '300ms' }}>
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border-2 border-white/50 p-6 md:p-8 mb-6 animate-fade-up hover:shadow-3xl transition-all duration-300" style={{ animationDelay: '0.3s', opacity: 0 }}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-[#b8860b]/10 rounded-lg">
                 <Heart className="w-6 h-6 text-[#b8860b]" />
               </div>
               <div>
-                <h3 className="text-2xl font-black text-gray-900">Komentar yang Disukai</h3>
-                <p className="text-gray-600 text-sm">Komentar yang Anda sukai</p>
+                <h3 className="text-2xl font-black text-gray-900" style={{ fontFamily: 'Nort, sans-serif' }}>Komentar yang Disukai</h3>
+                <p className="text-gray-600 text-sm" style={{ fontFamily: 'Nort, sans-serif' }}>Komentar yang Anda sukai</p>
               </div>
             </div>
             <span className="text-2xl font-black text-[#b8860b]">{likedComments.length}</span>
@@ -547,7 +611,7 @@ export function Dashboard() {
           {likedComments.length > 0 ? (
             <div className="space-y-4">
               {likedComments.slice(0, 5).map((liked) => (
-                <Card key={liked.id} className="border border-[#b8860b]/20 p-4 hover:shadow-md transition-all duration-300">
+                <Card key={liked.id} className="border-2 border-[#b8860b]/20 p-4 hover:shadow-lg hover:border-[#b8860b]/40 transition-all duration-300 bg-white/80 backdrop-blur-sm">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
@@ -590,35 +654,35 @@ export function Dashboard() {
 
         {/* Quick Actions - Only for Admin */}
         {isAdmin && (
-          <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 animate-fade-up" style={{ animationDelay: '400ms' }}>
-            <h3 className="text-2xl font-black text-gray-900 mb-6">Aksi Cepat</h3>
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border-2 border-white/50 p-6 md:p-8 animate-fade-up hover:shadow-3xl transition-all duration-300" style={{ animationDelay: '0.4s', opacity: 0 }}>
+            <h3 className="text-2xl font-black text-gray-900 mb-6" style={{ fontFamily: 'Nort, sans-serif' }}>Aksi Cepat</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <Link to="/admin/articles">
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer" style={{ fontFamily: 'Nort, sans-serif' }}>
                   <FileText className="w-5 h-5" />
                   Kelola Artikel
                 </div>
               </Link>
               <Link to="/admin/products">
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#ffde7d] to-[#f4d58d] text-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#ffde7d] to-[#f4d58d] text-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer" style={{ fontFamily: 'Nort, sans-serif' }}>
                   <Package className="w-5 h-5" />
                   Kelola Produk
                 </div>
               </Link>
               <Link to="/admin/gallery">
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#b8860b] to-[#9a6f09] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#b8860b] to-[#9a6f09] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer" style={{ fontFamily: 'Nort, sans-serif' }}>
                   <ImageIcon className="w-5 h-5" />
                   Kelola Galeri
                 </div>
               </Link>
               <Link to="/admin/users">
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer" style={{ fontFamily: 'Nort, sans-serif' }}>
                   <Users className="w-5 h-5" />
                   Kelola Pengguna
                 </div>
               </Link>
               <Link to="/admin/comments">
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-lg hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 cursor-pointer" style={{ fontFamily: 'Nort, sans-serif' }}>
                   <MessageCircle className="w-5 h-5" />
                   Kelola Komentar
                 </div>
@@ -629,15 +693,15 @@ export function Dashboard() {
 
         {/* Admin Section */}
         {isAdmin && (
-          <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 animate-fade-up mt-6 border-2 border-[#b8860b]" style={{ animationDelay: '500ms' }}>
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-8 animate-fade-up mt-6 border-2 border-[#b8860b]/50 hover:shadow-3xl transition-all duration-300" style={{ animationDelay: '0.5s', opacity: 0 }}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-[#b8860b]/10 rounded-lg">
                   <Shield className="w-6 h-6 text-[#b8860b]" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-gray-900">Pusat Kontrol Admin</h3>
-                  <p className="text-gray-600 text-sm">Kelola artikel, user, dan komentar</p>
+                  <h3 className="text-2xl font-black text-gray-900" style={{ fontFamily: 'Nort, sans-serif' }}>Pusat Kontrol Admin</h3>
+                  <p className="text-gray-600 text-sm" style={{ fontFamily: 'Nort, sans-serif' }}>Kelola artikel, user, dan komentar</p>
                 </div>
               </div>
             </div>
@@ -648,8 +712,8 @@ export function Dashboard() {
                 <Card className="p-4 bg-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-gray-600 text-sm mb-1">Total Users</p>
-                      <p className="text-2xl font-black text-[#00b8a9]">{adminStats.totalUsers}</p>
+                      <p className="text-gray-600 text-sm mb-1" style={{ fontFamily: 'Nort, sans-serif' }}>Total Users</p>
+                      <p className="text-2xl font-black text-[#00b8a9]" style={{ fontFamily: 'Nort, sans-serif' }}>{adminStats.totalUsers}</p>
                     </div>
                     <Users className="w-8 h-8 text-[#00b8a9]" />
                   </div>
@@ -657,8 +721,8 @@ export function Dashboard() {
                 <Card className="p-4 bg-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-gray-600 text-sm mb-1">Total Articles</p>
-                      <p className="text-2xl font-black text-[#b8860b]">{adminStats?.totalArticles || 0}</p>
+                      <p className="text-gray-600 text-sm mb-1" style={{ fontFamily: 'Nort, sans-serif' }}>Total Articles</p>
+                      <p className="text-2xl font-black text-[#b8860b]" style={{ fontFamily: 'Nort, sans-serif' }}>{adminStats?.totalArticles || 0}</p>
                     </div>
                     <FileText className="w-8 h-8 text-[#b8860b]" />
                   </div>
@@ -666,8 +730,8 @@ export function Dashboard() {
                 <Card className="p-4 bg-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-gray-600 text-sm mb-1">Total Comments</p>
-                      <p className="text-2xl font-black text-[#8b6914]">{adminComments.length}</p>
+                      <p className="text-gray-600 text-sm mb-1" style={{ fontFamily: 'Nort, sans-serif' }}>Total Comments</p>
+                      <p className="text-2xl font-black text-[#8b6914]" style={{ fontFamily: 'Nort, sans-serif' }}>{adminComments.length}</p>
                     </div>
                     <MessageCircle className="w-8 h-8 text-[#8b6914]" />
                   </div>
@@ -675,8 +739,8 @@ export function Dashboard() {
                 <Card className="p-4 bg-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-gray-600 text-sm mb-1">Admins</p>
-                      <p className="text-2xl font-black text-[#8b6914]">{adminStats.totalAdmins}</p>
+                      <p className="text-gray-600 text-sm mb-1" style={{ fontFamily: 'Nort, sans-serif' }}>Admins</p>
+                      <p className="text-2xl font-black text-[#8b6914]" style={{ fontFamily: 'Nort, sans-serif' }}>{adminStats.totalAdmins}</p>
                     </div>
                     <Shield className="w-8 h-8 text-[#8b6914]" />
                   </div>
@@ -697,6 +761,7 @@ export function Dashboard() {
                       ? 'text-[#00b8a9] border-b-2 border-[#00b8a9]'
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
+                  style={{ fontFamily: 'Nort, sans-serif' }}
                 >
                   <FileText className="w-4 h-4 inline mr-2" />
                   Semua Artikel ({adminArticles.length})
@@ -711,6 +776,7 @@ export function Dashboard() {
                       ? 'text-[#00b8a9] border-b-2 border-[#00b8a9]'
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
+                  style={{ fontFamily: 'Nort, sans-serif' }}
                 >
                   <Users className="w-4 h-4 inline mr-2" />
                   Semua User ({adminUsers.length})
@@ -725,6 +791,7 @@ export function Dashboard() {
                       ? 'text-[#00b8a9] border-b-2 border-[#00b8a9]'
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
+                  style={{ fontFamily: 'Nort, sans-serif' }}
                 >
                   <MessageCircle className="w-4 h-4 inline mr-2" />
                   Semua Comment ({adminComments.length})
@@ -904,8 +971,9 @@ export function Dashboard() {
             </div>
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

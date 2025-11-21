@@ -11,14 +11,28 @@ export const AboutSection = () => {
           {/* Title */}
           <div className="mb-8 md:mb-0">
             <div className="flex flex-col md:flex-row items-start">
-              <h2 className="text-4xl md:text-5xl font-bold text-white">
+              <h2 
+                className="text-4xl md:text-5xl font-bold text-white"
+                style={{ fontFamily: 'Nort, sans-serif' }}
+              >
                 Tentang
               </h2>
-              <div className="flex flex-col">
-                <h2 className="text-4xl md:text-5xl font-bold text-[#ffde7d] ml-2">
+              <div className="flex flex-col ml-2">
+                <h2 
+                  className="text-4xl md:text-5xl font-bold text-[#ffde7d] relative inline-block"
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
                   Kami
+                  {/* Underline matching home page style */}
+                  <span 
+                    className="absolute left-0 bg-black"
+                    style={{ 
+                      width: 'clamp(100px, 15vw, 200px)', 
+                      height: 'clamp(8px, 0.77vw, 11.02px)',
+                      bottom: 'clamp(-8px, -0.77vw, -11.02px)'
+                    }}
+                  ></span>
                 </h2>
-                <div className="h-1 bg-white w-full mt-2"></div>
               </div>
             </div>
           </div>

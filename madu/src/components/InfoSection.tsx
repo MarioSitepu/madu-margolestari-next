@@ -3,12 +3,101 @@ import apakahKamuTahuImage2 from "@/assets/apakah-kamu-tahu-image-2-2d9ce4.png";
 
 export function InfoSection() {
   return (
-    <section className="w-full bg-[#00B8A9] relative overflow-hidden" style={{ minHeight: 'clamp(500px, 40.42vw, 582px)' }}>
+    <section className="w-full bg-[#00B8A9] relative overflow-hidden py-8 md:py-0" style={{ minHeight: 'clamp(500px, 40.42vw, 582px)' }}>
       {/* Main Container - 1440px width */}
-      <div className="relative max-w-[1440px] mx-auto" style={{ height: 'clamp(500px, 40.42vw, 582px)' }}>
+      <div className="relative max-w-[1440px] mx-auto px-4 md:px-0 h-auto md:h-[582px] flex flex-col md:block">
+        {/* Mobile Layout - Stacked */}
+        <div className="flex flex-col md:hidden w-full gap-6">
+          {/* Heading Group */}
+          <div className="w-full text-center md:text-left">
+            <h2
+              className="text-white leading-[1.342]"
+              style={{
+                fontFamily: 'Nort, sans-serif',
+                fontWeight: 700,
+                fontSize: 'clamp(28px, 8vw, 48px)',
+                lineHeight: '1.342'
+              }}
+            >
+              Apakah Kamu{' '}
+              <span
+                className="text-[#FFDE7D] relative inline-block"
+                style={{
+                  fontFamily: 'Nort, sans-serif',
+                  fontWeight: 800,
+                  fontSize: 'clamp(28px, 8vw, 48px)',
+                  lineHeight: '1.342'
+                }}
+              >
+                Tahu?
+                {/* Underline */}
+                <span
+                  className="absolute left-0 bg-white"
+                  style={{
+                    width: 'clamp(80px, 22vw, 136px)',
+                    height: 'clamp(6px, 1.5vw, 11px)',
+                    bottom: 'clamp(-6px, -1.5vw, -11px)'
+                  }}
+                ></span>
+              </span>
+            </h2>
+          </div>
+
+          {/* Images Group - Mobile: Show below heading */}
+          <div className="relative w-full flex justify-center items-center gap-4" style={{ minHeight: '200px' }}>
+            {/* Image 1 */}
+            <div
+              className="relative"
+              style={{
+                width: 'clamp(100px, 25vw, 150px)',
+                height: 'clamp(150px, 40vw, 250px)'
+              }}
+            >
+              <img
+                src={apakahKamuTahuImage1}
+                alt="Honey illustration"
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            {/* Image 2 */}
+            <div
+              className="relative"
+              style={{
+                width: 'clamp(120px, 30vw, 180px)',
+                height: 'clamp(180px, 45vw, 280px)'
+              }}
+            >
+              <img
+                src={apakahKamuTahuImage2}
+                alt="Honey illustration"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
+
+          {/* Description Text - Mobile */}
+          <div className="w-full text-white">
+            <p
+              className="leading-[1.6] md:leading-[1.342] text-center md:text-left"
+              style={{
+                fontFamily: 'Nort, sans-serif',
+                fontWeight: 500,
+                fontSize: 'clamp(14px, 4vw, 18px)',
+                lineHeight: '1.6'
+              }}
+            >
+              Madu telah dikenal dan digunakan oleh manusia sejak zaman purba. Bukti penggunaan madu ditemukan dalam lukisan gua di Spanyol yang diperkirakan berusia lebih dari 8.000 tahun. Di banyak budaya kuno, madu bukan hanya dianggap sebagai pemanis alami, tetapi juga sebagai obat dan simbol keabadian. Masyarakat Mesir kuno, misalnya, menggunakan madu untuk pengobatan luka dan sebagai bahan dalam proses pembalseman.
+              <br /><br />
+              Seiring waktu, madu semakin dihargai karena <span className="text-[#FFDE7D]">kandungan nutrisinya yang kaya dan manfaat kesehatannya</span> yang luar biasa. Hingga kini, madu terus menjadi bagian penting dari diet sehat, tidak hanya karena rasanya yang lezat tetapi juga karena sifat penyembuhannya yang telah terbukti.
+            </p>
+          </div>
+        </div>
+
+        {/* Desktop Layout - Absolute Positioning */}
         {/* Heading Group - Positioned at x: 479, y: 41 */}
         <div
-          className="absolute"
+          className="hidden md:block absolute"
           style={{
             left: 'clamp(20px, 33.26vw, 479px)',
             top: 'clamp(20px, 7.04vw, 41px)',
@@ -51,7 +140,7 @@ export function InfoSection() {
 
         {/* Description Text - Positioned at x: 37, y: 162, width: 924 */}
         <div
-          className="absolute text-white"
+          className="hidden md:block absolute text-white"
           style={{
             left: 'clamp(20px, 2.57vw, 37px)',
             top: 'clamp(120px, 27.84vw, 162px)',
@@ -68,25 +157,15 @@ export function InfoSection() {
               lineHeight: '1.342'
             }}
           >
-            Madu telah dikenal dan digunakan oleh manusia sejak zaman purba.
-            Bukti penggunaan madu ditemukan dalam lukisan gua di Spanyol yang
-            diperkirakan berusia lebih dari 8.000 tahun. Di banyak budaya
-            kuno, madu bukan hanya dianggap sebagai pemanis alami, tetapi juga
-            sebagai obat dan simbol keabadian. Masyarakat Mesir kuno,
-            misalnya, menggunakan madu untuk pengobatan luka dan sebagai bahan
-            dalam proses pembalseman.
+            Madu telah dikenal dan digunakan oleh manusia sejak zaman purba. Bukti penggunaan madu ditemukan dalam lukisan gua di Spanyol yang diperkirakan berusia lebih dari 8.000 tahun. Di banyak budaya kuno, madu bukan hanya dianggap sebagai pemanis alami, tetapi juga sebagai obat dan simbol keabadian. Masyarakat Mesir kuno, misalnya, menggunakan madu untuk pengobatan luka dan sebagai bahan dalam proses pembalseman.
             <br /><br />
-            Seiring waktu, madu semakin dihargai karena <span className="text-[#FFDE7D]">kandungan nutrisinya
-            yang kaya dan manfaat kesehatannya</span> yang luar biasa. Hingga kini,
-            madu terus menjadi bagian penting dari diet sehat, tidak hanya
-            karena rasanya yang lezat tetapi juga karena sifat penyembuhannya
-            yang telah terbukti.
+            Seiring waktu, madu semakin dihargai karena <span className="text-[#FFDE7D]">kandungan nutrisinya yang kaya dan manfaat kesehatannya</span> yang luar biasa. Hingga kini, madu terus menjadi bagian penting dari diet sehat, tidak hanya karena rasanya yang lezat tetapi juga karena sifat penyembuhannya yang telah terbukti.
           </p>
         </div>
 
         {/* Images Group - Positioned at x: 938, y: 62.48, width: 502, height: 503.11 */}
         <div
-          className="absolute hidden md:block"
+          className="hidden md:block absolute"
           style={{
             left: 'clamp(600px, 65.14vw, 938px)',
             top: 'clamp(30px, 10.74vw, 62.48px)',

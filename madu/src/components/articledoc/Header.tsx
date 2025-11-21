@@ -2,23 +2,25 @@ import articleImage from "@/assets/article.png";
 
 export function Header() {
   return (
-    <div className="relative w-full h-[545px]" style={{ maxWidth: '1440px', margin: '0 auto' }}>
+    <div className="relative w-full overflow-hidden" style={{ height: 'clamp(300px, 37.85vw, 545px)' }}>
       {/* Background Image */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 overflow-hidden">
         <img 
           src={articleImage} 
           alt="Bee Farmer's Delight" 
-          className="w-full h-full object-cover" 
+          className="w-full h-full object-cover object-center" 
+          style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </div>
       
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-center">
+      <div className="relative z-10 h-full flex flex-col justify-center px-4 md:px-0">
         {/* Judul: Artikel Dan Dokumentasi */}
         <div
           style={{
-            marginLeft: 'clamp(20px, 2.92vw, 42px)',
-            width: 'clamp(300px, 39.86vw, 574px)',
+            marginLeft: 'clamp(0px, 2.92vw, 42px)',
+            width: 'clamp(280px, 39.86vw, 574px)',
+            maxWidth: 'calc(100% - clamp(0px, 2.92vw, 42px) * 2)',
             marginBottom: 'clamp(4px, 0.35vw, 5px)'
           }}
         >
@@ -40,8 +42,9 @@ export function Header() {
         {/* Deskripsi */}
         <div
           style={{
-            marginLeft: 'clamp(20px, 2.92vw, 42px)',
-            width: 'clamp(300px, 40.07vw, 577px)'
+            marginLeft: 'clamp(0px, 2.92vw, 42px)',
+            width: 'clamp(280px, 40.07vw, 577px)',
+            maxWidth: 'calc(100% - clamp(0px, 2.92vw, 42px) * 2)'
           }}
         >
           <p

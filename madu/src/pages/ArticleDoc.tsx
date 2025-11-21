@@ -13,7 +13,7 @@ export function ArticleDoc() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-[#ffde7d]">
-      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000'}>
+      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000'} style={{ width: '100%' }}>
         <ArticleHeader />
       </div>
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-200'}>

@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import headerImage from "@/assets/header-image-1a216d.png";
 
 export function Documentation() {
@@ -21,18 +22,20 @@ export function Documentation() {
                 </span>
               </h2>
               <div className="w-full md:w-[240px] h-[47px]">
-                <Button
-                  className="w-full h-full bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none flex items-center justify-center gap-2 px-8 whitespace-nowrap"
-                  style={{ 
-                    fontFamily: 'Nort, sans-serif', 
-                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
-                    fontSize: '14px',
-                    lineHeight: '1.342'
-                  }}
-                >
-                  <span>Kunjungi Sekarang</span>
-                  <ArrowRight className="w-[9.92px] h-[10px]" strokeWidth={2} />
-                </Button>
+                <Link to="/article">
+                  <Button
+                    className="w-full h-full bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none flex items-center justify-center gap-2 px-8 whitespace-nowrap"
+                    style={{ 
+                      fontFamily: 'Nort, sans-serif', 
+                      boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
+                      fontSize: '14px',
+                      lineHeight: '1.342'
+                    }}
+                  >
+                    <span>Kunjungi Sekarang</span>
+                    <ArrowRight className="w-[9.92px] h-[10px]" strokeWidth={2} />
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

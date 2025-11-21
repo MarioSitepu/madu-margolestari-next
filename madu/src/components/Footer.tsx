@@ -1,4 +1,6 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Twitter } from "lucide-react";
 import honeyLogo from "@/assets/1.svg";
 import honeycomb from "@/assets/2.png";
 
@@ -114,109 +116,173 @@ export function Footer() {
                 menengah yang berfokus pada budidaya lebah madu dan produksi
                 madu murni berkualitas tinggi.
               </p>
+              <div className="flex items-center gap-3 mt-4">
+                <a 
+                  href="https://www.facebook.com/madumargolestari" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-[#ffde7d] transition-colors"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="w-5 h-5" />
+                </a>
+                <a 
+                  href="https://www.instagram.com/madumargolestari" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-[#ffde7d] transition-colors"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a 
+                  href="https://twitter.com/madumargolestari" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-[#ffde7d] transition-colors"
+                  aria-label="Twitter"
+                >
+                  <Twitter className="w-5 h-5" />
+                </a>
+              </div>
             </div>
             {/* Navigation Links */}
             <div className="space-y-3 sm:space-y-3">
               <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Code
+                Navigasi
               </h4>
               <ul className="space-y-3 text-sm sm:text-[15px]">
                 <li>
-                  <a href="#" className="hover:underline">
-                    About Us
+                  <Link to="/" className="hover:underline">
+                    Beranda
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/product" className="hover:underline">
+                    Produk
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/article" className="hover:underline">
+                    Artikel
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="hover:underline">
+                    Tentang Kami
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div className="space-y-3 sm:space-y-3">
+              <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
+                Bantuan
+              </h4>
+              <ul className="space-y-3 text-sm sm:text-[15px]">
+                <li>
+                  <Link to="/about" className="hover:underline">
+                    Hubungi Kami
+                  </Link>
+                </li>
+                <li>
+                  <a href="#faq" className="hover:underline">
+                    FAQ
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline">
-                    Services
+                  <a href="#cara-pemesanan" className="hover:underline">
+                    Cara Pemesanan
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline">
-                    Community
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Testimonal
+                  <a href="#pengiriman" className="hover:underline">
+                    Info Pengiriman
                   </a>
                 </li>
               </ul>
             </div>
             <div className="space-y-3 sm:space-y-3">
               <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Support
+                Informasi
               </h4>
               <ul className="space-y-3 text-sm sm:text-[15px]">
                 <li>
-                  <a href="#" className="hover:underline">
-                    Help Center
+                  <Link to="/about" className="hover:underline">
+                    Tentang Kami
+                  </Link>
+                </li>
+                <li>
+                  <a href="#lokasi" className="hover:underline">
+                    Lokasi
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline">
-                    Tweet @Us
+                  <a href="#jam-operasional" className="hover:underline">
+                    Jam Operasional
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline">
-                    Webians
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Feedback
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="space-y-3 sm:space-y-3">
-              <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Links
-              </h4>
-              <ul className="space-y-3 text-sm sm:text-[15px]">
-                <li>
-                  <a href="#" className="hover:underline">
-                    Courses
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Become 5Teacher
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Services
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    All In One
+                  <a href="#testimoni" className="hover:underline">
+                    Testimoni
                   </a>
                 </li>
               </ul>
             </div>
             <div className="space-y-[18px] sm:space-y-[18px]">
               <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Contact Us
+                Kontak Kami
               </h4>
               <ul className="space-y-[18px] text-sm sm:text-[15px]">
-                <li className="flex items-center">
-                  <img
-                    src="https://uploadthingy.s3.us-west-1.amazonaws.com/qtzmAPNGY8KKXCxbsKaGgN/239e916ef62ae36e3c81fd165260edd7033b0d3d.svg"
-                    alt=""
-                    className="w-4 h-4 mr-2 shrink-0"
-                  />
-                  <span className="break-all">081262143242412</span>
+                <li className="flex items-start gap-2">
+                  <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
+                  <span className="break-all">
+                    Jl. Lebah Madu No. 123, Kota Bandung, Jawa Barat 40123
+                  </span>
                 </li>
-                <li className="flex items-center">
-                  <img
-                    src="https://uploadthingy.s3.us-west-1.amazonaws.com/qsy7F41wDUnmVMRxW8eD61/dbdaf6bbb07247b278f897c9f4cb0dc4674a44a9.svg"
-                    alt=""
-                    className="w-4 h-4 mr-2 shrink-0"
-                  />
-                  <span className="break-all">Support@dfwff.com</span>
+                <li className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 shrink-0" />
+                  <a href="tel:+6281234567890" className="hover:underline break-all">
+                    +62 812-3456-7890
+                  </a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 shrink-0" />
+                  <a href="mailto:info@lebahmadu.co.id" className="hover:underline break-all">
+                    info@lebahmadu.co.id
+                  </a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 shrink-0" />
+                  <span>Senin - Sabtu: 08:00 - 17:00 WIB</span>
+                </li>
+                <li className="flex items-center gap-3 pt-2">
+                  <a 
+                    href="https://www.facebook.com/madumargolestari" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-[#ffde7d] transition-colors"
+                    aria-label="Facebook"
+                  >
+                    <Facebook className="w-5 h-5" />
+                  </a>
+                  <a 
+                    href="https://www.instagram.com/madumargolestari" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-[#ffde7d] transition-colors"
+                    aria-label="Instagram"
+                  >
+                    <Instagram className="w-5 h-5" />
+                  </a>
+                  <a 
+                    href="https://twitter.com/madumargolestari" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-[#ffde7d] transition-colors"
+                    aria-label="Twitter"
+                  >
+                    <Twitter className="w-5 h-5" />
+                  </a>
                 </li>
               </ul>
             </div>
@@ -228,21 +294,18 @@ export function Footer() {
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-40 py-6 sm:py-8">
           <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 text-xs sm:text-sm">
             <div className="flex items-center">
-              <img
-                src="https://uploadthingy.s3.us-west-1.amazonaws.com/1wBeAqm1RZJaTFgKYstpym/28269401c235d5b35d7e1ba2526ba68897b32d3a.svg"
-                alt=""
-                className="w-4 h-4 mr-2 shrink-0"
-              />
-              <span className="text-center sm:text-left">Copyright By CodeUI.All right Reserved</span>
+              <span className="text-center sm:text-left">
+                © {new Date().getFullYear()} Madu Margo Lestari. All rights reserved.
+              </span>
             </div>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-16">
-              <a href="#" className="hover:underline whitespace-nowrap">
-                Privacy Policy
+              <a href="#kebijakan-privasi" className="hover:underline whitespace-nowrap">
+                Kebijakan Privasi
               </a>
-              <a href="#" className="hover:underline whitespace-nowrap">
-                Terms Of Use
+              <a href="#syarat-ketentuan" className="hover:underline whitespace-nowrap">
+                Syarat & Ketentuan
               </a>
-              <a href="#" className="hover:underline whitespace-nowrap">
+              <a href="#legal" className="hover:underline whitespace-nowrap">
                 Legal
               </a>
             </div>

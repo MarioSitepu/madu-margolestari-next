@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Trash2, Upload, X, Image as ImageIcon, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import honeyBg from "@/assets/honey-bg-6badc9.png";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -167,29 +168,50 @@ export function GalleryManagement() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+        <div className="text-white text-xl" style={{ fontFamily: 'Nort, sans-serif' }}>Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
+      {/* Background Honey Image */}
+      <div className="absolute inset-0 overflow-hidden opacity-30">
+        <img 
+          src={honeyBg} 
+          alt="Honey background" 
+          className="w-full h-full object-cover"
+          style={{ transform: 'scale(1.1)' }}
+        />
+      </div>
+      
+      {/* Background Pattern Overlay */}
+      <div className="absolute inset-0 opacity-10">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 20px 20px, white 2px, transparent 0)`,
+            backgroundSize: "40px 40px",
+          }}
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Link to="/dashboard">
-              <Button variant="outline" className="bg-white/90">
+              <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50" style={{ fontFamily: 'Nort, sans-serif' }}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Kembali
               </Button>
             </Link>
-            <h1 className="text-4xl font-black text-white">Kelola Galeri</h1>
+            <h1 className="text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>Kelola Galeri</h1>
           </div>
         </div>
 
         {/* Upload Section */}
-        <Card className="p-6 bg-white/95 mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-2xl mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6" style={{ fontFamily: 'Nort, sans-serif' }}>
             Upload Gambar Galeri
           </h2>
           <div className="space-y-4">
@@ -243,7 +265,7 @@ export function GalleryManagement() {
         </Card>
 
         {/* Gallery List */}
-        <Card className="p-6 bg-white/95">
+        <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-2xl">
           {galleries.length === 0 ? (
             <div className="text-center py-12">
               <ImageIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -254,7 +276,7 @@ export function GalleryManagement() {
               {galleries.map((gallery) => (
                 <div
                   key={gallery._id}
-                  className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all"
+                  className="border-2 border-gray-200/50 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm hover:scale-105"
                 >
                   <div className="relative">
                     <img
@@ -269,7 +291,7 @@ export function GalleryManagement() {
                     )}
                   </div>
                   <div className="p-4">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1" style={{ fontFamily: 'Nort, sans-serif' }}>
                       {gallery.title}
                     </h3>
                     {gallery.description && (

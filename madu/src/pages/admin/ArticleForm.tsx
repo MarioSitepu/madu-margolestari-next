@@ -5,6 +5,7 @@ import axios from 'axios';
 import { ArrowLeft, Save, Upload, X, Image as ImageIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import honeyBg from "@/assets/honey-bg-6badc9.png";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -165,27 +166,48 @@ export function ArticleForm() {
   if (fetching) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+        <div className="text-white text-xl" style={{ fontFamily: 'Nort, sans-serif' }}>Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#ffde7d] to-[#00b8a9] py-8 px-4">
+      {/* Background Honey Image */}
+      <div className="absolute inset-0 overflow-hidden opacity-30">
+        <img 
+          src={honeyBg} 
+          alt="Honey background" 
+          className="w-full h-full object-cover"
+          style={{ transform: 'scale(1.1)' }}
+        />
+      </div>
+      
+      {/* Background Pattern Overlay */}
+      <div className="absolute inset-0 opacity-10">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 20px 20px, white 2px, transparent 0)`,
+            backgroundSize: "40px 40px",
+          }}
+        />
+      </div>
+
+      <div className="max-w-4xl mx-auto relative z-10">
         <div className="flex items-center gap-4 mb-8">
           <Link to="/admin/articles">
-            <Button variant="outline" className="bg-white/90">
+            <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50" style={{ fontFamily: 'Nort, sans-serif' }}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Kembali
             </Button>
           </Link>
-          <h1 className="text-4xl font-black text-white">
+          <h1 className="text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>
             {isEdit ? 'Edit Artikel' : 'Buat Artikel Baru'}
           </h1>
         </div>
 
-        <Card className="p-8 bg-white/95">
+        <Card className="p-8 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
