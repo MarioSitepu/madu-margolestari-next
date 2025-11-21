@@ -102,13 +102,7 @@ export function Dashboard() {
 
     if (user) {
       fetchUserProfile();
-      // Check if user is admin
-      const checkAdmin = user.role === 'admin' || ADMIN_EMAILS.includes(user.email.toLowerCase());
-      setIsAdmin(checkAdmin);
-      
-      if (checkAdmin) {
-        fetchAdminData();
-      }
+      // Admin data will be fetched inside fetchUserProfile if user is admin
     }
   }, [user, isLoading, navigate]);
 
@@ -151,7 +145,8 @@ export function Dashboard() {
         
         // If user is admin, fetch admin data
         if (checkAdmin) {
-          fetchAdminData();
+          // Call fetchAdminData immediately without waiting for state update
+          await fetchAdminData();
         }
       }
     } catch (error) {
@@ -162,8 +157,6 @@ export function Dashboard() {
   };
 
   const fetchAdminData = async () => {
-    if (!isAdmin) return;
-    
     try {
       const token = localStorage.getItem('token');
       const [usersRes, commentsRes, statsRes, articlesRes, productsRes, galleryRes] = await Promise.allSettled([
@@ -195,6 +188,9 @@ export function Dashboard() {
       }
       if (statsRes.status === 'fulfilled' && statsRes.value.data.success) {
         setAdminStats(statsRes.value.data.stats);
+      }
+      if (articlesRes.status === 'fulfilled' && articlesRes.value.data.success) {
+        setAdminArticles(articlesRes.value.data.articles);
       }
 
       // Set stats cards
