@@ -1,20 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Mail, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '@/context/AuthContext';
 import { API_URL } from '@/lib/api';
 
 export function ForgotPassword() {
+  const { user } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [isGoogleUser, setIsGoogleUser] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
-  }, []);
+    
+    // Check if user is logged in via Google
+    if (user && user.provider === 'google') {
+      setIsGoogleUser(true);
+      // Reset submitted state jika user adalah Google user
+      setSubmitted(false);
+    }
+  }, [user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -84,7 +94,37 @@ export function ForgotPassword() {
 
           {/* Form Container */}
           <div className="p-6 md:p-8">
-            {submitted && success ? (
+            {isGoogleUser ? (
+              // Google User - Cannot request password reset
+              <div className="text-center py-8 px-6">
+                <div className="mb-6 flex justify-center">
+                  <div className="p-4 bg-blue-50 rounded-full">
+                    <AlertCircle className="w-12 h-12 text-blue-600" />
+                  </div>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                  Akun Google
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  Akun Anda login menggunakan Google. Untuk mengubah password, Anda perlu menggunakan fitur "Lupa Password" dari Google langsung.
+                </p>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-gray-700">
+                  <p className="mb-3">
+                    <strong>Alasan:</strong> Data password Anda disimpan dan dikelola oleh Google, bukan oleh sistem kami. Untuk keamanan akun Anda, Anda harus mengatur ulang password melalui Google.
+                  </p>
+                  <p className="text-xs">
+                    Kunjungi <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">Google Account Security</a> untuk mengubah password Anda.
+                  </p>
+                </div>
+                <Link 
+                  to="/"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#00b8a9] hover:bg-[#009c91] text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Kembali ke Beranda
+                </Link>
+              </div>
+            ) : submitted && success ? (
               <div className="text-center py-8 animate-fade-up">
                 <div className="flex justify-center mb-4">
                   <div className="p-4 bg-green-100 rounded-full">
@@ -107,7 +147,6 @@ export function ForgotPassword() {
                   className="inline-flex items-center gap-2 px-6 py-3 bg-[#00b8a9] hover:bg-[#009c91] text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  Kembali ke Login
                 </Link>
               </div>
             ) : (
@@ -182,7 +221,7 @@ export function ForgotPassword() {
             )}
 
             {/* Help Text */}
-            {!submitted && (
+            {!submitted && !isGoogleUser && (
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <p className="text-center text-gray-600 text-xs md:text-sm">
                   Belum punya akun?{' '}

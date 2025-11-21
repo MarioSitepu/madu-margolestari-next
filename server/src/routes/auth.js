@@ -763,6 +763,14 @@ router.post('/forgot-password', async (req, res) => {
       });
     }
 
+    // Check if user logged in via Google
+    if (user.provider === 'google') {
+      return res.status(403).json({
+        success: false,
+        message: 'Akun Anda terhubung dengan Google. Silakan gunakan fitur "Lupa Password" dari Google untuk mengubah password.'
+      });
+    }
+
     // Generate reset token (valid for 1 hour)
     const resetToken = generateToken(user._id, '1h');
     
