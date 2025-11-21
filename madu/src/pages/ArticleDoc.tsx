@@ -7,6 +7,8 @@ import { SEO } from '@/components/SEO'
 
 export function ArticleDoc() {
   const [isVisible, setIsVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'newest' | 'most-viewed'>('newest');
 
   useEffect(() => {
     setIsVisible(true);
@@ -25,10 +27,18 @@ export function ArticleDoc() {
         <ArticleHeader />
       </div>
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-200'}>
-        <SearchSection />
+        <SearchSection 
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+        />
       </div>
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-300'}>
-        <ArticleGrid />
+        <ArticleGrid 
+          searchQuery={searchQuery}
+          sortBy={sortBy}
+        />
       </div>
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-400'}>
         <Gallery />
