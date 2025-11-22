@@ -391,7 +391,7 @@ export function Login() {
               </div>
             </div>
 
-            {/* Forgot Password - Link Biru Halus */}
+            {/* Lupa Password - Link Biru Halus */}
             <div className="text-right">
               <Link to="/forgot-password" className="text-sm text-[#00b8a9] hover:underline font-bold">
                 Lupa password?

@@ -93,7 +93,15 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   console.log(`404 - Endpoint tidak ditemukan: ${req.method} ${req.path}`);
   console.log('Available routes:', {
-    auth: ['/api/auth/login', '/api/auth/register', '/api/auth/google', '/api/auth/me'],
+    auth: [
+      '/api/auth/login',
+      '/api/auth/register',
+      '/api/auth/google',
+      '/api/auth/me',
+      '/api/auth/forgot-password',
+      '/api/auth/reset-password',
+      '/api/auth/logout'
+    ],
     products: '/api/products',
     articles: '/api/articles',
     comments: '/api/comments',
