@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
-import { ArrowLeft, Save, Upload, X, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Save, Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { API_URL } from '@/lib/api';
@@ -12,6 +12,52 @@ interface SuccessModalProps {
   message: string;
   onClose: () => void;
 }
+
+// Validation Error Modal Component
+interface ValidationErrorModalProps {
+  isOpen: boolean;
+  title: string;
+  message: string;
+  onClose: () => void;
+}
+
+const ValidationErrorModal = ({ isOpen, title, message, onClose }: ValidationErrorModalProps) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in" style={{ opacity: 0, animationDelay: '0s', animation: 'fadeIn 0.2s ease-out forwards' }}>
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in" style={{ opacity: 0, animationDelay: '0s', animation: 'scaleIn 0.2s ease-out forwards' }}>
+        {/* Header */}
+        <div className="bg-gradient-to-r from-red-500 to-red-600 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-red-700/50 rounded-lg flex items-center justify-center">
+              <AlertCircle className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="text-lg font-bold text-white" style={{ fontFamily: 'Nort, sans-serif' }}>{title}</h3>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-6">
+          <p className="text-gray-700 text-center" style={{ fontFamily: 'Nort, sans-serif' }}>
+            {message}
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="bg-gray-50 px-6 py-4 flex justify-end border-t border-gray-200">
+          <Button
+            onClick={onClose}
+            className="bg-red-600 hover:bg-red-700 text-white transition-all duration-300"
+            style={{ fontFamily: 'Nort, sans-serif' }}
+          >
+            Mengerti
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const SuccessModal = ({ message, onClose }: SuccessModalProps) => {
   useEffect(() => {
@@ -89,6 +135,11 @@ export function ProductForm() {
   });
   const [submitSuccessModal, setSubmitSuccessModal] = useState<{ isOpen: boolean; message: string }>({
     isOpen: false,
+    message: ''
+  });
+  const [validationError, setValidationError] = useState<{ isOpen: boolean; title: string; message: string }>({
+    isOpen: false,
+    title: '',
     message: ''
   });
 
@@ -226,12 +277,20 @@ export function ProductForm() {
     
     // Validate required fields
     if (!formData.name || !formData.price) {
-      alert('Nama dan harga produk wajib diisi!');
+      setValidationError({
+        isOpen: true,
+        title: 'Data Tidak Lengkap',
+        message: 'Nama dan harga produk wajib diisi untuk melanjutkan. Silakan lengkapi kedua field terlebih dahulu.'
+      });
       return;
     }
 
     if (!formData.imageUrl) {
-      alert('Gambar produk wajib diisi!');
+      setValidationError({
+        isOpen: true,
+        title: 'Gambar Produk Wajib Diisi',
+        message: 'Upload gambar produk Anda untuk memastikan produk terlihat menarik di katalog. Gunakan format JPG, PNG, atau GIF dengan ukuran maksimal 10MB.'
+      });
       return;
     }
 
@@ -531,6 +590,14 @@ export function ProductForm() {
           onClose={() => setSubmitSuccessModal({ isOpen: false, message: '' })}
         />
       )}
+
+      {/* Validation Error Modal */}
+      <ValidationErrorModal
+        isOpen={validationError.isOpen}
+        title={validationError.title}
+        message={validationError.message}
+        onClose={() => setValidationError({ isOpen: false, title: '', message: '' })}
+      />
     </>
   );
 }
