@@ -15,6 +15,7 @@ export function ForgotPassword() {
   const [success, setSuccess] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [isGoogleUser, setIsGoogleUser] = useState(false);
+  const [emailNotFound, setEmailNotFound] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -50,6 +51,7 @@ export function ForgotPassword() {
 
     setIsLoading(true);
     setError('');
+    setEmailNotFound(false);
 
     try {
       const response = await axios.post(`${API_URL}/auth/forgot-password`, {
@@ -69,6 +71,13 @@ export function ForgotPassword() {
 
       if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
         errorMessage = 'Network Error: Tidak dapat terhubung ke server.';
+      } else if (error.response?.status === 404) {
+        // Email not found - show specific message
+        setEmailNotFound(true);
+        errorMessage = error.response.data.message || 'Email tidak terdaftar di sistem kami';
+      } else if (error.response?.status === 403) {
+        // Google user - cannot reset password
+        errorMessage = error.response.data.message || 'Akun Anda login via Google. Silakan reset password melalui Google.';
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
@@ -190,8 +199,42 @@ export function ForgotPassword() {
 
                 {/* Error Message */}
                 {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm animate-shake">
-                    {error}
+                  <div className={`border rounded-lg px-4 py-3 text-sm animate-shake ${
+                    emailNotFound 
+                      ? 'bg-orange-50 border-orange-200 text-orange-800' 
+                      : 'bg-red-50 border-red-200 text-red-800'
+                  }`}>
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 font-semibold" />
+                      <div className="flex-1">
+                        <p className="font-semibold mb-3">{error}</p>
+                        {emailNotFound && (
+                          <div className="mt-4 space-y-3 bg-white/50 rounded p-3">
+                            <p className="text-sm font-medium">Opsi yang tersedia:</p>
+                            <div className="space-y-2">
+                              <div>
+                                <p className="text-xs text-gray-600 mb-2">1. Cek kembali email Anda</p>
+                                <input
+                                  type="email"
+                                  value={email}
+                                  onChange={handleInputChange}
+                                  placeholder="Masukkan email lagi"
+                                  className="w-full px-3 py-2 text-sm border border-orange-200 rounded bg-white focus:outline-none focus:border-orange-400"
+                                  disabled={isLoading}
+                                />
+                              </div>
+                              <p className="text-xs text-gray-600">2. Atau daftar akun baru:</p>
+                              <Link
+                                to="/register"
+                                className="inline-block w-full text-center px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 text-sm"
+                              >
+                                Daftar Akun Baru
+                              </Link>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
 

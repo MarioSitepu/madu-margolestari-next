@@ -829,10 +829,11 @@ router.post('/forgot-password', async (req, res) => {
     // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
-      // For security, don't reveal if email exists
-      return res.json({
-        success: true,
-        message: 'Jika email terdaftar, kami akan mengirimkan link reset password'
+      // Return 404 with clear message for frontend to differentiate
+      return res.status(404).json({
+        success: false,
+        message: 'Email tidak terdaftar di sistem kami. Silakan cek kembali email Anda atau daftar akun baru.',
+        code: 'EMAIL_NOT_FOUND'
       });
     }
 
@@ -840,7 +841,8 @@ router.post('/forgot-password', async (req, res) => {
     if (user.provider === 'google') {
       return res.status(403).json({
         success: false,
-        message: 'Akun Anda terhubung dengan Google. Silakan gunakan fitur "Lupa Password" dari Google untuk mengubah password.'
+        message: 'Akun Anda terhubung dengan Google. Silakan gunakan fitur "Lupa Password" dari Google untuk mengubah password.',
+        code: 'GOOGLE_ACCOUNT_NO_RESET'
       });
     }
 
