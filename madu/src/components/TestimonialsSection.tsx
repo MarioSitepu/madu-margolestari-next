@@ -27,7 +27,7 @@ export const TestimonialsSection = () => {
   return <section className="relative w-full overflow-hidden bg-[#00b8a9] py-12 sm:py-16 md:py-24">
       {/* Background image */}
       <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
-        <img src={honeyBg} alt="Honey drip background" className="object-cover w-full h-full opacity-40" />
+        <img src={honeyBg} alt="Background tetesan madu alami dari peternakan lebah Madu Margo Lestari - Visualisasi madu murni berkualitas" className="object-cover w-full h-full opacity-40" />
       </div>
       <div className="container mx-auto px-4 sm:px-6 md:px-8 relative z-10">
         {/* Section title */}

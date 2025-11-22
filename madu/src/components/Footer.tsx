@@ -20,10 +20,10 @@ export function Footer() {
             {/* White container with subscription form */}
           <div className="bg-white rounded-2xl max-w-6xl mx-auto -mb-12 sm:-mb-16 md:-mb-20 lg:-mb-24 xl:-mb-28 p-3 sm:p-5 md:p-6 lg:p-8 relative shadow-[0_4px_6px_rgba(0,0,0,0.8)] min-h-[180px] sm:min-h-60 md:min-h-[280px]">
             {/* Honeycomb image */}
-            <div className="absolute -top-4 sm:-top-6 md:-top-8 lg:-top-10 xl:-top-12 left-0 md:-left-6 w-28 sm:w-40 md:w-56 lg:w-80 xl:w-96 hidden sm:block">
+            <div className="absolute -top-4 sm:-top-6 md:-top-8 lg:-top-10 xl:-top-12 left-0 md:-left-6 w-28 sm:w-40 md:w-56 lg:w-80 xl:w-96 hidden md:block">
               <img
                 src={honeycomb}
-                alt="Honeycomb with honey"
+                alt="Sarang lebah madu alami dari peternakan Madu Margo Lestari - Produk madu murni berkualitas tinggi"
                 className="w-full h-auto"
               />
             </div>
@@ -134,7 +134,7 @@ export function Footer() {
               <div className="flex items-center -ml-2 sm:-ml-4 md:-ml-7">
                 <img
                   src={honeyLogo}
-                  alt="Honeycomb logo"
+                  alt="Logo Madu Margo Lestari - UMKM madu murni asli dari Lampung Selatan"
                   className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
                 />
                 <h3 className="text-[#ffde7d] text-xl sm:text-2xl font-bold mt-2 -ml-2 sm:-ml-3">
@@ -147,18 +147,18 @@ export function Footer() {
                 madu murni berkualitas tinggi.
               </p>
               <div className="flex items-center gap-3 mt-4">
-                <a 
-                  href="https://www.facebook.com/madumargolestari" 
-                  target="_blank" 
+                <a
+                  href="https://www.facebook.com/madumargolestari"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-[#ffde7d] transition-colors"
                   aria-label="Facebook"
                 >
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a 
-                  href="https://www.instagram.com/madumargolestari" 
-                  target="_blank" 
+                <a
+                  href="https://www.instagram.com/madumargolestari"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-[#ffde7d] transition-colors"
                   aria-label="Instagram"
@@ -329,14 +329,21 @@ export function Footer() {
           <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 text-xs sm:text-sm">
             <div className="flex items-center">
               <span className="text-center sm:text-left">
-                © {new Date().getFullYear()} Madu Margo Lestari. All rights reserved.
+                © {new Date().getFullYear()} Madu Margo Lestari. All rights
+                reserved.
               </span>
             </div>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-16">
-              <a href="#kebijakan-privasi" className="hover:underline whitespace-nowrap">
+              <a
+                href="#kebijakan-privasi"
+                className="hover:underline whitespace-nowrap"
+              >
                 Kebijakan Privasi
               </a>
-              <a href="#syarat-ketentuan" className="hover:underline whitespace-nowrap">
+              <a
+                href="#syarat-ketentuan"
+                className="hover:underline whitespace-nowrap"
+              >
                 Syarat & Ketentuan
               </a>
               <a href="#legal" className="hover:underline whitespace-nowrap">

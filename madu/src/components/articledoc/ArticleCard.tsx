@@ -41,7 +41,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
       <div className="h-56 relative overflow-hidden">
         <img 
           src={articleData.image} 
-          alt={articleData.title} 
+          alt={`Gambar artikel ${articleData.title} - Dokumentasi dan informasi tentang madu dari Madu Margo Lestari`}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
         />
       </div>

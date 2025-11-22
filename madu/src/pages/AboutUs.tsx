@@ -71,10 +71,15 @@ export const AboutUs = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900">
       <SEO 
-        title="Tentang Kami - Madu Margo Lestari"
-        description="Kenali Madu Margo Lestari - UMKM madu terpercaya dengan lebih dari 10 tahun pengalaman. Kami menyediakan madu murni 100% asli dari peternakan lebah terbaik di Margo Lestari, Jati Agung, Lampung Selatan. Komitmen kami adalah memberikan produk berkualitas tinggi dengan standar kebersihan ketat."
-        keywords="tentang madu margo lestari, profil perusahaan madu, sejarah madu margo lestari, visi misi madu, umkm madu lampung, peternakan lebah lampung selatan, madu jati agung"
+        title="Tentang Kami - Madu Margo Lestari | Profil UMKM Madu Terpercaya"
+        description="Kenali Madu Margo Lestari - UMKM madu terpercaya dengan lebih dari 10 tahun pengalaman. Kami menyediakan madu murni 100% asli dari peternakan lebah terbaik di Margo Lestari, Jati Agung, Lampung Selatan. Komitmen kami adalah memberikan produk berkualitas tinggi dengan standar kebersihan ketat. Lebih dari 5000 pelanggan puas dan 50+ mitra peternak."
+        keywords="tentang madu margo lestari, profil perusahaan madu, sejarah madu margo lestari, visi misi madu, umkm madu lampung, peternakan lebah lampung selatan, madu jati agung, profil umkm madu, sejarah madu margo lestari, komitmen kualitas madu"
         url="https://madumargolestari.vercel.app/about"
+        image="https://madumargolestari.vercel.app/marles-honey.png"
+        breadcrumbs={[
+          { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' },
+          { name: 'Tentang Kami', url: 'https://madumargolestari.vercel.app/about' }
+        ]}
       />
       {/* Hero Section with Honey Image */}
       <section className="relative min-h-[50vh] overflow-hidden bg-[#ffde7d] text-black lg:min-h-[60vh]">
@@ -168,7 +173,7 @@ export const AboutUs = () => {
               <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/40 bg-white/40 shadow-xl backdrop-blur lg:aspect-4/5 max-w-md mx-auto">
                 <img 
                   src={marlesHoney} 
-                  alt="Madu Margo Lestari" 
+                  alt="Madu murni asli dari peternakan lebah Madu Margo Lestari di Jati Agung, Lampung Selatan - Produk madu berkualitas tinggi 100% alami" 
                   className="w-full h-full object-cover"
                 />
                 {/* Overlay gradient untuk efek */}
@@ -277,7 +282,7 @@ export const AboutUs = () => {
       <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 md:py-24">
         {/* Background image */}
         <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
-          <img src={honeyBg} alt="Honey drip background" className="object-cover w-full h-full opacity-30" />
+          <img src={honeyBg} alt="Background tetesan madu alami dari peternakan lebah Madu Margo Lestari - Visualisasi madu murni berkualitas" className="object-cover w-full h-full opacity-30" />
         </div>
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="mb-12 text-center lg:mb-16">

@@ -49,13 +49,29 @@ export function ProductPage() {
     alert(`${product.name} - Rp ${product.price.toLocaleString('id-ID')} ditambahkan ke keranjang!`);
   };
 
+  // Prepare products for SEO structured data
+  const seoProducts = products.map(product => ({
+    name: product.name,
+    description: product.description,
+    image: product.imageUrl || 'https://madumargolestari.vercel.app/product-bottle-card.png',
+    price: product.price,
+    url: `https://madumargolestari.vercel.app/product`
+  }));
+
   return (
     <div className="min-h-screen bg-white">
       <SEO 
-        title="Produk Madu Margo Lestari - Beli Madu Murni Online"
-        description="Jelajahi koleksi produk madu murni berkualitas tinggi dari Madu Margo Lestari. Dapatkan madu asli 100% tanpa campuran, dipanen langsung dari peternakan lebah terbaik. Pesan sekarang dan nikmati manfaat kesehatan yang luar biasa."
-        keywords="produk madu, beli madu online, madu murni lampung, madu asli lampung selatan, harga madu, jual madu murni, madu kesehatan, madu organik indonesia, madu margo lestari produk, madu jati agung"
+        title="Produk Madu Margo Lestari - Beli Madu Murni Online | Katalog Lengkap"
+        description="Jelajahi koleksi produk madu murni berkualitas tinggi dari Madu Margo Lestari. Dapatkan madu asli 100% tanpa campuran, dipanen langsung dari peternakan lebah terbaik. Pesan sekarang dan nikmati manfaat kesehatan yang luar biasa. Harga terjangkau dengan kualitas premium. Pengiriman cepat ke seluruh Indonesia."
+        keywords="produk madu, beli madu online, madu murni lampung, madu asli lampung selatan, harga madu, jual madu murni, madu kesehatan, madu organik indonesia, madu margo lestari produk, madu jati agung, katalog madu, daftar produk madu, beli madu murni, toko madu online"
         url="https://madumargolestari.vercel.app/product"
+        image="https://madumargolestari.vercel.app/product-bottles-hero.png"
+        type="website"
+        breadcrumbs={[
+          { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' },
+          { name: 'Produk', url: 'https://madumargolestari.vercel.app/product' }
+        ]}
+        products={seoProducts}
       />
       {/* Bottom CTA Section - Teal Background */}
       <section className="bg-[#00b8a9] relative w-full min-h-[498px] py-8 md:py-0">
@@ -64,7 +80,7 @@ export function ProductPage() {
           <div className="hidden md:block absolute right-[154px] top-[31px] w-[435px] h-[435px]">
             <img
               src={productBottlesHero}
-              alt="Madu Margo Lestari Bottles"
+              alt="Koleksi botol madu murni berkualitas tinggi dari Madu Margo Lestari Lampung - Produk madu asli 100% tanpa campuran"
               className="w-full h-full object-contain"
             />
           </div>
@@ -74,7 +90,7 @@ export function ProductPage() {
             <div className="w-[300px] h-[300px]">
               <img
                 src={productBottlesHero}
-                alt="Madu Margo Lestari Bottles"
+                alt="Koleksi botol madu murni berkualitas tinggi dari Madu Margo Lestari Lampung - Produk madu asli 100% tanpa campuran"
                 className="w-full h-full object-contain"
               />
             </div>
@@ -172,7 +188,7 @@ export function ProductPage() {
                   <div className="absolute top-[38px] left-[109px] w-[165px] h-[380px]">
                     <img
                       src={product.imageUrl || productBottleCard}
-                      alt={product.name}
+                      alt={`Botol Madu Murni ${product.name} Asli Lampung dari Madu Margo Lestari - ${product.description.substring(0, 50)}`}
                       className="w-full h-full object-contain"
                       onError={(e) => {
                         // Fallback to default image if error

@@ -16,7 +16,7 @@ export function Header() {
       <div className="absolute inset-0 w-full h-full">
         <img 
           src={headerImage} 
-          alt="Madu Margo Lestari" 
+          alt="Peternakan lebah Madu Margo Lestari di Jati Agung Lampung Selatan - Sumber madu murni asli 100% dari alam" 
           className="w-full h-full object-cover object-center" 
         />
       </div>
