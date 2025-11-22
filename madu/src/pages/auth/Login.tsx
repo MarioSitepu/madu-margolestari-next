@@ -153,6 +153,11 @@ export function Login() {
           errorMessage += `\n\nDetail: ${JSON.stringify(errorData.details, null, 2)}`;
         }
         
+        // Include error from backend if available
+        if (errorData.error) {
+          errorMessage += `\n\n${errorData.error}`;
+        }
+        
         // Handle specific error cases
         if (errorData.message?.includes('GOOGLE_CLIENT_ID')) {
           errorMessage = 'Konfigurasi Google OAuth tidak lengkap. Silakan hubungi administrator.';

@@ -89,13 +89,11 @@ const initializeTransporter = async () => {
 // Initialize on startup
 await initializeTransporter();
 
-// Admin emails - bisa diubah sesuai kebutuhan
-const ADMIN_EMAILS = [
-  'admin@madumargolestari.com',
-  'admin@example.com',
-  // Tambahkan email admin lainnya di sini
-  ...(process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim()) : [])
-];
+// Admin emails - dari environment variable atau default
+// Format: email1@example.com,email2@example.com (comma-separated)
+const ADMIN_EMAILS = process.env.ADMIN_EMAILS 
+  ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim()).filter(e => e)
+  : ['admin@marles.com', 'admin@madumargolestari.com'];
 
 // Helper function to check if email is admin email
 const isAdminEmail = (email) => {
@@ -155,6 +153,8 @@ router.post('/login', async (req, res) => {
 
     // Ensure admin role if email is admin email
     await ensureAdminRole(user);
+    console.log(`Login user ${user.email}, role: ${user.role}, isAdmin: ${isAdminEmail(user.email)}`);
+    
     // Refresh user data
     await user.populate();
 
@@ -366,6 +366,15 @@ router.post('/google', async (req, res) => {
       stack: error.stack
     });
     
+    // Handle validation errors (e.g., missing fields)
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        success: false,
+        message: 'Data user tidak valid',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
+    }
+    
     // Handle specific Google OAuth errors
     if (error.message && error.message.includes('Token used too early')) {
       return res.status(400).json({
@@ -396,6 +405,17 @@ router.post('/google', async (req, res) => {
       });
     }
 
+    // Handle database errors
+    if (error.name === 'MongoError' || error.name === 'MongoServerError') {
+      console.error('Database error during Google login:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Error database. Silakan coba lagi.',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
+    }
+
+    // Default error response
     res.status(500).json({
       success: false,
       message: 'Terjadi kesalahan saat login dengan Google',

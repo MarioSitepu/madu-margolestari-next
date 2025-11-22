@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 import { API_URL } from '@/lib/api';
 
 export function ForgotPassword() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -21,10 +22,13 @@ export function ForgotPassword() {
     // Check if user is logged in via Google
     if (user && user.provider === 'google') {
       setIsGoogleUser(true);
-      // Reset submitted state jika user adalah Google user
-      setSubmitted(false);
+      // Redirect Google users after 2 seconds
+      const timeout = setTimeout(() => {
+        navigate('/');
+      }, 3000);
+      return () => clearTimeout(timeout);
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -96,24 +100,29 @@ export function ForgotPassword() {
           <div className="p-6 md:p-8">
             {isGoogleUser ? (
               // Google User - Cannot request password reset
-              <div className="text-center py-8 px-6">
+              <div className="text-center py-8 px-6 animate-fade-up">
                 <div className="mb-6 flex justify-center">
-                  <div className="p-4 bg-blue-50 rounded-full">
-                    <AlertCircle className="w-12 h-12 text-blue-600" />
+                  <div className="p-4 bg-yellow-50 rounded-full">
+                    <AlertCircle className="w-12 h-12 text-yellow-600" />
                   </div>
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                  Akun Google
+                  Akun Google Tidak Dapat Reset Password
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  Akun Anda login menggunakan Google. Untuk mengubah password, Anda perlu menggunakan fitur "Lupa Password" dari Google langsung.
+                  Akun Anda login menggunakan Google. Fitur lupa password tidak tersedia untuk akun Google karena password Anda dikelola langsung oleh Google.
                 </p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-gray-700">
-                  <p className="mb-3">
-                    <strong>Alasan:</strong> Data password Anda disimpan dan dikelola oleh Google, bukan oleh sistem kami. Untuk keamanan akun Anda, Anda harus mengatur ulang password melalui Google.
+                <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 mb-6 text-sm text-gray-700 space-y-3">
+                  <p>
+                    <strong>Untuk mengubah password:</strong>
                   </p>
-                  <p className="text-xs">
-                    Kunjungi <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">Google Account Security</a> untuk mengubah password Anda.
+                  <ol className="text-left list-decimal list-inside space-y-2">
+                    <li>Kunjungi <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">Google Account Security</a></li>
+                    <li>Pilih "Password" dari menu</li>
+                    <li>Ikuti instruksi untuk mengubah password Anda</li>
+                  </ol>
+                  <p className="text-xs mt-3 pt-3 border-t border-yellow-200">
+                    Perubahan password Anda akan berlaku untuk semua layanan Google dan aplikasi yang terkoneksi dengan akun Google Anda.
                   </p>
                 </div>
                 <Link 
@@ -123,6 +132,9 @@ export function ForgotPassword() {
                   <ArrowLeft className="w-4 h-4" />
                   Kembali ke Beranda
                 </Link>
+                <p className="text-gray-500 text-xs mt-4">
+                  Akan dialihkan dalam 3 detik...
+                </p>
               </div>
             ) : submitted && success ? (
               <div className="text-center py-8 animate-fade-up">
