@@ -74,16 +74,16 @@ export function Navigation() {
         ? "bg-[#ffde7d]/98 backdrop-blur-sm border-[#00b8a9]/20 shadow-lg" 
         : "bg-[#ffde7d] border-[#00b8a9]/10 shadow-md"
     )}>
-      <div className="container mx-auto flex items-center justify-between px-4 md:px-8 py-3 md:py-4">
+      <div className="container mx-auto flex items-center justify-between px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4">
         {/* Logo & Brand */}
-        <Link to="/" className="flex items-center gap-2 md:gap-3 group">
+        <Link to="/" className="flex items-center gap-2 sm:gap-2.5 md:gap-3 group">
           <img
             src={honeyLogo}
             alt="Madu Margo Lestari Logo"
-            className="w-8 h-8 md:w-10 md:h-10 transition-transform duration-300 group-hover:scale-110"
+            className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 transition-transform duration-300 group-hover:scale-110"
           />
           <span 
-            className="text-xl md:text-2xl lg:text-3xl font-black text-gray-900 transition-colors group-hover:text-[#00b8a9]"
+            className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-gray-900 transition-colors group-hover:text-[#00b8a9]"
             style={{ fontFamily: 'Nort, sans-serif' }}
           >
             <span className="text-gray-900">Madu Margo</span>{' '}
@@ -92,7 +92,7 @@ export function Navigation() {
         </Link>
         
         {/* Desktop Menu */}
-        <div className="hidden items-center gap-2 md:gap-6 lg:gap-8 md:flex">
+        <div className="hidden items-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 md:flex">
           {navigationItems.map((item) =>
             item.type === "route" ? (
               <NavLink

@@ -7,6 +7,9 @@ interface SEOProps {
   image?: string;
   url?: string;
   type?: string;
+  noindex?: boolean;
+  nofollow?: boolean;
+  breadcrumbs?: Array<{ name: string; url: string }>;
   article?: {
     publishedTime?: string;
     modifiedTime?: string;
@@ -20,6 +23,13 @@ interface SEOProps {
     availability?: string;
     brand?: string;
   };
+  products?: Array<{
+    name: string;
+    description: string;
+    image: string;
+    price: number;
+    url: string;
+  }>;
 }
 
 const BASE_URL = 'https://madumargolestari.vercel.app';
@@ -35,12 +45,33 @@ export function SEO({
   image = DEFAULT_IMAGE,
   url = BASE_URL,
   type = 'website',
+  noindex = false,
+  nofollow = false,
+  breadcrumbs,
   article,
-  product
+  product,
+  products
 }: SEOProps) {
+  // Ensure URL ends with / for homepage, remove trailing slash for other pages
+  const canonicalUrl = url === BASE_URL || url === `${BASE_URL}/` 
+    ? `${BASE_URL}/` 
+    : url.replace(/\/$/, '');
+  
   const fullTitle = title.includes('Madu Margo Lestari') 
     ? title 
     : `${title} | Madu Margo Lestari`;
+
+  // Ensure image URL is absolute
+  const imageUrl = image.startsWith('http') ? image : `${BASE_URL}${image.startsWith('/') ? image : `/${image}`}`;
+
+  // Robots meta
+  const robotsContent = [
+    noindex ? 'noindex' : 'index',
+    nofollow ? 'nofollow' : 'follow',
+    'max-image-preview:large',
+    'max-snippet:-1',
+    'max-video-preview:-1'
+  ].join(', ');
 
   // Generate structured data
   const structuredData: any = {
@@ -48,8 +79,8 @@ export function SEO({
     '@type': type === 'article' ? 'Article' : type === 'Product' ? 'Product' : 'WebPage',
     name: fullTitle,
     description,
-    url,
-    image,
+    url: canonicalUrl,
+    image: imageUrl,
     publisher: {
       '@type': 'Organization',
       name: 'Madu Margo Lestari',
@@ -88,6 +119,43 @@ export function SEO({
     };
   }
 
+  // Breadcrumb Structured Data
+  const breadcrumbStructuredData = breadcrumbs && breadcrumbs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((crumb, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.name,
+      item: crumb.url
+    }))
+  } : null;
+
+  // Product ItemList Structured Data (for Product page)
+  const productListStructuredData = products && products.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Produk Madu Margo Lestari',
+    description: 'Koleksi produk madu murni berkualitas tinggi',
+    itemListElement: products.map((prod, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Product',
+        name: prod.name,
+        description: prod.description,
+        image: prod.image,
+        offers: {
+          '@type': 'Offer',
+          price: prod.price,
+          priceCurrency: 'IDR',
+          availability: 'https://schema.org/InStock',
+          url: prod.url
+        }
+      }
+    }))
+  } : null;
+
   return (
     <Helmet>
       {/* Primary Meta Tags */}
@@ -95,23 +163,40 @@ export function SEO({
       <meta name="title" content={fullTitle} />
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <link rel="canonical" href={url} />
+      <meta name="author" content="Madu Margo Lestari" />
+      <meta name="robots" content={robotsContent} />
+      <meta name="language" content="Indonesian" />
+      <meta name="revisit-after" content="7 days" />
+      <meta name="geo.region" content="ID-LA" />
+      <meta name="geo.placename" content="Margo Lestari, Jati Agung, Lampung Selatan" />
+      <meta name="geo.position" content="-5.350000;105.250000" />
+      <meta name="ICBM" content="-5.350000, 105.250000" />
+      
+      {/* Canonical URL - Critical for SEO */}
+      <link rel="canonical" href={canonicalUrl} />
 
-      {/* Open Graph / Facebook */}
+      {/* Open Graph / Facebook - Enhanced */}
       <meta property="og:type" content={type} />
-      <meta property="og:url" content={url} />
+      <meta property="og:url" content={canonicalUrl} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={imageUrl} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content={fullTitle} />
       <meta property="og:site_name" content="Madu Margo Lestari" />
       <meta property="og:locale" content="id_ID" />
+      <meta property="og:locale:alternate" content="en_US" />
 
-      {/* Twitter */}
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content={url} />
-      <meta property="twitter:title" content={fullTitle} />
-      <meta property="twitter:description" content={description} />
-      <meta property="twitter:image" content={image} />
+      {/* Twitter Card - Enhanced */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:url" content={canonicalUrl} />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={imageUrl} />
+      <meta name="twitter:image:alt" content={fullTitle} />
+      <meta name="twitter:site" content="@madumargolestari" />
+      <meta name="twitter:creator" content="@madumargolestari" />
 
       {/* Article specific meta tags */}
       {article && (
@@ -134,10 +219,36 @@ export function SEO({
         </>
       )}
 
-      {/* Structured Data */}
+      {/* Additional SEO Meta Tags */}
+      <meta name="theme-color" content="#00b8a9" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      <meta name="apple-mobile-web-app-title" content="Madu Margo Lestari" />
+      
+      {/* Performance & Resource Hints */}
+      <link rel="preconnect" href="https://www.googletagmanager.com" />
+      <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+      
+      {/* Structured Data - Main Page */}
       <script type="application/ld+json">
         {JSON.stringify(structuredData)}
       </script>
+
+      {/* Breadcrumb Structured Data */}
+      {breadcrumbStructuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(breadcrumbStructuredData)}
+        </script>
+      )}
+
+      {/* Product List Structured Data */}
+      {productListStructuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(productListStructuredData)}
+        </script>
+      )}
     </Helmet>
   );
 }

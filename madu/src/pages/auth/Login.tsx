@@ -1,10 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 import { buildApiUrl, getApiUrl } from '@/lib/api';
+
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: Record<string, unknown>) => void;
+          prompt: (momentListener?: (notification: any) => void) => void;
+        };
+      };
+    };
+  }
+}
 
 const API_URL = getApiUrl();
 
@@ -21,11 +33,12 @@ export function Login() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showGoogleAccounts, setShowGoogleAccounts] = useState(false);
+  const [isGoogleReady, setIsGoogleReady] = useState(false);
+  const [isPromptingGoogle, setIsPromptingGoogle] = useState(false);
   const navigate = useNavigate();
   const { login, getGoogleAccountHistory } = useAuth();
   const [googleAccounts, setGoogleAccounts] = useState(getGoogleAccountHistory());
-  const googleLoginRef = useRef<HTMLDivElement>(null);
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -67,7 +80,7 @@ export function Login() {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
+  const handleGoogleSuccess = useCallback(async (credentialResponse: any) => {
     setIsLoading(true);
     setError('');
 
@@ -143,29 +156,114 @@ export function Login() {
       setError(errorMessage);
     } finally {
       setIsLoading(false);
+      setIsPromptingGoogle(false);
     }
-  };
+  }, [login, navigate]);
 
-  const handleGoogleError = () => {
-    console.error('Google OAuth error occurred');
-    setError('Login dengan Google gagal. Pastikan popup tidak diblokir dan coba lagi.');
-  };
+  const initializeGoogleClient = useCallback((loginHint?: string) => {
+    if (!GOOGLE_CLIENT_ID) {
+      setError('Google Client ID tidak ditemukan. Hubungi administrator untuk konfigurasi.');
+      return false;
+    }
+
+    if (!window.google?.accounts?.id) {
+      return false;
+    }
+
+    window.google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleSuccess,
+      auto_select: false,
+      ux_mode: 'popup',
+      login_hint: loginHint,
+      context: 'signin',
+    });
+    setIsGoogleReady(true);
+    return true;
+  }, [GOOGLE_CLIENT_ID, handleGoogleSuccess]);
+
+  useEffect(() => {
+    if (!GOOGLE_CLIENT_ID) {
+      return;
+    }
+
+    if (window.google?.accounts?.id) {
+      initializeGoogleClient();
+      return;
+    }
+
+    const scriptId = 'google-identity-services';
+    const existingScript = document.getElementById(scriptId) as HTMLScriptElement | null;
+
+    const handleScriptLoad = () => {
+      initializeGoogleClient();
+    };
+
+    if (existingScript) {
+      if (existingScript.hasAttribute('data-loaded')) {
+        initializeGoogleClient();
+      } else {
+        existingScript.addEventListener('load', handleScriptLoad);
+      }
+      return () => {
+        existingScript.removeEventListener('load', handleScriptLoad);
+      };
+    }
+
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      script.setAttribute('data-loaded', 'true');
+      initializeGoogleClient();
+    };
+    script.onerror = () => {
+      setError('Gagal memuat Google Identity Services. Periksa koneksi internet atau coba lagi.');
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      script.onload = null;
+    };
+  }, [GOOGLE_CLIENT_ID, initializeGoogleClient]);
 
   // Refresh Google accounts list when component mounts or after successful login
   useEffect(() => {
     setGoogleAccounts(getGoogleAccountHistory());
   }, [getGoogleAccountHistory]);
 
-  const handleAccountSelect = () => {
-    // When user clicks on a recommended account, trigger Google login button click
-    // The GoogleLogin component will handle account selection via Google's UI
-    if (googleLoginRef.current) {
-      const googleButton = googleLoginRef.current.querySelector('div[role="button"]') as HTMLElement;
-      if (googleButton) {
-        googleButton.click();
-      }
+  const handleGoogleButtonClick = () => {
+    const preferredAccount = googleAccounts[0];
+    const isInitialized = initializeGoogleClient(preferredAccount?.email);
+
+    if (!isInitialized) {
+      setError('Google login belum siap. Mohon tunggu beberapa detik dan coba lagi.');
+      return;
     }
-    setShowGoogleAccounts(false);
+
+    setIsPromptingGoogle(true);
+    setError('');
+
+    try {
+      window.google?.accounts?.id?.prompt((notification) => {
+        if (notification?.isDismissedMoment?.()) {
+          const reason = notification.getDismissedReason?.();
+          if (reason !== 'credential_returned') {
+            console.warn('Google prompt dismissed:', reason);
+            setIsPromptingGoogle(false);
+          }
+        } else if (notification?.isNotDisplayedMoment?.()) {
+          console.warn('Google prompt not displayed:', notification.getNotDisplayedReason?.());
+          setIsPromptingGoogle(false);
+        }
+      });
+    } catch (promptError) {
+      console.error('Gagal membuka Google Sign-In prompt:', promptError);
+      setError('Tidak dapat membuka Google Sign-In. Pastikan popup tidak diblokir dan coba lagi.');
+      setIsPromptingGoogle(false);
+    }
   };
 
   return (
@@ -262,128 +360,72 @@ export function Login() {
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
-          {/* Recommended Google Accounts */}
-          {googleAccounts.length > 0 && (
-            <div className="mb-4">
-              <p className="text-sm text-gray-600 mb-3 font-medium">Akun Google yang pernah digunakan:</p>
-              <div className="space-y-2">
-                {googleAccounts.slice(0, 3).map((account, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={handleAccountSelect}
-                    className="w-full flex items-center gap-3 p-3 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-all duration-200 hover:shadow-md group"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-[#00b8a9] flex items-center justify-center overflow-hidden ring-2 ring-white shadow-sm flex-shrink-0">
-                      {account.avatar ? (
-                        <img
-                          src={account.avatar}
-                          alt={account.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                          }}
-                        />
-                      ) : (
-                        <span className="text-white font-semibold text-sm">
-                          {account.name?.charAt(0)?.toUpperCase() || account.email?.charAt(0)?.toUpperCase() || 'G'}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex-1 text-left min-w-0">
-                      <p className="font-semibold text-gray-900 truncate group-hover:text-[#00b8a9] transition-colors">
-                        Login sebagai {account.name || 'User'}
-                      </p>
-                      <p className="text-sm text-gray-600 truncate">{account.email}</p>
-                    </div>
-                    <div className="flex items-center gap-2 text-gray-400 group-hover:text-[#00b8a9] transition-colors">
-                      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                        <g fill="none" fillRule="evenodd">
-                          <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
-                          <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
-                          <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.348 6.173 0 7.55 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
-                          <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
-                        </g>
-                      </svg>
-                      <ChevronDown size={16} className="opacity-50" />
-                    </div>
-                  </button>
-                ))}
+          {/* Recommended Google Account */}
+          <div className="mb-4 space-y-3">
+            {googleAccounts.length > 0 && (
+              <div>
+                <p className="text-sm text-gray-600 mb-3 font-medium">Akun Google terakhir digunakan:</p>
+                <button
+                  type="button"
+                  onClick={handleGoogleButtonClick}
+                  disabled={isLoading || isPromptingGoogle}
+                  className="w-full flex items-center gap-3 p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl transition-all duration-200 hover:shadow-lg"
+                >
+                  <div className="w-12 h-12 rounded-full bg-[#00b8a9] flex items-center justify-center overflow-hidden ring-2 ring-white shadow-sm flex-shrink-0">
+                    {googleAccounts[0].avatar ? (
+                      <img
+                        src={googleAccounts[0].avatar}
+                        alt={googleAccounts[0].name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <span className="text-white font-semibold text-lg">
+                        {googleAccounts[0].name?.charAt(0)?.toUpperCase() || googleAccounts[0].email?.charAt(0)?.toUpperCase() || 'G'}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex-1 text-left min-w-0">
+                    <p className="font-semibold text-gray-900 truncate">
+                      Login sebagai {googleAccounts[0].name || 'User'}
+                    </p>
+                    <p className="text-sm text-gray-600 truncate">{googleAccounts[0].email}</p>
+                  </div>
+                  <svg width="24" height="24" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                    <g fill="none" fillRule="evenodd">
+                      <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
+                      <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+                      <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.348 6.173 0 7.55 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+                      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                    </g>
+                  </svg>
+                </button>
               </div>
-              {googleAccounts.length > 3 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setShowGoogleAccounts(!showGoogleAccounts)}
-                    className="mt-2 text-sm text-[#00b8a9] hover:underline font-medium w-full text-center"
-                  >
-                    {showGoogleAccounts ? 'Sembunyikan' : `Lihat ${googleAccounts.length - 3} akun lainnya`}
-                  </button>
-                  {showGoogleAccounts && (
-                    <div className="mt-2 space-y-2">
-                      {googleAccounts.slice(3).map((account, index) => (
-                        <button
-                          key={index + 3}
-                          type="button"
-                          onClick={handleAccountSelect}
-                          className="w-full flex items-center gap-3 p-3 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-all duration-200 hover:shadow-md group"
-                        >
-                          <div className="w-10 h-10 rounded-full bg-[#00b8a9] flex items-center justify-center overflow-hidden ring-2 ring-white shadow-sm flex-shrink-0">
-                            {account.avatar ? (
-                              <img
-                                src={account.avatar}
-                                alt={account.name}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  const target = e.target as HTMLImageElement;
-                                  target.style.display = 'none';
-                                }}
-                              />
-                            ) : (
-                              <span className="text-white font-semibold text-sm">
-                                {account.name?.charAt(0)?.toUpperCase() || account.email?.charAt(0)?.toUpperCase() || 'G'}
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex-1 text-left min-w-0">
-                            <p className="font-semibold text-gray-900 truncate group-hover:text-[#00b8a9] transition-colors">
-                              Login sebagai {account.name || 'User'}
-                            </p>
-                            <p className="text-sm text-gray-600 truncate">{account.email}</p>
-                          </div>
-                          <div className="flex items-center gap-2 text-gray-400 group-hover:text-[#00b8a9] transition-colors">
-                            <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                              <g fill="none" fillRule="evenodd">
-                                <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
-                                <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
-                                <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.348 6.173 0 7.55 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
-                                <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
-                              </g>
-                            </svg>
-                            <ChevronDown size={16} className="opacity-50" />
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          )}
-
-          <div className="w-full" ref={googleLoginRef}>
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              theme="outline"
-              size="large"
-              text="signin_with"
-              shape="rectangular"
-              logo_alignment="left"
-              width="100%"
-              useOneTap={false}
-            />
+            )}
+            <button
+              type="button"
+              onClick={handleGoogleButtonClick}
+              disabled={isLoading || isPromptingGoogle || !isGoogleReady}
+              className="w-full bg-white border-2 border-[#00b8a9] text-[#00b8a9] py-3 rounded-lg font-bold hover:bg-[#00b8a9] hover:text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <svg width="20" height="20" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                <g fill="none" fillRule="evenodd">
+                  <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
+                  <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+                  <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.348 6.173 0 7.55 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+                  <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                </g>
+              </svg>
+              {isPromptingGoogle ? 'Membuka Google...' : 'Login dengan Google'}
+            </button>
+            {!isGoogleReady && (
+              <p className="text-xs text-gray-500 text-center">
+                Menunggu Google Sign-In siap...
+              </p>
+            )}
           </div>
 
           <div className="text-center mt-6">

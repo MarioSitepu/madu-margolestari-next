@@ -4,7 +4,7 @@ export const AboutSection = () => {
   return <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 md:py-24">
       {/* Background image */}
       <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
-        <img src={honeyBg} alt="Honey drip background" className="object-cover w-full h-full opacity-40" />
+        <img src={honeyBg} alt="Background tetesan madu alami dari peternakan lebah Madu Margo Lestari - Visualisasi madu murni berkualitas" className="object-cover w-full h-full opacity-40" />
       </div>
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8 md:gap-16">

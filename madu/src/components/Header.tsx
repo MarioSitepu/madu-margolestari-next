@@ -11,47 +11,50 @@ export function Header() {
   }, []);
 
   return (
-    <section className="w-full bg-[#FFDE7D] relative overflow-hidden min-h-[600px] md:min-h-[854px] flex items-start">
+    <section className="w-full bg-[#FFDE7D] relative overflow-hidden min-h-[500px] sm:min-h-[600px] md:min-h-[854px] flex items-start">
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
         <img 
           src={headerImage} 
-          alt="Madu Margo Lestari" 
+          alt="Peternakan lebah Madu Margo Lestari di Jati Agung Lampung Selatan - Sumber madu murni asli 100% dari alam" 
           className="w-full h-full object-cover object-center" 
         />
       </div>
 
       {/* Content Container - Positioned exactly like Figma */}
       {/* Group 98: x: 77, y: 316.5, width: 654, height: 292.89 */}
-      <div className="relative w-full max-w-[1440px] mx-auto">
+      <div className="relative w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-0">
         <div 
           className={`relative transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
           style={{
             marginLeft: 'clamp(16px, 5.35vw, 77px)',
-            marginTop: 'clamp(40px, 37vw, 316.5px)',
+            marginTop: 'clamp(60px, 37vw, 316.5px)',
             width: 'calc(100% - clamp(32px, 10.7vw, 154px))',
-            maxWidth: '654px'
+            maxWidth: '654px',
+            border: '2px solid #00B8A9',
+            padding: '20px',
+            borderRadius: '8px'
           }}
         >
           {/* Group 23: Heading Group - x: 0, y: 0, width: 452, height: 133.89 */}
           <div 
-            className="mb-[18px]"
+            className="mb-4 sm:mb-5 md:mb-[18px]"
             style={{
               width: '100%',
               maxWidth: '452px'
             }}
           >
             <h1 
-              className="text-black leading-[1.342] mb-0"
+              className="text-black leading-[1.2] sm:leading-[1.342] mb-0"
               style={{
                 fontFamily: 'Nort, sans-serif',
                 fontWeight: 800,
-                fontSize: 'clamp(32px, 3.33vw, 48px)',
+                fontSize: 'clamp(28px, 3.33vw, 48px)',
                 lineHeight: '1.342'
               }}
             >
               Rasakan Madu Asli{' '}
-              <br />
+              <br className="hidden sm:block" />
               Dari{' '}
               {/* Sumbernya dengan underline - positioned inline */}
               <span 
@@ -59,7 +62,7 @@ export function Header() {
                 style={{
                   fontFamily: 'Nort, sans-serif',
                   fontWeight: 800,
-                  fontSize: 'clamp(32px, 3.33vw, 48px)',
+                  fontSize: 'clamp(28px, 3.33vw, 48px)',
                   lineHeight: '1.342'
                 }}
               >
@@ -68,9 +71,9 @@ export function Header() {
                 <span 
                   className="absolute left-0 bg-black"
                   style={{ 
-                    width: 'clamp(200px, 18.4vw, 264.38px)', 
-                    height: 'clamp(8px, 0.77vw, 11.02px)',
-                    bottom: 'clamp(-8px, -0.77vw, -11.02px)'
+                    width: 'clamp(180px, 18.4vw, 264.38px)', 
+                    height: 'clamp(6px, 0.77vw, 11.02px)',
+                    bottom: 'clamp(-6px, -0.77vw, -11.02px)'
                   }}
                 ></span>
               </span>
@@ -78,33 +81,45 @@ export function Header() {
           </div>
 
           {/* Description Text - x: 0, y: 151.89, width: 654, height: 76 */}
-          <p 
-            className="text-[12px] md:text-[14px] font-normal text-black leading-[1.342] mb-[18px]"
+          <div 
+            className="text-[12px] sm:text-[13px] md:text-[14px] font-bold text-white leading-relaxed sm:leading-[1.342] mb-4 sm:mb-5 md:mb-[18px] px-0 py-0 md:px-0 md:py-0 rounded-none md:rounded-none"
             style={{ 
               fontFamily: 'Nort, sans-serif',
-              fontWeight: 400,
+              fontWeight: 700,
               fontSize: 'clamp(12px, 0.97vw, 14px)',
               lineHeight: '1.342',
               width: '100%',
-              maxWidth: '654px'
+              maxWidth: '654px',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.25rem'
             }}
           >
-            Selamat datang di Madu Margo Lestari, tempat di mana keaslian dan kualitas
-            bertemu. Kami bangga mempersembahkan madu 100% asli,
-            dipanen langsung dari peternakan lebah alami tanpa campuran
-            bahan apapun. Setiap tetes madu kami adalah hasil dari alam
-            yang murni, yang diproses dengan hati-hati untuk menjaga
-            manfaat dan kualitasnya.
-          </p>
+            {['Selamat datang di Madu Margo Lestari tempat ini,', 'keaslian dan kualitas bertemu Kami bangga mempersembahkan,', 'madu seratus persen asli dipanen dari peternakan alam,', 'lebah alami tanpa campuran bahan apapun untuk Setiap,', 'tetes madu kami adalah hasil dari alam yang murni,', 'murni yang diproses dengan hati-hati untuk menjaga baik.'].map((word, index) => (
+              <span
+                key={index}
+                className="px-1.5 py-0.5 rounded"
+                style={{
+                  backgroundColor: 'rgba(0, 184, 169, 0.4)',
+                  display: 'inline-block',
+                  border: '1px solid rgba(0, 184, 169, 0.6)',
+                  minWidth: '150px',
+                  textAlign: 'left'
+                }}
+              >
+                {word}
+              </span>
+            ))}
+          </div>
 
           {/* Group 86: Button - x: 0, y: 245.89, width: 186, height: 47 */}
-          <div className="w-full md:w-[186px] h-[47px]">
+          <div className="w-full sm:w-[186px] h-[44px] sm:h-[47px]">
             <Button
-              className="w-full h-full bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none flex items-center justify-center gap-2 px-8"
+              className="w-full h-full bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none flex items-center justify-center gap-2 px-6 sm:px-8 transition-all duration-300 hover:scale-105 active:scale-95"
               style={{ 
                 fontFamily: 'Nort, sans-serif', 
                 boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
-                fontSize: '14px',
+                fontSize: 'clamp(13px, 0.97vw, 14px)',
                 lineHeight: '1.342'
               }}
             >

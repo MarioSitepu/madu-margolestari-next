@@ -7,6 +7,7 @@ import { Documentation } from "@/components/Documentation";
 import { WhyUs } from "@/components/WhyUs";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 
 export function Home() {
   const [isVisible, setIsVisible] = useState(false);
@@ -18,10 +19,14 @@ export function Home() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <SEO 
-        title="Madu Margo Lestari - Madu Murni Berkualitas Tinggi"
-        description="Madu Margo Lestari - Platform E-Commerce Modern untuk UMKM Madu dengan Produk Berkualitas Tinggi. Dapatkan madu murni 100% asli, dipanen langsung dari peternakan lebah alami tanpa campuran bahan apapun. Kaya akan manfaat kesehatan dan rasa khas yang autentik."
-        keywords="madu margo lestari, madu murni, madu asli, madu berkualitas, madu kesehatan, e-commerce madu, umkm madu, produk madu, madu lampung, madu lampung selatan, madu jati agung, madu indonesia, jual madu, beli madu online, madu alami, madu organik"
+        title="Madu Margo Lestari - Madu Murni Berkualitas Tinggi | E-Commerce UMKM Madu Terpercaya"
+        description="Madu Margo Lestari - Platform E-Commerce Modern untuk UMKM Madu dengan Produk Berkualitas Tinggi. Dapatkan madu murni 100% asli, dipanen langsung dari peternakan lebah alami tanpa campuran bahan apapun. Kaya akan manfaat kesehatan dan rasa khas yang autentik. Pengiriman ke seluruh Indonesia."
+        keywords="madu margo lestari, madu murni, madu asli, madu berkualitas, madu kesehatan, e-commerce madu, umkm madu, produk madu, madu lampung, madu lampung selatan, madu jati agung, madu indonesia, jual madu, beli madu online, madu alami, madu organik, madu murni 100%, madu peternakan lebah"
         url="https://madumargolestari.vercel.app/"
+        image="https://madumargolestari.vercel.app/marles-honey.png"
+        breadcrumbs={[
+          { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' }
+        ]}
       />
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000'}>
         <Header />
@@ -44,6 +49,7 @@ export function Home() {
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-700'}>
         <Footer />
       </div>
+      <ScrollToTopButton />
     </div>
   );
 }

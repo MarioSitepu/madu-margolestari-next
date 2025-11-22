@@ -75,26 +75,179 @@ export function ProductHighlight() {
           }
         }
       `}</style>
-      <section className="w-full bg-white relative overflow-hidden min-h-screen md:min-h-[786px]">
+      <section className="w-full bg-white relative overflow-hidden min-h-[600px] sm:min-h-[700px] md:min-h-[786px]">
         {/* Background Rectangle - #00B8A9 */}
         <div className="absolute inset-0 bg-[#00B8A9]"></div>
 
       {/* Main Container - 1440px width */}
-      <div className="relative max-w-[1440px] mx-auto h-auto md:h-[786px] overflow-visible py-6 md:py-0 px-4 md:px-0 flex flex-col md:block">
-        {/* Text Content - Right Side / Top on Mobile */}
+      <div className="relative max-w-[1440px] mx-auto h-auto md:h-[786px] overflow-visible py-8 sm:py-10 md:py-0 px-4 sm:px-6 md:px-0 flex flex-col md:block">
+        {/* Mobile Layout - Stacked vertically */}
+        <div className="flex flex-col md:hidden w-full gap-6 sm:gap-8">
+          {/* Text Content - Top on Mobile */}
+          <div className="relative text-white mx-auto px-0 text-center w-full max-w-full sm:max-w-lg z-10 animate-fade-in-right">
+            {/* Heading - "Produk Paling Banyak Terjual" */}
+            <div className="mb-4 sm:mb-5">
+              <h2 
+                className="text-[28px] sm:text-[36px] font-bold text-white leading-[1.2] sm:leading-[1.3] mb-0 drop-shadow-lg"
+                style={{ 
+                  fontFamily: 'Nort, sans-serif',
+                  fontWeight: 700
+                }}
+              >
+                Produk Paling{' '}
+                <br />
+                Banyak{' '}
+                <span className="text-[#FFDE7D] relative inline-block">
+                  Terjual
+                  <span 
+                    className="absolute left-0 bg-black transition-all duration-300"
+                    style={{
+                      width: 'clamp(80px, 20vw, 156px)',
+                      height: 'clamp(5px, 1.2vw, 11px)',
+                      bottom: 'clamp(-5px, -1.2vw, -11px)'
+                    }}
+                  ></span>
+                </span>
+              </h2>
+            </div>
+
+            {/* Description Text - Center on Mobile */}
+            <p 
+              className="text-[13px] sm:text-[14px] font-normal text-white leading-[1.6] text-center mx-auto drop-shadow-md px-2"
+              style={{ 
+                fontFamily: 'Nort, sans-serif',
+                maxWidth: '100%'
+              }}
+            >
+              Madu Hutan Premium kami adalah produk best seller yang telah memikat
+              hati pelanggan setia kami. Dipanen langsung dari hutan alami, madu ini
+              mengandung berbagai nektar bunga pilihan yang memberikan rasa khas dan
+              manfaat luar biasa. Setiap tetesnya kaya akan nutrisi dan antioksidan
+              alami yang dapat mendukung daya tahan tubuh dan meningkatkan kesehatan
+              secara keseluruhan.
+            </p>
+          </div>
+
+          {/* Product Card - Bottom on Mobile */}
+          <div className="relative w-full max-w-[320px] sm:max-w-[350px] mx-auto animate-fade-in-up z-10">
+            {/* Product Card */}
+            <div
+              className="product-card relative bg-[#FFDE7D] rounded-[4px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl cursor-pointer group flex flex-col pb-6 sm:pb-8"
+              style={{
+                width: '100%',
+                minHeight: '400px',
+                height: 'auto',
+                boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
+              }}
+            >
+              {/* Product Image */}
+              <div 
+                className="product-image relative z-10 transition-transform duration-500 group-hover:scale-110 mx-auto shrink-0 flex items-center justify-center order-first"
+                style={{
+                  width: 'clamp(140px, 35vw, 200px)',
+                  height: 'clamp(220px, 50vw, 320px)',
+                  marginTop: '24px',
+                  marginBottom: '20px'
+                }}
+              >
+                {!imageLoaded && (
+                  <div className="absolute inset-0 bg-[#FFDE7D] animate-pulse rounded-lg"></div>
+                )}
+                <img
+                  src={product.imageUrl || productBottleCard}
+                  alt={product.name}
+                  className={`w-full h-full object-contain transition-opacity duration-500 ${
+                    imageLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  onLoad={() => setImageLoaded(true)}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = productBottleCard;
+                    setImageLoaded(true);
+                  }}
+                />
+              </div>
+
+              {/* Product Info Container - Bottom Section */}
+              <div className="px-4 sm:px-6 pb-4 sm:pb-6 space-y-3 sm:space-y-4 flex-1 flex flex-col justify-end">
+                {/* Product Name */}
+                <div className="h-auto flex items-center justify-start">
+                  <h3 
+                    className="text-[20px] sm:text-[22px] font-medium text-[#00B8A9] leading-[1.342] text-left"
+                    style={{ fontFamily: 'Nort, sans-serif' }}
+                  >
+                    <span className="underline decoration-2 underline-offset-2">{firstWord}</span>
+                    {restOfName && ` ${restOfName}`}
+                  </h3>
+                </div>
+
+                {/* Product Description */}
+                <div className="w-full h-auto">
+                  <p 
+                    className="text-[12px] sm:text-[13px] font-normal text-black leading-relaxed"
+                    style={{ fontFamily: 'Nort, sans-serif' }}
+                  >
+                    {product.description}
+                  </p>
+                </div>
+
+                {/* Price and Cart Container */}
+                <div className="h-auto flex items-center justify-between pt-2">
+                  {/* Price Group */}
+                  <div className="flex items-center gap-1">
+                    <span 
+                      className="text-[14px] sm:text-[15px] font-medium text-black leading-[1.342] whitespace-nowrap flex items-center"
+                      style={{ fontFamily: 'Nort, sans-serif' }}
+                    >
+                      Rp
+                    </span>
+                    <span 
+                      className="text-[22px] sm:text-[24px] font-medium text-[#00B8A9] leading-[1.342] whitespace-nowrap flex items-center"
+                      style={{ fontFamily: 'Nort, sans-serif' }}
+                    >
+                      {product.price.toLocaleString('id-ID')}
+                    </span>
+                  </div>
+
+                  {/* Shopping Cart Icon */}
+                  <button
+                    onClick={handleProductBuy}
+                    className="relative bg-white text-[#00b8a9] rounded-xl hover:bg-[#00b8a9] hover:text-white active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#00b8a9] focus:ring-offset-2 transition-all duration-300 shadow-md hover:shadow-xl flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 shrink-0 group/btn overflow-hidden"
+                    title="Tambah ke Keranjang"
+                    aria-label="Tambah produk ke keranjang"
+                    style={{
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                    }}
+                  >
+                    <span className="absolute inset-0 bg-[#00b8a9] transform scale-x-0 group-hover/btn:scale-x-100 transition-transform duration-300 origin-left"></span>
+                    <ShoppingCart 
+                      size={20} 
+                      strokeWidth={2.5} 
+                      className="relative z-10 transition-transform duration-300 group-hover/btn:scale-110" 
+                      aria-hidden="true"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout - Absolute Positioning */}
+        {/* Text Content - Right Side */}
         <div 
-          className="relative md:absolute text-white mx-auto md:mx-0 px-0 md:px-0 mb-6 md:mb-0 md:mt-0 text-center md:text-left animate-fade-in-right order-1 md:order-0 w-full md:w-auto"
+          className="hidden md:block absolute text-white text-left animate-fade-in-right z-10"
           style={{
             right: 'clamp(20px, 3.47vw, 50px)',
             top: 'clamp(100px, 9.72vw, 140px)',
             width: 'clamp(250px, 22.92vw, 330px)',
-            maxWidth: '100%'
+            maxWidth: '330px'
           }}
         >
           {/* Heading - "Produk Paling Banyak Terjual" */}
-          <div className="mb-3 md:mb-6">
+          <div className="mb-6">
             <h2 
-              className="text-[26px] md:text-[48px] font-bold text-white leading-[1.15] md:leading-[1.342] mb-0 drop-shadow-lg"
+              className="text-[48px] font-bold text-white leading-[1.342] mb-0 drop-shadow-lg"
               style={{ 
                 fontFamily: 'Nort, sans-serif',
                 fontWeight: 700
@@ -119,11 +272,11 @@ export function ProductHighlight() {
 
           {/* Description Text - align RIGHT */}
           <p 
-            className="text-[11px] md:text-[14px] font-normal text-white leading-[1.6] md:leading-[1.342] text-center md:text-right mx-auto md:mx-0 drop-shadow-md"
+            className="text-[14px] font-normal text-white leading-[1.342] text-right mx-0 drop-shadow-md"
             style={{ 
               fontFamily: 'Nort, sans-serif',
               width: 'clamp(250px, 19.44vw, 280px)',
-              maxWidth: '100%'
+              maxWidth: '280px'
             }}
           >
             Madu Hutan Premium kami adalah produk best seller yang telah memikat
@@ -135,9 +288,9 @@ export function ProductHighlight() {
           </p>
         </div>
 
-        {/* Product Card Group - Positioned at x: 113, y: 20 / Bottom on Mobile */}
+        {/* Product Card Group - Desktop: Positioned at x: 113, y: 20 */}
         <div 
-          className="product-card-container relative md:absolute overflow-visible mx-auto md:mx-0 w-full max-w-[300px] md:max-w-[382px] md:w-auto animate-fade-in-up order-2 md:order-0"
+          className="hidden md:block absolute overflow-visible animate-fade-in-up z-10"
           style={{
             left: 'clamp(20px, 7.85vw, 113px)',
             top: 'clamp(20px, 2.54vw, 20px)',
@@ -145,28 +298,28 @@ export function ProductHighlight() {
             height: 'auto'
           }}
         >
-          {/* Product Card - Same structure as ProductList, but keep yellow background */}
+          {/* Product Card - Desktop */}
           <div
-            className="product-card relative bg-[#FFDE7D] rounded-[4px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl cursor-pointer group flex flex-col md:block pb-4 md:pb-0"
+            className="product-card relative bg-[#FFDE7D] rounded-[4px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl cursor-pointer group"
             style={{
               marginTop: 'clamp(0px, 7.78vw, 112px)',
               width: '100%',
-              minHeight: 'clamp(320px, 40.76vw, 587px)',
+              minHeight: 'clamp(400px, 40.76vw, 587px)',
               height: 'auto',
               boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
             }}
           >
-            {/* Product Image - Enlarged, anchored at bottom, extending upward */}
+            {/* Product Image - Desktop */}
             <div 
-              className="product-image relative md:absolute z-10 transition-transform duration-500 group-hover:scale-110 mx-auto md:mx-0 shrink-0 flex items-center justify-center order-first md:order-0"
+              className="product-image absolute z-10 transition-transform duration-500 group-hover:scale-110"
               style={{
                 left: '50%',
                 transform: 'translateX(-50%)',
-                bottom: 'auto',
-                width: 'clamp(110px, 15.56vw, 224px)',
-                height: 'clamp(180px, 37.5vw, 540px)',
-                marginTop: '16px',
-                marginBottom: '12px'
+                bottom: 'clamp(100px, 13.06vw, 150px)',
+                width: 'clamp(120px, 15.56vw, 224px)',
+                height: 'clamp(200px, 37.5vw, 540px)',
+                marginTop: 0,
+                marginBottom: 0
               }}
             >
               {!imageLoaded && (
@@ -174,7 +327,7 @@ export function ProductHighlight() {
               )}
               <img
                 src={product.imageUrl || productBottleCard}
-                alt={product.name}
+                alt={`Botol Madu Murni ${product.name} Asli Lampung dari Madu Margo Lestari - Produk Best Seller Madu Berkualitas Tinggi`}
                 className={`w-full h-full object-contain transition-opacity duration-500 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
@@ -187,71 +340,81 @@ export function ProductHighlight() {
               />
             </div>
 
-            {/* Product Name - Positioned at x: 24, y: 421, with underline on first word */}
-            <div 
-              className="product-name relative md:absolute left-[16px] md:left-[24px] right-[16px] md:right-[24px] h-auto md:h-[32px] flex items-center justify-start px-4 md:px-0 mt-0 mb-2 md:my-0"
-            >
-              <h3 
-                className="text-[17px] md:text-[24px] font-medium text-[#00B8A9] leading-[1.342] text-left md:whitespace-nowrap"
-                style={{ fontFamily: 'Nort, sans-serif' }}
-              >
-                <span className="underline decoration-2 underline-offset-2">{firstWord}</span>
-                {restOfName && ` ${restOfName}`}
-              </h3>
-            </div>
-
-            {/* Product Description - Positioned at x: 24, y: 457, width: 302, height: 76 */}
-            <div 
-              className="product-description relative md:absolute left-[16px] md:left-[24px] right-[16px] md:right-[24px] md:w-[302px] md:h-[76px] px-4 md:px-0 mb-3 md:my-0"
-            >
-              <p 
-                className="text-[10px] md:text-[12px] font-normal text-black leading-normal md:leading-[1.342]"
-                style={{ fontFamily: 'Nort, sans-serif' }}
-              >
-                {product.description}
-              </p>
-            </div>
-
-            {/* Price and Cart Container - Aligned at y: 533 */}
-            <div 
-              className="product-price relative md:absolute left-[16px] md:left-[24px] right-[16px] md:right-[24px] h-[32px] flex items-center justify-between px-4 md:px-0 mb-4 md:my-0"
-            >
-              {/* Price Group */}
-              <div className="flex items-center gap-1 h-full">
-                {/* Rp */}
-                <span 
-                  className="text-[12px] md:text-[15px] font-medium text-black leading-[1.342] whitespace-nowrap flex items-center"
-                  style={{ fontFamily: 'Nort, sans-serif' }}
-                >
-                  Rp
-                </span>
-                {/* Price */}
-                <span 
-                  className="text-[17px] md:text-[24px] font-medium text-[#00B8A9] leading-[1.342] whitespace-nowrap flex items-center"
-                  style={{ fontFamily: 'Nort, sans-serif' }}
-                >
-                  {product.price.toLocaleString('id-ID')}
-                </span>
-              </div>
-
-              {/* Shopping Cart Icon - Symmetrically aligned */}
-              <button
-                onClick={handleProductBuy}
-                className="relative bg-white text-[#00b8a9] rounded-xl hover:bg-[#00b8a9] hover:text-white active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#00b8a9] focus:ring-offset-2 transition-all duration-300 shadow-md hover:shadow-xl flex items-center justify-center w-8 h-8 md:w-12 md:h-12 shrink-0 group/btn overflow-hidden"
-                title="Tambah ke Keranjang"
-                aria-label="Tambah produk ke keranjang"
+            {/* Product Info Container - Desktop */}
+            <div className="absolute left-[24px] right-[24px]">
+              {/* Product Name */}
+              <div 
+                className="product-name absolute h-[32px] flex items-center justify-start"
                 style={{
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                  top: 'clamp(280px, 403px, 403px)'
                 }}
               >
-                <span className="absolute inset-0 bg-[#00b8a9] transform scale-x-0 group-hover/btn:scale-x-100 transition-transform duration-300 origin-left"></span>
-                <ShoppingCart 
-                  size={15} 
-                  strokeWidth={2.5} 
-                  className="md:w-5 md:h-5 relative z-10 transition-transform duration-300 group-hover/btn:scale-110" 
-                  aria-hidden="true"
-                />
-              </button>
+                <h3 
+                  className="text-[24px] font-medium text-[#00B8A9] leading-[1.342] text-left whitespace-nowrap"
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
+                  <span className="underline decoration-2 underline-offset-2">{firstWord}</span>
+                  {restOfName && ` ${restOfName}`}
+                </h3>
+              </div>
+
+              {/* Product Description */}
+              <div 
+                className="product-description absolute w-[302px] h-[76px]"
+                style={{
+                  top: 'clamp(320px, 439px, 439px)'
+                }}
+              >
+                <p 
+                  className="text-[12px] font-normal text-black leading-[1.342]"
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
+                  {product.description}
+                </p>
+              </div>
+
+              {/* Price and Cart Container */}
+              <div 
+                className="product-price absolute h-[32px] flex items-center justify-between"
+                style={{
+                  top: 'clamp(380px, 515px, 515px)'
+                }}
+              >
+                {/* Price Group */}
+                <div className="flex items-center gap-1">
+                  <span 
+                    className="text-[15px] font-medium text-black leading-[1.342] whitespace-nowrap flex items-center"
+                    style={{ fontFamily: 'Nort, sans-serif' }}
+                  >
+                    Rp
+                  </span>
+                  <span 
+                    className="text-[24px] font-medium text-[#00B8A9] leading-[1.342] whitespace-nowrap flex items-center"
+                    style={{ fontFamily: 'Nort, sans-serif' }}
+                  >
+                    {product.price.toLocaleString('id-ID')}
+                  </span>
+                </div>
+
+                {/* Shopping Cart Icon */}
+                <button
+                  onClick={handleProductBuy}
+                  className="relative bg-white text-[#00b8a9] rounded-xl hover:bg-[#00b8a9] hover:text-white active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#00b8a9] focus:ring-offset-2 transition-all duration-300 shadow-md hover:shadow-xl flex items-center justify-center w-12 h-12 shrink-0 group/btn overflow-hidden"
+                  title="Tambah ke Keranjang"
+                  aria-label="Tambah produk ke keranjang"
+                  style={{
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                  }}
+                >
+                  <span className="absolute inset-0 bg-[#00b8a9] transform scale-x-0 group-hover/btn:scale-x-100 transition-transform duration-300 origin-left"></span>
+                  <ShoppingCart 
+                    size={20} 
+                    strokeWidth={2.5} 
+                    className="relative z-10 transition-transform duration-300 group-hover/btn:scale-110" 
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -269,7 +432,7 @@ export function ProductHighlight() {
           <div className="relative w-full h-full">
             <img
               src={honeyBg}
-              alt="Honey background"
+              alt="Background tetesan madu alami dari peternakan lebah Madu Margo Lestari Lampung"
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
             />
             {/* Gradient overlay for better text readability */}

@@ -172,7 +172,7 @@ export function Gallery() {
                     <div className="bg-white p-3 rounded-lg">
                       <img
                         src={image}
-                        alt={`Gallery image ${startIndex + index + 1}`}
+                        alt={`Galeri foto dokumentasi madu dan peternakan lebah Madu Margo Lestari - Gambar ${startIndex + index + 1}`}
                         className="w-full h-[380px] object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
@@ -285,7 +285,7 @@ export function Gallery() {
             <img
               ref={lightboxImageRef}
               src={images[lightboxIndex]}
-              alt={`Gallery image ${lightboxIndex + 1}`}
+              alt={`Galeri foto dokumentasi madu dan peternakan lebah Madu Margo Lestari - Lightbox gambar ${lightboxIndex + 1}`}
               className="max-w-full max-h-[90vh] object-contain transition-transform duration-300"
               style={{
                 transform: `scale(${zoom})`,

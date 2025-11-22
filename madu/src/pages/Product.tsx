@@ -3,6 +3,7 @@ import { ArrowRight, ShoppingCart } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/SEO";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import productBottlesHero from "@/assets/product-bottles-hero.png";
 import productBottleCard from "@/assets/product-bottle-card.png";
 import axios from "axios";
@@ -48,13 +49,29 @@ export function ProductPage() {
     alert(`${product.name} - Rp ${product.price.toLocaleString('id-ID')} ditambahkan ke keranjang!`);
   };
 
+  // Prepare products for SEO structured data
+  const seoProducts = products.map(product => ({
+    name: product.name,
+    description: product.description,
+    image: product.imageUrl || 'https://madumargolestari.vercel.app/product-bottle-card.png',
+    price: product.price,
+    url: `https://madumargolestari.vercel.app/product`
+  }));
+
   return (
     <div className="min-h-screen bg-white">
       <SEO 
-        title="Produk Madu Margo Lestari - Beli Madu Murni Online"
-        description="Jelajahi koleksi produk madu murni berkualitas tinggi dari Madu Margo Lestari. Dapatkan madu asli 100% tanpa campuran, dipanen langsung dari peternakan lebah terbaik. Pesan sekarang dan nikmati manfaat kesehatan yang luar biasa."
-        keywords="produk madu, beli madu online, madu murni lampung, madu asli lampung selatan, harga madu, jual madu murni, madu kesehatan, madu organik indonesia, madu margo lestari produk, madu jati agung"
+        title="Produk Madu Margo Lestari - Beli Madu Murni Online | Katalog Lengkap"
+        description="Jelajahi koleksi produk madu murni berkualitas tinggi dari Madu Margo Lestari. Dapatkan madu asli 100% tanpa campuran, dipanen langsung dari peternakan lebah terbaik. Pesan sekarang dan nikmati manfaat kesehatan yang luar biasa. Harga terjangkau dengan kualitas premium. Pengiriman cepat ke seluruh Indonesia."
+        keywords="produk madu, beli madu online, madu murni lampung, madu asli lampung selatan, harga madu, jual madu murni, madu kesehatan, madu organik indonesia, madu margo lestari produk, madu jati agung, katalog madu, daftar produk madu, beli madu murni, toko madu online"
         url="https://madumargolestari.vercel.app/product"
+        image="https://madumargolestari.vercel.app/product-bottles-hero.png"
+        type="website"
+        breadcrumbs={[
+          { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' },
+          { name: 'Produk', url: 'https://madumargolestari.vercel.app/product' }
+        ]}
+        products={seoProducts}
       />
       {/* Bottom CTA Section - Teal Background */}
       <section className="bg-[#00b8a9] relative w-full min-h-[498px] py-8 md:py-0">
@@ -63,7 +80,7 @@ export function ProductPage() {
           <div className="hidden md:block absolute right-[154px] top-[31px] w-[435px] h-[435px]">
             <img
               src={productBottlesHero}
-              alt="Madu Margo Lestari Bottles"
+              alt="Koleksi botol madu murni berkualitas tinggi dari Madu Margo Lestari Lampung - Produk madu asli 100% tanpa campuran"
               className="w-full h-full object-contain"
             />
           </div>
@@ -73,7 +90,7 @@ export function ProductPage() {
             <div className="w-[300px] h-[300px]">
               <img
                 src={productBottlesHero}
-                alt="Madu Margo Lestari Bottles"
+                alt="Koleksi botol madu murni berkualitas tinggi dari Madu Margo Lestari Lampung - Produk madu asli 100% tanpa campuran"
                 className="w-full h-full object-contain"
               />
             </div>
@@ -90,7 +107,7 @@ export function ProductPage() {
                 Nikmati kelezatan dan manfaat dari Madu Alami{' '}
                 <span className="text-[#ffde7d] relative inline-block">
                   100%
-                  <span className="absolute bottom-0 left-0 w-[80px] md:w-[122px] h-[8px] md:h-[11px] bg-white"></span>
+                  <span className="absolute bottom-0 left-0 w-20 md:w-[122px] h-2 md:h-2.5 bg-white"></span>
                 </span>
               </h2>
             </div>
@@ -106,15 +123,16 @@ export function ProductPage() {
             </div>
 
             {/* Buy Now Button */}
-            <div className="w-full md:w-[186px] h-[47px]">
+            <div className="w-full md:w-[186px] h-[47px] flex justify-center md:justify-start">
               <Button
                 onClick={handleBuyNow}
-                className="w-full h-full bg-[#ffde7d] text-white hover:bg-[#f5c869] font-bold rounded-none flex items-center justify-center gap-2 px-8"
+                className="w-full md:w-auto bg-[#ffde7d] text-white hover:bg-[#f5c869] font-bold rounded-none flex items-center justify-center gap-2 px-8"
                 style={{ 
                   fontFamily: 'Nort, sans-serif', 
                   boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
                   fontSize: '14px',
-                  lineHeight: '1.342'
+                  lineHeight: '1.342',
+                  height: '47px'
                 }}
               >
                 <span>Beli Sekarang</span>
@@ -137,7 +155,7 @@ export function ProductPage() {
               Produk{' '}
               <span className="text-[#00b8a9] relative inline-block">
                 Kami
-                <span className="absolute bottom-0 left-0 w-full h-[11px] bg-black"></span>
+                <span className="absolute bottom-0 left-0 w-full h-2.5 bg-black"></span>
               </span>
             </h2>
           </div>
@@ -163,14 +181,14 @@ export function ProductPage() {
                 return (
                 <div
                   key={product._id}
-                  className="relative w-full max-w-[382px] h-[587px] bg-[#00b8a9] rounded-[4px] overflow-hidden mx-auto"
+                  className="relative w-full max-w-[382px] h-[587px] bg-[#00b8a9] rounded-sm overflow-hidden mx-auto"
                   style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)' }}
                 >
                   {/* Product Image - Positioned exactly as Figma */}
                   <div className="absolute top-[38px] left-[109px] w-[165px] h-[380px]">
                     <img
                       src={product.imageUrl || productBottleCard}
-                      alt={product.name}
+                      alt={`Botol Madu Murni ${product.name} Asli Lampung dari Madu Margo Lestari - ${product.description.substring(0, 50)}`}
                       className="w-full h-full object-contain"
                       onError={(e) => {
                         // Fallback to default image if error
@@ -181,7 +199,7 @@ export function ProductPage() {
                   </div>
 
                 {/* Product Name - Positioned at x: 24, y: 421, allow text to extend right */}
-                <div className="absolute top-[421px] left-[24px] right-[24px] h-[32px] flex items-center justify-start">
+                <div className="absolute top-[421px] left-6 right-6 h-8 flex items-center justify-start">
                   <h3 
                     className="text-[24px] font-medium text-[#ffde7d] leading-[1.342] text-left whitespace-nowrap"
                     style={{ fontFamily: 'Nort, sans-serif' }}
@@ -192,7 +210,7 @@ export function ProductPage() {
                 </div>
 
                 {/* Product Description - Positioned at x: 24, y: 457, width: 302, height: 76 */}
-                <div className="absolute top-[457px] left-[24px] w-[302px] h-[76px]">
+                <div className="absolute top-[457px] left-6 w-[302px] h-[76px]">
                   <p 
                     className="text-[12px] font-normal text-black leading-[1.342]"
                     style={{ fontFamily: 'Nort, sans-serif' }}
@@ -202,7 +220,7 @@ export function ProductPage() {
                 </div>
 
                 {/* Price and Cart Container - Aligned at y: 533 */}
-                <div className="absolute top-[533px] left-[24px] right-[24px] h-[32px] flex items-center justify-between">
+                <div className="absolute top-[533px] left-6 right-6 h-8 flex items-center justify-between">
                   {/* Price Group */}
                   <div className="flex items-center gap-1 h-full">
                     {/* Rp */}
@@ -243,6 +261,7 @@ export function ProductPage() {
 
       {/* Footer */}
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 }

@@ -29,7 +29,7 @@ export const VisitUsSection = () => {
             <div className="border-4 border-[#00b8a9] rounded-lg h-64 md:h-80 bg-[#ffde7d] relative overflow-hidden">
               <img 
                 src={headerImage} 
-                alt="Lokasi Madu Margo Lestari" 
+                alt="Lokasi peternakan lebah Madu Margo Lestari di Jati Agung, Lampung Selatan - Tempat produksi madu murni berkualitas tinggi" 
                 className="w-full h-full object-cover opacity-60"
               />
               <div className="absolute inset-0 flex items-center justify-center">
