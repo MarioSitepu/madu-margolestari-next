@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Footer } from "@/components/Footer";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
+import { SEO } from "@/components/SEO";
 import marlesHoney from "@/assets/marles-honey.png";
 import { API_URL } from '@/lib/api';
 
