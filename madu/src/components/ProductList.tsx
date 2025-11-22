@@ -62,7 +62,7 @@ export function ProductList() {
                 <div className="relative w-[120px] h-[180px] sm:w-[140px] sm:h-[220px] md:w-[165px] md:h-[380px]">
                   <img
                     src={product.imageUrl || productBottleCard}
-                    alt={product.name}
+                    alt={`Botol Madu Murni ${product.name} Asli Lampung dari Madu Margo Lestari - Produk Madu Berkualitas Tinggi`}
                     className="w-full h-full object-contain"
                     onError={(e) => {
                       // Fallback to default image if error

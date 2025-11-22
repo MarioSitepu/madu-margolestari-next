@@ -155,7 +155,7 @@ export function ProductHighlight() {
                 )}
                 <img
                   src={product.imageUrl || productBottleCard}
-                  alt={product.name}
+                  alt={`Botol Madu Murni ${product.name} Asli Lampung dari Madu Margo Lestari - Produk Best Seller Madu Berkualitas Tinggi`}
                   className={`w-full h-full object-contain transition-opacity duration-500 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
                   }`}

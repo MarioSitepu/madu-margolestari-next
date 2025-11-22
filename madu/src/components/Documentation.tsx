@@ -6,7 +6,7 @@ import headerImage from "@/assets/header-image-1a216d.png";
 export function Documentation() {
   return <section className="w-full bg-white py-0 relative">
       <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px]">
-        <img src={headerImage} alt="Peternak lebah memeriksa sarang" className="w-full h-full object-cover" />
+        <img src={headerImage} alt="Dokumentasi peternak lebah Madu Margo Lestari memeriksa sarang lebah di Jati Agung Lampung Selatan - Proses produksi madu murni berkualitas" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/30"></div>
         <div className="absolute inset-0 flex items-center">
           <div className="container mx-auto px-4 sm:px-6 md:px-8">

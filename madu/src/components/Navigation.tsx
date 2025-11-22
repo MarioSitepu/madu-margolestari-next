@@ -79,7 +79,7 @@ export function Navigation() {
         <Link to="/" className="flex items-center gap-2 sm:gap-2.5 md:gap-3 group">
           <img
             src={honeyLogo}
-            alt="Madu Margo Lestari Logo"
+            alt="Logo Madu Margo Lestari - UMKM madu murni asli dari Lampung Selatan"
             className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 transition-transform duration-300 group-hover:scale-110"
           />
           <span 

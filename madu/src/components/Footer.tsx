@@ -62,7 +62,7 @@ export function Footer() {
                       <div className="flex items-center justify-center w-5 h-5 shrink-0">
                         <img
                           src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
-                          alt="Email icon"
+                          alt="Icon email untuk berlangganan newsletter Madu Margo Lestari"
                           className="w-5 h-5"
                         />
                       </div>
@@ -89,7 +89,7 @@ export function Footer() {
                     <div className="flex items-center flex-1 pl-4 pr-2">
                       <img
                         src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
-                        alt="Email icon"
+                        alt="Icon email untuk berlangganan newsletter Madu Margo Lestari"
                         className="w-4 h-4 mr-2 shrink-0"
                       />
                       <input
