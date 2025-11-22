@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import marlesHoney from "@/assets/marles-honey.png";
 import honeyBg from "@/assets/honey-bg-6badc9.png";
 
@@ -94,14 +95,14 @@ export const AboutUs = () => {
         </div>
 
         <div className="container relative mx-auto h-full px-4 sm:px-6 lg:px-8">
-          <div className="grid min-h-[50vh] items-center gap-6 py-8 lg:min-h-[60vh] lg:grid-cols-2 lg:gap-8 lg:py-12">
+          <div className="grid min-h-[50vh] items-center gap-6 py-12 sm:py-16 lg:min-h-[60vh] lg:grid-cols-2 lg:gap-8 lg:py-20">
             {/* Left Content */}
             <div
-              className={`z-10 space-y-4 transition-all duration-1000 lg:space-y-5 ${
+              className={`z-10 space-y-6 transition-all duration-1000 lg:space-y-7 ${
                 isVisible ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
               }`}
             >
-              <div>
+              <div className="space-y-4 lg:space-y-5">
                 <h1 
                   className="text-3xl font-black leading-tight text-black sm:text-4xl lg:mb-4 lg:text-5xl"
                   style={{ fontFamily: 'Nort, sans-serif' }}
@@ -135,9 +136,9 @@ export const AboutUs = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+              <div className="flex flex-col gap-3 pt-4 sm:pt-6 sm:flex-row">
                 <Button 
-                  className="bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none px-10 py-4 text-sm"
+                  className="bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none px-10 py-4 text-sm flex-1 sm:flex-none"
                   style={{ 
                     fontFamily: 'Nort, sans-serif',
                     boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
@@ -147,9 +148,9 @@ export const AboutUs = () => {
                 >
                   Hubungi Kami
                 </Button>
-                <Link to="/product">
+                <Link to="/product" className="flex-1 sm:flex-none">
                   <Button
-                    className="bg-white text-[#00B8A9] hover:bg-gray-50 font-bold rounded-none px-10 py-4 text-sm"
+                    className="bg-white text-[#00B8A9] hover:bg-gray-50 font-bold rounded-none px-10 py-4 text-sm w-full sm:w-auto"
                     style={{ 
                       fontFamily: 'Nort, sans-serif',
                       boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
@@ -176,7 +177,7 @@ export const AboutUs = () => {
                   className="w-full h-full object-cover"
                 />
                 {/* Overlay gradient untuk efek */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20" />
+                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/20" />
                 {/* Decorative elements */}
                 <div className="absolute right-6 top-6 h-12 w-12 animate-float rounded-full bg-white/40 blur-xl" />
                 <div
@@ -444,7 +445,7 @@ export const AboutUs = () => {
             </div>
 
             <Card className="border-0 bg-white p-6 text-left text-black shadow-2xl lg:p-8">
-              <div className="mb-6 flex aspect-video items-center justify-center rounded-xl bg-gradient-to-br from-[#ffde7d] to-[#f4d58d]">
+              <div className="mb-6 flex aspect-video items-center justify-center rounded-xl bg-linear-to-br from-[#ffde7d] to-[#f4d58d]">
                 <MapPin className="h-16 w-16 text-[#00b8a9]" />
               </div>
               <h3 
@@ -474,6 +475,7 @@ export const AboutUs = () => {
 
       {/* Footer */}
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 };

@@ -3,11 +3,11 @@ import apakahKamuTahuImage2 from "@/assets/apakah-kamu-tahu-image-2-2d9ce4.png";
 
 export function InfoSection() {
   return (
-    <section className="w-full bg-[#00B8A9] relative overflow-hidden py-8 md:py-0" style={{ minHeight: 'clamp(500px, 40.42vw, 582px)' }}>
+    <section className="w-full bg-[#00B8A9] relative overflow-hidden py-12 sm:py-16 md:py-0" style={{ minHeight: 'clamp(500px, 40.42vw, 582px)' }}>
       {/* Main Container - 1440px width */}
-      <div className="relative max-w-[1440px] mx-auto px-4 md:px-0 h-auto md:h-[582px] flex flex-col md:block">
+      <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 md:px-0 h-auto md:h-[582px] flex flex-col md:block">
         {/* Mobile Layout - Stacked */}
-        <div className="flex flex-col md:hidden w-full gap-6">
+        <div className="flex flex-col md:hidden w-full gap-6 sm:gap-8">
           {/* Heading Group */}
           <div className="w-full text-center md:text-left">
             <h2
@@ -44,7 +44,7 @@ export function InfoSection() {
           </div>
 
           {/* Images Group - Mobile: Show below heading */}
-          <div className="relative w-full flex justify-center items-center gap-4" style={{ minHeight: '200px' }}>
+          <div className="relative w-full flex justify-center items-center gap-4 sm:gap-6" style={{ minHeight: '200px' }}>
             {/* Image 1 */}
             <div
               className="relative"
