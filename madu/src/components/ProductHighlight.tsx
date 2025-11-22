@@ -1,14 +1,91 @@
-import { ShoppingCart } from 'lucide-react';
-import { useState } from 'react';
+import { ShoppingCart, CheckCircle, X } from 'lucide-react';
+import React, { useState } from 'react';
 import productBottleCard from "@/assets/product-bottle-card.png";
 import honeyBg from "@/assets/honey-bg-6badc9.png";
 
-const handleProductBuy = () => {
-  alert('Lebah Cerana - Rp 50.000 ditambahkan ke keranjang!');
+interface AddToCartNotificationProps {
+  isOpen: boolean;
+  productName: string;
+  price: number;
+  onClose: () => void;
+}
+
+const AddToCartNotification = ({ isOpen, productName, price, onClose }: AddToCartNotificationProps) => {
+  React.useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(onClose, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in" style={{ opacity: 0, animationDelay: '0s', animation: 'fadeIn 0.2s ease-out forwards' }}>
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { 
+            opacity: 0; 
+            transform: scale(0.95);
+          }
+          to { 
+            opacity: 1; 
+            transform: scale(1);
+          }
+        }
+      `}</style>
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in" style={{ opacity: 0, animationDelay: '0s', animation: 'scaleIn 0.2s ease-out forwards' }}>
+        {/* Header - Green Gradient for Success */}
+        <div className="bg-gradient-to-r from-[#00b8a9] to-[#009d92] px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-6 h-6 text-white flex-shrink-0" strokeWidth={2} />
+            <h3 className="text-white font-bold text-lg">Berhasil!</h3>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-white hover:bg-white/20 p-1 rounded-lg transition-colors"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" strokeWidth={2} />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-6">
+          <div className="text-center space-y-3">
+            <p className="text-gray-800 font-semibold text-lg">{productName}</p>
+            <p className="text-[#00b8a9] font-bold text-2xl">
+              Rp {price.toLocaleString('id-ID')}
+            </p>
+            <p className="text-gray-600 text-sm">Telah ditambahkan ke keranjang Anda</p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="bg-gray-50 px-6 py-4 flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 bg-[#00b8a9] hover:bg-[#009d92] text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
+          >
+            Lanjut Berbelanja
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export function ProductHighlight() {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [cartNotification, setCartNotification] = useState<{ isOpen: boolean; productName: string; price: number }>({
+    isOpen: false,
+    productName: '',
+    price: 0
+  });
 
   const product = {
     name: 'Lebah Cerana',
@@ -236,7 +313,11 @@ export function ProductHighlight() {
 
               {/* Shopping Cart Icon - Symmetrically aligned */}
               <button
-                onClick={handleProductBuy}
+                onClick={() => setCartNotification({
+                  isOpen: true,
+                  productName: product.name,
+                  price: product.price
+                })}
                 className="relative bg-white text-[#00b8a9] rounded-xl hover:bg-[#00b8a9] hover:text-white active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#00b8a9] focus:ring-offset-2 transition-all duration-300 shadow-md hover:shadow-xl flex items-center justify-center w-8 h-8 md:w-12 md:h-12 shrink-0 group/btn overflow-hidden"
                 title="Tambah ke Keranjang"
                 aria-label="Tambah produk ke keranjang"
@@ -278,6 +359,14 @@ export function ProductHighlight() {
         </div>
       </div>
     </section>
+    
+    {/* Add to Cart Notification Modal */}
+    <AddToCartNotification
+      isOpen={cartNotification.isOpen}
+      productName={cartNotification.productName}
+      price={cartNotification.price}
+      onClose={() => setCartNotification({ ...cartNotification, isOpen: false })}
+    />
     </>
   );
 }
