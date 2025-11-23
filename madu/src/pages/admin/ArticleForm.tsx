@@ -188,15 +188,16 @@ export function ArticleForm() {
 
     try {
       setUploadingImage(true);
+      console.log('Starting image upload for article...');
 
       const token = localStorage.getItem('token');
       const response = await axios.post(`${API_URL}/articles/upload-image`, formDataUpload, {
         headers: {
-          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
         }
       });
 
+      console.log('Image upload response:', response.data);
       if (response.data.success) {
         const imageUrl = response.data.imageUrl;
         // Set both image and backgroundImage to the same URL (thumbnail otomatis dari gambar artikel)
