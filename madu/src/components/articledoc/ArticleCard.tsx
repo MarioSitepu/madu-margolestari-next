@@ -50,7 +50,8 @@ export function ArticleCard({ article }: ArticleCardProps) {
     navigate(`/article-galeri/${articleData.id}`);
   };
 
-  return <div className="bg-[#00b8a9] border-[6px] border-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+  return (
+    <div className="bg-[#00b8a9] border-[6px] border-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
       <div className="h-56 relative overflow-hidden">
         <img 
           src={articleData.image} 
@@ -96,37 +97,6 @@ export function ArticleCard({ article }: ArticleCardProps) {
           <div className="flex items-center">
             <UserCircleIcon className="h-5 w-5 mr-2" />
             <span className="text-sm font-semibold text-[#ffde7d]">{articleData.author}</span>
-          </div>
-
-          <h3 className="text-lg sm:text-xl font-bold mb-2 line-clamp-2">
-            {articleData.title}
-          </h3>
-
-          <p className="text-sm leading-relaxed mb-3 opacity-95 line-clamp-2">
-            {truncateText(articleData.description, 5)}
-          </p>
-
-          {articleData.tags && (
-            <div className="flex flex-wrap gap-2 mb-3 hidden sm:flex">
-              {articleData.tags.slice(0, 3).map((tag, index) => (
-                <span
-                  key={index}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 bg-white/20 text-white text-xs rounded-full"
-                >
-                  <Tag className="w-3 h-3" />
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="flex justify-between items-center pt-3 border-t border-white/20">
-          <div className="flex items-center">
-            <UserCircleIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-            <span className="text-xs sm:text-sm font-semibold text-[#ffde7d] truncate">
-              {articleData.author}
-            </span>
           </div>
 
           <button
