@@ -208,7 +208,12 @@ export function ProductForm() {
       }
     } catch (error: any) {
       console.error('Error uploading image:', error);
-      alert(error.response?.data?.message || 'Gagal mengupload gambar');
+      const errorMessage = error.response?.data?.message || error.message || 'Gagal mengupload gambar';
+      setValidationError({
+        isOpen: true,
+        title: 'Gagal Mengupload Gambar',
+        message: errorMessage
+      });
     } finally {
       setUploadingImage(false);
     }
@@ -219,12 +224,20 @@ export function ProductForm() {
     if (file) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        alert('File harus berupa gambar');
+        setValidationError({
+          isOpen: true,
+          title: 'Format File Tidak Valid',
+          message: 'File harus berupa gambar. Gunakan format JPG, PNG, atau GIF.'
+        });
         return;
       }
       // Validate file size (10MB)
       if (file.size > 10 * 1024 * 1024) {
-        alert('Ukuran file maksimal 10MB');
+        setValidationError({
+          isOpen: true,
+          title: 'Ukuran File Terlalu Besar',
+          message: 'Ukuran file maksimal 10MB. Silakan kompres gambar terlebih dahulu.'
+        });
         return;
       }
       handleImageUpload(file);
@@ -261,11 +274,19 @@ export function ProductForm() {
     if (files && files.length > 0) {
       const file = files[0];
       if (!file.type.startsWith('image/')) {
-        alert('File harus berupa gambar');
+        setValidationError({
+          isOpen: true,
+          title: 'Format File Tidak Valid',
+          message: 'File harus berupa gambar. Gunakan format JPG, PNG, atau GIF.'
+        });
         return;
       }
       if (file.size > 10 * 1024 * 1024) {
-        alert('Ukuran file maksimal 10MB');
+        setValidationError({
+          isOpen: true,
+          title: 'Ukuran File Terlalu Besar',
+          message: 'Ukuran file maksimal 10MB. Silakan kompres gambar terlebih dahulu.'
+        });
         return;
       }
       handleImageUpload(file);
