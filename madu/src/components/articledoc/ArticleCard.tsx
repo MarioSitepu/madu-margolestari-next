@@ -1,5 +1,11 @@
-import { useNavigate } from 'react-router-dom';
-import { CalendarIcon, UserIcon, UserCircleIcon, ArrowRightIcon, Tag } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import {
+  CalendarIcon,
+  UserIcon,
+  UserCircleIcon,
+  ArrowRightIcon,
+  Tag,
+} from "lucide-react";
 import defaultArticleImage from "@/assets/marles-honey.png";
 
 interface ArticleData {
@@ -17,6 +23,12 @@ interface ArticleCardProps {
   article?: ArticleData;
 }
 
+function truncateText(text: string, maxWords: number): string {
+  const words = text.split(" ");
+  if (words.length <= maxWords) return text;
+  return words.slice(0, maxWords).join(" ") + "...";
+}
+
 export function ArticleCard({ article }: ArticleCardProps) {
   const navigate = useNavigate();
 
@@ -27,8 +39,9 @@ export function ArticleCard({ article }: ArticleCardProps) {
     date: "26 Desember 2024",
     participants: 60,
     title: "Pengambilan Madu",
-    description: "Madu alami ini kaya akan antioksidan, vitamin, dan mineral yang dapat membantu meningkatkan daya tahan tubuh",
-    author: "Madu Margo Lestari"
+    description:
+      "Madu alami ini kaya akan antioksidan, vitamin, dan mineral yang dapat membantu meningkatkan daya tahan tubuh",
+    author: "Madu Margo Lestari",
   };
 
   const articleData = article || defaultArticle;
@@ -84,14 +97,47 @@ export function ArticleCard({ article }: ArticleCardProps) {
             <UserCircleIcon className="h-5 w-5 mr-2" />
             <span className="text-sm font-semibold text-[#ffde7d]">{articleData.author}</span>
           </div>
-          <button 
+
+          <h3 className="text-lg sm:text-xl font-bold mb-2 line-clamp-2">
+            {articleData.title}
+          </h3>
+
+          <p className="text-sm leading-relaxed mb-3 opacity-95 line-clamp-2">
+            {truncateText(articleData.description, 5)}
+          </p>
+
+          {articleData.tags && (
+            <div className="flex flex-wrap gap-2 mb-3 hidden sm:flex">
+              {articleData.tags.slice(0, 3).map((tag, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 bg-white/20 text-white text-xs rounded-full"
+                >
+                  <Tag className="w-3 h-3" />
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-between items-center pt-3 border-t border-white/20">
+          <div className="flex items-center">
+            <UserCircleIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+            <span className="text-xs sm:text-sm font-semibold text-[#ffde7d] truncate">
+              {articleData.author}
+            </span>
+          </div>
+
+          <button
             onClick={handleLihatGaleri}
             className="bg-white text-[#00b8a9] text-sm font-semibold py-2.5 px-5 rounded-lg shadow-md flex items-center gap-2 hover:bg-[#ffde7d] hover:text-[#00b8a9] transition-all duration-300 hover:scale-105"
           >
             <span>Lihat Galeri</span>
-            <ArrowRightIcon className="h-4 w-4" />
+            <ArrowRightIcon className="h-3 w-3 sm:h-4 sm:w-4" />
           </button>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 }

@@ -23,7 +23,14 @@ export function ArticleDoc() {
         url="https://madumargolestari.vercel.app/article"
         type="website"
       />
-      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000'} style={{ width: '100%' }}>
+      <div
+        className={
+          isVisible
+            ? "opacity-100"
+            : "opacity-0 transition-opacity duration-1000"
+        }
+        style={{ width: "100%" }}
+      >
         <ArticleHeader />
       </div>
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-200'}>
@@ -40,11 +47,17 @@ export function ArticleDoc() {
           sortBy={sortBy}
         />
       </div>
-      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-400'}>
+      <div
+        className={
+          isVisible
+            ? "opacity-100"
+            : "opacity-0 transition-opacity duration-1000 delay-400"
+        }
+      >
         <Gallery />
       </div>
     </div>
-  )
+  );
 }
 
-export default ArticleDoc
+export default ArticleDoc;
