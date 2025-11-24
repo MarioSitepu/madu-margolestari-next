@@ -19,9 +19,9 @@ export function Home() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <SEO 
-        title="Madu Margo Lestari - Madu Murni Berkualitas Tinggi | E-Commerce UMKM Madu Terpercaya"
-        description="Madu Margo Lestari - Platform E-Commerce Modern untuk UMKM Madu dengan Produk Berkualitas Tinggi. Dapatkan madu murni 100% asli, dipanen langsung dari peternakan lebah alami tanpa campuran bahan apapun. Kaya akan manfaat kesehatan dan rasa khas yang autentik. Pengiriman ke seluruh Indonesia."
-        keywords="madu margo lestari, madu murni, madu asli, madu berkualitas, madu kesehatan, e-commerce madu, umkm madu, produk madu, madu lampung, madu lampung selatan, madu jati agung, madu indonesia, jual madu, beli madu online, madu alami, madu organik, madu murni 100%, madu peternakan lebah"
+        title="Madu Jaya Lestari - Madu Murni Berkualitas Tinggi | E-Commerce UMKM Madu Terpercaya"
+        description="Madu Jaya Lestari - Platform E-Commerce Modern untuk UMKM Madu dengan Produk Berkualitas Tinggi. Dapatkan madu murni 100% asli, dipanen langsung dari peternakan lebah alami tanpa campuran bahan apapun. Kaya akan manfaat kesehatan dan rasa khas yang autentik. Pengiriman ke seluruh Indonesia."
+        keywords="madu jaya lestari, madu margo lestari, maps madu jaya lestari, madu di margo lestari, madu murni, madu asli, madu berkualitas, madu kesehatan, e-commerce madu, umkm madu, produk madu, madu lampung, madu lampung selatan, madu jati agung, madu indonesia, jual madu, beli madu online, madu alami, madu organik, madu murni 100%, madu peternakan lebah, lokasi madu jaya lestari, alamat madu jaya lestari"
         url="https://madumargolestari.vercel.app/"
         image="https://madumargolestari.vercel.app/marles-honey.png"
         breadcrumbs={[

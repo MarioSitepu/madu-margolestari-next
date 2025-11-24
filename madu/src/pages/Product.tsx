@@ -61,9 +61,9 @@ export function ProductPage() {
   return (
     <div className="min-h-screen bg-white">
       <SEO 
-        title="Produk Madu Margo Lestari - Beli Madu Murni Online | Katalog Lengkap"
-        description="Jelajahi koleksi produk madu murni berkualitas tinggi dari Madu Margo Lestari. Dapatkan madu asli 100% tanpa campuran, dipanen langsung dari peternakan lebah terbaik. Pesan sekarang dan nikmati manfaat kesehatan yang luar biasa. Harga terjangkau dengan kualitas premium. Pengiriman cepat ke seluruh Indonesia."
-        keywords="produk madu, beli madu online, madu murni lampung, madu asli lampung selatan, harga madu, jual madu murni, madu kesehatan, madu organik indonesia, madu margo lestari produk, madu jati agung, katalog madu, daftar produk madu, beli madu murni, toko madu online"
+        title="Produk Madu Jaya Lestari - Beli Madu Murni Online | Katalog Lengkap"
+        description="Jelajahi koleksi produk madu murni berkualitas tinggi dari Madu Jaya Lestari. Dapatkan madu asli 100% tanpa campuran, dipanen langsung dari peternakan lebah terbaik. Pesan sekarang dan nikmati manfaat kesehatan yang luar biasa. Harga terjangkau dengan kualitas premium. Pengiriman cepat ke seluruh Indonesia."
+        keywords="produk madu, beli madu online, madu murni lampung, madu asli lampung selatan, harga madu, jual madu murni, madu kesehatan, madu organik indonesia, madu jaya lestari produk, madu margo lestari, maps madu jaya lestari, madu di margo lestari, madu jati agung, katalog madu, daftar produk madu, beli madu murni, toko madu online, lokasi madu jaya lestari"
         url="https://madumargolestari.vercel.app/product"
         image="https://madumargolestari.vercel.app/product-bottles-hero.png"
         type="website"
@@ -80,7 +80,7 @@ export function ProductPage() {
           <div className="hidden md:block absolute right-[154px] top-[31px] w-[435px] h-[435px]">
             <img
               src={productBottlesHero}
-              alt="Koleksi botol madu murni berkualitas tinggi dari Madu Margo Lestari Lampung - Produk madu asli 100% tanpa campuran"
+              alt="Koleksi botol madu murni berkualitas tinggi dari Madu Jaya Lestari Lampung - Produk madu asli 100% tanpa campuran"
               className="w-full h-full object-contain"
             />
           </div>
@@ -90,7 +90,7 @@ export function ProductPage() {
             <div className="w-[300px] h-[300px]">
               <img
                 src={productBottlesHero}
-                alt="Koleksi botol madu murni berkualitas tinggi dari Madu Margo Lestari Lampung - Produk madu asli 100% tanpa campuran"
+                alt="Koleksi botol madu murni berkualitas tinggi dari Madu Jaya Lestari Lampung - Produk madu asli 100% tanpa campuran"
                 className="w-full h-full object-contain"
               />
             </div>
@@ -188,7 +188,7 @@ export function ProductPage() {
                   <div className="absolute top-[38px] left-[109px] w-[165px] h-[380px]">
                     <img
                       src={product.imageUrl || productBottleCard}
-                      alt={`Botol Madu Murni ${product.name} Asli Lampung dari Madu Margo Lestari - ${product.description.substring(0, 50)}`}
+                      alt={`Botol Madu Murni ${product.name} Asli Lampung dari Madu Jaya Lestari - ${product.description.substring(0, 50)}`}
                       className="w-full h-full object-contain"
                       onError={(e) => {
                         // Fallback to default image if error

@@ -16,9 +16,9 @@ export function ArticleDoc() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-[#ffde7d]">
       <SEO 
-        title="Artikel & Dokumentasi Madu Margo Lestari | Blog Informasi Madu"
-        description="Baca artikel dan dokumentasi lengkap tentang madu, manfaat kesehatan, tips penggunaan, dan informasi seputar peternakan lebah dari Madu Margo Lestari. Pelajari lebih lanjut tentang madu murni dan cara memilih madu berkualitas. Update terbaru tentang dunia madu dan kesehatan."
-        keywords="artikel madu, dokumentasi madu, manfaat madu, tips madu, peternakan lebah, informasi madu, blog madu, madu margo lestari artikel, artikel kesehatan madu, tips penggunaan madu, cara memilih madu berkualitas, informasi peternakan lebah"
+        title="Artikel & Dokumentasi Madu Jaya Lestari | Blog Informasi Madu"
+        description="Baca artikel dan dokumentasi lengkap tentang madu, manfaat kesehatan, tips penggunaan, dan informasi seputar peternakan lebah dari Madu Jaya Lestari. Pelajari lebih lanjut tentang madu murni dan cara memilih madu berkualitas. Update terbaru tentang dunia madu dan kesehatan."
+        keywords="artikel madu, dokumentasi madu, manfaat madu, tips madu, peternakan lebah, informasi madu, blog madu, madu jaya lestari artikel, madu margo lestari, maps madu jaya lestari, madu di margo lestari, artikel kesehatan madu, tips penggunaan madu, cara memilih madu berkualitas, informasi peternakan lebah"
         url="https://madumargolestari.vercel.app/article"
         type="website"
         image="https://madumargolestari.vercel.app/article.png"

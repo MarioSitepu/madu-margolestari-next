@@ -79,14 +79,14 @@ export function Navigation() {
         <Link to="/" className="flex items-center gap-2 sm:gap-2.5 md:gap-3 group">
           <img
             src={honeyLogo}
-            alt="Logo Madu Margo Lestari - UMKM madu murni asli dari Lampung Selatan"
+            alt="Logo Madu Jaya Lestari - UMKM madu murni asli dari Lampung Selatan"
             className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 transition-transform duration-300 group-hover:scale-110"
           />
           <span 
             className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-gray-900 transition-colors group-hover:text-[#00b8a9]"
             style={{ fontFamily: 'Nort, sans-serif' }}
           >
-            <span className="text-gray-900">Madu Margo</span>{' '}
+            <span className="text-gray-900">Madu Jaya</span>{' '}
             <span className="text-[#00b8a9]">Lestari</span>
           </span>
         </Link>

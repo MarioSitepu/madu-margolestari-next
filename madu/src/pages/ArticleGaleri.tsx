@@ -304,9 +304,9 @@ export function ArticleGaleri() {
   return (
     <div className="bg-[#ffde7d] min-h-screen">
       <SEO 
-        title={`${article.title} | Madu Margo Lestari`}
+        title={`${article.title} | Madu Jaya Lestari`}
         description={article.description || article.content.substring(0, 160) + '...'}
-        keywords={article.tags ? article.tags.join(', ') : 'artikel madu, informasi madu, madu margo lestari'}
+        keywords={article.tags ? article.tags.join(', ') + ', madu jaya lestari, madu margo lestari, maps madu jaya lestari, madu di margo lestari' : 'artikel madu, informasi madu, madu jaya lestari, madu margo lestari, maps madu jaya lestari, madu di margo lestari'}
         url={articleUrl}
         type="article"
         image={articleImage}
@@ -318,7 +318,7 @@ export function ArticleGaleri() {
         article={{
           publishedTime: publishedTime,
           modifiedTime: publishedTime,
-          author: article.authorName || 'Madu Margo Lestari',
+          author: article.authorName || 'Madu Jaya Lestari',
           section: 'Artikel Madu',
           tags: article.tags || []
         }}
@@ -357,7 +357,7 @@ export function ArticleGaleri() {
             <div className="mb-8">
               <img
                 src={article.image || article.backgroundImage || "/images/beekeeper-main.jpg"}
-                alt={`Gambar utama artikel ${article.title} - Dokumentasi lengkap tentang madu dan peternakan lebah dari Madu Margo Lestari`}
+                alt={`Gambar utama artikel ${article.title} - Dokumentasi lengkap tentang madu dan peternakan lebah dari Madu Jaya Lestari`}
                 className="w-full h-[500px] md:h-[600px] object-cover rounded-lg"
               />
             </div>
@@ -475,7 +475,7 @@ export function ArticleGaleri() {
           <div className="absolute left-6 top-0 -translate-y-1/2 z-30 pointer-events-none">
             <img
               src={marlesHoney}
-              alt="Logo Madu Margo Lestari - Madu murni asli dari peternakan lebah Lampung Selatan"
+              alt="Logo Madu Jaya Lestari - Madu murni asli dari peternakan lebah Lampung Selatan"
               className="w-28 md:w-36 lg:w-25 object-contain drop-shadow-2xl"
             />
           </div>
@@ -724,7 +724,7 @@ export function ArticleGaleri() {
                   <div className="overflow-hidden">
                     <img
                       src={relatedArticle.image || marlesHoney}
-                      alt={`Gambar artikel terkait ${relatedArticle.title} - Artikel madu dan peternakan lebah dari Madu Margo Lestari`}
+                      alt={`Gambar artikel terkait ${relatedArticle.title} - Artikel madu dan peternakan lebah dari Madu Jaya Lestari`}
                       className="w-full h-44 object-cover"
                     />
                   </div>
@@ -761,7 +761,7 @@ export function ArticleGaleri() {
                             strokeLinejoin="round"
                           />
                         </svg>
-                        <span>Madu Margo Lestari</span>
+                        <span>Madu Jaya Lestari</span>
                       </div>
 
                       <button 

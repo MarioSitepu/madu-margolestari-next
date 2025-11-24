@@ -16,7 +16,7 @@ export function Header() {
       <div className="absolute inset-0 w-full h-full">
         <img 
           src={headerImage} 
-          alt="Peternakan lebah Madu Margo Lestari di Jati Agung Lampung Selatan - Sumber madu murni asli 100% dari alam" 
+          alt="Peternakan lebah Madu Jaya Lestari di Jati Agung Lampung Selatan - Sumber madu murni asli 100% dari alam" 
           className="w-full h-full object-cover object-center" 
         />
       </div>
@@ -95,7 +95,7 @@ export function Header() {
               gap: '0.25rem'
             }}
           >
-            {['Selamat datang di Madu Margo Lestari tempat ini,', 'keaslian dan kualitas bertemu Kami bangga mempersembahkan,', 'madu seratus persen asli dipanen dari peternakan alam,', 'lebah alami tanpa campuran bahan apapun untuk Setiap,', 'tetes madu kami adalah hasil dari alam yang murni,', 'murni yang diproses dengan hati-hati untuk menjaga baik.'].map((word, index) => (
+            {['Selamat datang di Madu Jaya Lestari tempat ini,', 'keaslian dan kualitas bertemu Kami bangga mempersembahkan,', 'madu seratus persen asli dipanen dari peternakan alam,', 'lebah alami tanpa campuran bahan apapun untuk Setiap,', 'tetes madu kami adalah hasil dari alam yang murni,', 'murni yang diproses dengan hati-hati untuk menjaga baik.'].map((word, index) => (
               <span
                 key={index}
                 className="px-1.5 py-0.5 rounded"

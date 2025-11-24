@@ -28,7 +28,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
     participants: 60,
     title: "Pengambilan Madu",
     description: "Madu alami ini kaya akan antioksidan, vitamin, dan mineral yang dapat membantu meningkatkan daya tahan tubuh",
-    author: "Madu Margo Lestari"
+    author: "Madu Jaya Lestari"
   };
 
   const articleData = article || defaultArticle;
@@ -41,7 +41,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
       <div className="h-56 relative overflow-hidden">
         <img 
           src={articleData.image} 
-          alt={`Gambar artikel ${articleData.title} - Dokumentasi dan informasi tentang madu dari Madu Margo Lestari`}
+          alt={`Gambar artikel ${articleData.title} - Dokumentasi dan informasi tentang madu dari Madu Jaya Lestari`}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
         />
       </div>

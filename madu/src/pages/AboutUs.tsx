@@ -71,9 +71,9 @@ export const AboutUs = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900">
       <SEO 
-        title="Tentang Kami - Madu Margo Lestari | Profil UMKM Madu Terpercaya"
-        description="Kenali Madu Margo Lestari - UMKM madu terpercaya dengan lebih dari 10 tahun pengalaman. Kami menyediakan madu murni 100% asli dari peternakan lebah terbaik di Margo Lestari, Jati Agung, Lampung Selatan. Komitmen kami adalah memberikan produk berkualitas tinggi dengan standar kebersihan ketat. Lebih dari 5000 pelanggan puas dan 50+ mitra peternak."
-        keywords="tentang madu margo lestari, profil perusahaan madu, sejarah madu margo lestari, visi misi madu, umkm madu lampung, peternakan lebah lampung selatan, madu jati agung, profil umkm madu, sejarah madu margo lestari, komitmen kualitas madu"
+        title="Tentang Kami - Madu Jaya Lestari | Profil UMKM Madu Terpercaya"
+        description="Kenali Madu Jaya Lestari - UMKM madu terpercaya dengan lebih dari 10 tahun pengalaman. Kami menyediakan madu murni 100% asli dari peternakan lebah terbaik di Margo Lestari, Jati Agung, Lampung Selatan. Komitmen kami adalah memberikan produk berkualitas tinggi dengan standar kebersihan ketat. Lebih dari 5000 pelanggan puas dan 50+ mitra peternak."
+        keywords="tentang madu jaya lestari, madu margo lestari, maps madu jaya lestari, madu di margo lestari, profil perusahaan madu, sejarah madu jaya lestari, visi misi madu, umkm madu lampung, peternakan lebah lampung selatan, madu jati agung, profil umkm madu, sejarah madu jaya lestari, komitmen kualitas madu, lokasi madu jaya lestari, alamat madu jaya lestari"
         url="https://madumargolestari.vercel.app/about"
         image="https://madumargolestari.vercel.app/marles-honey.png"
         breadcrumbs={[
@@ -173,7 +173,7 @@ export const AboutUs = () => {
               <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/40 bg-white/40 shadow-xl backdrop-blur lg:aspect-4/5 max-w-md mx-auto">
                 <img 
                   src={marlesHoney} 
-                  alt="Madu murni asli dari peternakan lebah Madu Margo Lestari di Jati Agung, Lampung Selatan - Produk madu berkualitas tinggi 100% alami" 
+                  alt="Madu murni asli dari peternakan lebah Madu Jaya Lestari di Jati Agung, Lampung Selatan - Produk madu berkualitas tinggi 100% alami" 
                   className="w-full h-full object-cover"
                 />
                 {/* Overlay gradient untuk efek */}
@@ -282,7 +282,7 @@ export const AboutUs = () => {
       <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 md:py-24">
         {/* Background image */}
         <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
-          <img src={honeyBg} alt="Background tetesan madu alami dari peternakan lebah Madu Margo Lestari - Visualisasi madu murni berkualitas" className="object-cover w-full h-full opacity-30" />
+          <img src={honeyBg} alt="Background tetesan madu alami dari peternakan lebah Madu Jaya Lestari - Visualisasi madu murni berkualitas" className="object-cover w-full h-full opacity-30" />
         </div>
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="mb-12 text-center lg:mb-16">
@@ -445,11 +445,8 @@ export const AboutUs = () => {
             </div>
 
             <Card className="border-0 bg-white p-6 text-left text-black shadow-2xl lg:p-8">
-              <div className="mb-6 flex aspect-video items-center justify-center rounded-xl bg-linear-to-br from-[#ffde7d] to-[#f4d58d]">
-                <MapPin className="h-16 w-16 text-[#00b8a9]" />
-              </div>
               <h3 
-                className="text-xl font-bold text-black lg:text-2xl"
+                className="text-xl font-bold text-black lg:text-2xl mb-4"
                 style={{ fontFamily: 'Nort, sans-serif' }}
               >
                 Temukan Lokasi Kami
@@ -457,6 +454,19 @@ export const AboutUs = () => {
               <p className="mb-6 text-sm text-black lg:text-base">
                 Kunjungi farm kami dan lihat langsung proses pembuatan madu berkualitas tinggi
               </p>
+              <div className="mb-6 overflow-hidden rounded-xl border-2 border-[#00b8a9]/20 shadow-lg">
+                <iframe
+                  src="https://www.google.com/maps?q=Margo+Lestari,+Kec.+Jati+Agung,+Kabupaten+Lampung+Selatan,+Lampung+35365&output=embed"
+                  width="100%"
+                  height="400"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Lokasi Madu Jaya Lestari - Margo Lestari, Jati Agung, Lampung Selatan"
+                  className="w-full"
+                ></iframe>
+              </div>
               <Button 
                 className="w-full bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none py-6"
                 style={{ 
@@ -465,6 +475,7 @@ export const AboutUs = () => {
                   fontSize: '14px',
                   lineHeight: '1.342'
                 }}
+                onClick={() => window.open('https://maps.app.goo.gl/vzmv6BV4oFboJmqW7', '_blank')}
               >
                 Buka di Google Maps
               </Button>

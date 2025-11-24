@@ -33,9 +33,9 @@ interface SEOProps {
 }
 
 const BASE_URL = 'https://madumargolestari.vercel.app';
-const DEFAULT_TITLE = 'Madu Margo Lestari - Madu Murni Berkualitas Tinggi | E-Commerce UMKM';
-const DEFAULT_DESCRIPTION = 'Madu Margo Lestari - Platform E-Commerce Modern untuk UMKM Madu dengan Produk Berkualitas Tinggi. Dapatkan madu murni 100% asli, dipanen langsung dari peternakan lebah alami tanpa campuran bahan apapun. Kaya akan manfaat kesehatan dan rasa khas yang autentik.';
-const DEFAULT_KEYWORDS = 'madu margo lestari, madu murni, madu asli, madu berkualitas, madu kesehatan, e-commerce madu, umkm madu, produk madu, madu lampung, madu lampung selatan, madu jati agung, madu indonesia, jual madu, beli madu online, madu alami, madu organik';
+const DEFAULT_TITLE = 'Madu Jaya Lestari - Madu Murni Berkualitas Tinggi | E-Commerce UMKM';
+const DEFAULT_DESCRIPTION = 'Madu Jaya Lestari - Platform E-Commerce Modern untuk UMKM Madu dengan Produk Berkualitas Tinggi. Dapatkan madu murni 100% asli, dipanen langsung dari peternakan lebah alami tanpa campuran bahan apapun. Kaya akan manfaat kesehatan dan rasa khas yang autentik.';
+const DEFAULT_KEYWORDS = 'madu jaya lestari, madu margo lestari, maps madu jaya lestari, madu di margo lestari, madu murni, madu asli, madu berkualitas, madu kesehatan, e-commerce madu, umkm madu, produk madu, madu lampung, madu lampung selatan, madu jati agung, madu indonesia, jual madu, beli madu online, madu alami, madu organik, lokasi madu jaya lestari, alamat madu jaya lestari';
 const DEFAULT_IMAGE = `${BASE_URL}/marles-honey.png`;
 
 export function SEO({
@@ -57,9 +57,9 @@ export function SEO({
     ? `${BASE_URL}/` 
     : url.replace(/\/$/, '');
   
-  const fullTitle = title.includes('Madu Margo Lestari') 
+  const fullTitle = title.includes('Madu Jaya Lestari') 
     ? title 
-    : `${title} | Madu Margo Lestari`;
+    : `${title} | Madu Jaya Lestari`;
 
   // Ensure image URL is absolute
   const imageUrl = image.startsWith('http') ? image : `${BASE_URL}${image.startsWith('/') ? image : `/${image}`}`;
@@ -74,16 +74,17 @@ export function SEO({
   ].join(', ');
 
   // Generate structured data
+  const pageType = type === 'article' ? 'Article' : type === 'Product' ? 'Product' : 'WebPage';
   const structuredData: any = {
     '@context': 'https://schema.org',
-    '@type': type === 'article' ? 'Article' : type === 'Product' ? 'Product' : 'WebPage',
+    '@type': pageType,
     name: fullTitle,
     description,
     url: canonicalUrl,
     image: imageUrl,
     publisher: {
       '@type': 'Organization',
-      name: 'Madu Margo Lestari',
+      name: 'Madu Jaya Lestari',
       logo: {
         '@type': 'ImageObject',
         url: DEFAULT_IMAGE
@@ -91,12 +92,31 @@ export function SEO({
     }
   };
 
+  // Add location and maps reference for website/homepage
+  if (type === 'website' && url === BASE_URL) {
+    structuredData['@type'] = 'LocalBusiness';
+    structuredData.address = {
+      '@type': 'PostalAddress',
+      streetAddress: 'Margo Lestari',
+      addressLocality: 'Jati Agung',
+      addressRegion: 'Lampung Selatan',
+      postalCode: '35365',
+      addressCountry: 'ID'
+    };
+    structuredData.geo = {
+      '@type': 'GeoCoordinates',
+      latitude: -5.350000,
+      longitude: 105.250000
+    };
+    structuredData.hasMap = 'https://maps.app.goo.gl/vzmv6BV4oFboJmqW7';
+  }
+
   if (article) {
     structuredData.datePublished = article.publishedTime;
     structuredData.dateModified = article.modifiedTime;
     structuredData.author = {
       '@type': 'Person',
-      name: article.author || 'Madu Margo Lestari'
+      name: article.author || 'Madu Jaya Lestari'
     };
     structuredData.articleSection = article.section;
     structuredData.keywords = article.tags?.join(', ');
@@ -110,12 +130,12 @@ export function SEO({
       availability: product.availability || 'https://schema.org/InStock',
       seller: {
         '@type': 'Organization',
-        name: 'Madu Margo Lestari'
+        name: 'Madu Jaya Lestari'
       }
     };
     structuredData.brand = {
       '@type': 'Brand',
-      name: product.brand || 'Madu Margo Lestari'
+      name: product.brand || 'Madu Jaya Lestari'
     };
   }
 
@@ -135,7 +155,7 @@ export function SEO({
   const productListStructuredData = products && products.length > 0 ? {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Produk Madu Margo Lestari',
+    name: 'Produk Madu Jaya Lestari',
     description: 'Koleksi produk madu murni berkualitas tinggi',
     itemListElement: products.map((prod, index) => ({
       '@type': 'ListItem',
@@ -163,7 +183,7 @@ export function SEO({
       <meta name="title" content={fullTitle} />
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <meta name="author" content="Madu Margo Lestari" />
+      <meta name="author" content="Madu Jaya Lestari" />
       <meta name="robots" content={robotsContent} />
       <meta name="language" content="Indonesian" />
       <meta name="revisit-after" content="7 days" />
@@ -184,7 +204,7 @@ export function SEO({
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={fullTitle} />
-      <meta property="og:site_name" content="Madu Margo Lestari" />
+      <meta property="og:site_name" content="Madu Jaya Lestari" />
       <meta property="og:locale" content="id_ID" />
       <meta property="og:locale:alternate" content="en_US" />
 
@@ -223,7 +243,7 @@ export function SEO({
       <meta name="theme-color" content="#00b8a9" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-      <meta name="apple-mobile-web-app-title" content="Madu Margo Lestari" />
+      <meta name="apple-mobile-web-app-title" content="Madu Jaya Lestari" />
       
       {/* Performance & Resource Hints */}
       <link rel="preconnect" href="https://www.googletagmanager.com" />
