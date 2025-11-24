@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import {
   CalendarIcon,
-  UserIcon,
   UserCircleIcon,
   ArrowRightIcon,
   Tag,
