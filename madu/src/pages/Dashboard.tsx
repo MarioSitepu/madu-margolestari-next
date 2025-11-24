@@ -102,13 +102,7 @@ export function Dashboard() {
 
     if (user) {
       fetchUserProfile();
-      // Check if user is admin
-      const checkAdmin = user.role === 'admin' || ADMIN_EMAILS.includes(user.email.toLowerCase());
-      setIsAdmin(checkAdmin);
-      
-      if (checkAdmin) {
-        fetchAdminData();
-      }
+      // Admin data will be fetched inside fetchUserProfile if user is admin
     }
   }, [user, isLoading, navigate]);
 
@@ -151,7 +145,8 @@ export function Dashboard() {
         
         // If user is admin, fetch admin data
         if (checkAdmin) {
-          fetchAdminData();
+          // Call fetchAdminData immediately without waiting for state update
+          await fetchAdminData();
         }
       }
     } catch (error) {
@@ -162,8 +157,6 @@ export function Dashboard() {
   };
 
   const fetchAdminData = async () => {
-    if (!isAdmin) return;
-    
     try {
       const token = localStorage.getItem('token');
       const [usersRes, commentsRes, statsRes, articlesRes, productsRes, galleryRes] = await Promise.allSettled([
@@ -195,6 +188,9 @@ export function Dashboard() {
       }
       if (statsRes.status === 'fulfilled' && statsRes.value.data.success) {
         setAdminStats(statsRes.value.data.stats);
+      }
+      if (articlesRes.status === 'fulfilled' && articlesRes.value.data.success) {
+        setAdminArticles(articlesRes.value.data.articles);
       }
 
       // Set stats cards
@@ -691,8 +687,8 @@ export function Dashboard() {
                 </div>
               </Link>
               <Link to="/admin/comments">
-                <div className="flex items-center gap-2 sm:gap-3 p-4 sm:p-5 bg-gradient-to-r from-[#00b8a9] to-[#00a298] text-white rounded-xl hover:shadow-[0_8px_25px_rgba(0,184,169,0.3)] transition-all duration-300 font-semibold hover:-translate-y-1 cursor-pointer text-sm sm:text-base group/action relative overflow-hidden">
-                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover/action:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <div className="flex items-center gap-2 sm:gap-3 p-4 sm:p-5 bg-gradient-to-r from-[#ffde7d] to-[#f4d58d] text-gray-900 rounded-xl hover:shadow-[0_8px_25px_rgba(255,222,125,0.3)] transition-all duration-300 font-semibold hover:-translate-y-1 cursor-pointer text-sm sm:text-base group/action relative overflow-hidden">
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover/action:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                   <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
                   <span className="relative z-10">Kelola Komentar</span>
                 </div>

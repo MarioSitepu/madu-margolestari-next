@@ -15,6 +15,7 @@ export function Register() {
   
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -41,6 +42,13 @@ export function Register() {
     setIsLoading(true);
     setError('');
     
+    // Validate terms checkbox
+    if (!agreedToTerms) {
+      setError('Anda harus menyetujui syarat dan ketentuan untuk melanjutkan');
+      setIsLoading(false);
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError('Password tidak cocok!');
       setIsLoading(false);
@@ -261,22 +269,29 @@ export function Register() {
             </div>
 
             {/* Terms */}
-            <div className="flex items-start space-x-2">
+            <label htmlFor="terms" className="flex items-start space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-all" style={{
+              borderColor: agreedToTerms ? '#00b8a9' : '#e5e7eb',
+              backgroundColor: agreedToTerms ? 'rgba(0, 184, 169, 0.08)' : '#f9fafb'
+            }}>
               <input
                 type="checkbox"
                 id="terms"
-                className="mt-1 h-4 w-4 text-[#00b8a9] focus:ring-[#00b8a9] border-gray-300 rounded"
-                required
+                checked={agreedToTerms}
+                onChange={(e) => {
+                  setAgreedToTerms(e.target.checked);
+                  setError('');
+                }}
+                className="mt-1 h-5 w-5 accent-[#00b8a9] cursor-pointer flex-shrink-0"
                 disabled={isLoading}
               />
-              <label htmlFor="terms" className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 select-none">
                 Saya setuju dengan{' '}
                 <Link to="/terms" className="text-[#00b8a9] hover:underline font-medium">
                   syarat dan ketentuan
                 </Link>{' '}
                 yang berlaku
-              </label>
-            </div>
+              </span>
+            </label>
 
             {/* Register Button - Solid Biru Halus */}
             <button

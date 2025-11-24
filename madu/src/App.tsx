@@ -10,6 +10,8 @@ import ArticleDoc from "@/pages/ArticleDoc";
 import ArticleGaleri from "@/pages/ArticleGaleri";
 import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
+import { ForgotPassword } from "@/pages/auth/ForgotPassword";
+import { ResetPassword } from "@/pages/auth/ResetPassword";
 import { AdminLogin } from "@/pages/auth/AdminLogin";
 import { ArticleManagement } from "@/pages/admin/ArticleManagement";
 import { ArticleForm } from "@/pages/admin/ArticleForm";
@@ -47,6 +49,8 @@ export function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
               {/* Admin routes without navigation */}
               <Route path="/admin/articles" element={<ArticleManagement />} />

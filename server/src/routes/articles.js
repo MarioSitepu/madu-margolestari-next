@@ -78,9 +78,22 @@ router.get('/:id', async (req, res) => {
       });
     }
 
-    // Increment views
-    article.views += 1;
-    await article.save();
+    // Get user ID from query parameter or cookies/headers
+    const userId = req.query.userId || req.user?.id;
+
+    // Increment view count only if user hasn't viewed this article before
+    if (userId) {
+      const hasViewed = article.viewedBy.some(id => id.toString() === userId.toString());
+      if (!hasViewed) {
+        article.viewedBy.push(userId);
+        article.views = article.viewedBy.length;
+        await article.save();
+      }
+    } else {
+      // If no user ID, just increment views (for anonymous users)
+      article.views += 1;
+      await article.save();
+    }
 
     res.json({
       success: true,

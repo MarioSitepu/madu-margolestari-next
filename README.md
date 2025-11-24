@@ -16,7 +16,7 @@
 
 ---
 
-## 📖 Tentang Project
+## 📖 Tentang Project.
 
 **Madu Margolestari** adalah platform e-commerce modern yang dirancang khusus untuk UMKM madu. Platform ini menyediakan sistem manajemen produk, artikel, galeri, dan komentar yang lengkap dengan autentikasi pengguna dan dashboard admin yang powerful.
 

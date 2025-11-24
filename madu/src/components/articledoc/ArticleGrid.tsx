@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { ArticleCard } from './ArticleCard';
 import defaultArticleImage from "@/assets/marles-honey.png";
@@ -17,7 +17,12 @@ interface Article {
   tags?: string[];
 }
 
-export function ArticleGrid() {
+interface ArticleGridProps {
+  searchQuery: string;
+  sortBy: 'newest' | 'most-viewed';
+}
+
+export function ArticleGrid({ searchQuery, sortBy }: ArticleGridProps) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,6 +43,30 @@ export function ArticleGrid() {
       setLoading(false);
     }
   };
+
+  // Filter and sort articles
+  const filteredArticles = useMemo(() => {
+    let result = [...articles];
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(article => 
+        article.title.toLowerCase().includes(query) ||
+        article.description.toLowerCase().includes(query) ||
+        article.tags?.some(tag => tag.toLowerCase().includes(query))
+      );
+    }
+
+    // Sort
+    if (sortBy === 'newest') {
+      result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    } else if (sortBy === 'most-viewed') {
+      result.sort((a, b) => b.views - a.views);
+    }
+
+    return result;
+  }, [articles, searchQuery, sortBy]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -69,10 +98,25 @@ export function ArticleGrid() {
     );
   }
 
+  if (filteredArticles.length === 0) {
+    return (
+      <div className="w-full max-w-7xl mx-auto px-6 py-12">
+        <div className="text-center py-12">
+          <p className="text-gray-600 text-lg">Tidak ada artikel yang sesuai dengan pencarian</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-7xl mx-auto px-6 py-12">
+      <div className="mb-6">
+        <p className="text-gray-600 text-sm">
+          Menampilkan <span className="font-semibold text-[#00b8a9]">{filteredArticles.length}</span> dari <span className="font-semibold text-[#00b8a9]">{articles.length}</span> artikel
+        </p>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {articles.map((article, index) => (
+        {filteredArticles.map((article, index) => (
           <div
             key={article._id}
             className="animate-fade-up"
