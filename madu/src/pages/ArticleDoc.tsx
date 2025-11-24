@@ -8,6 +8,8 @@ import { ScrollToTopButton } from '@/components/ScrollToTopButton'
 
 export function ArticleDoc() {
   const [isVisible, setIsVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'newest' | 'most-viewed'>('newest');
 
   useEffect(() => {
     setIsVisible(true);
@@ -44,7 +46,12 @@ export function ArticleDoc() {
             : "opacity-0 transition-opacity duration-1000 delay-200"
         }
       >
-        <SearchSection />
+        <SearchSection 
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+        />
       </div>
       <div
         className={
@@ -53,7 +60,10 @@ export function ArticleDoc() {
             : "opacity-0 transition-opacity duration-1000 delay-300"
         }
       >
-        <ArticleGrid />
+        <ArticleGrid 
+          searchQuery={searchQuery}
+          sortBy={sortBy}
+        />
       </div>
       <div
         className={
