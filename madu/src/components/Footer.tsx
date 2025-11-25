@@ -9,8 +9,8 @@ import {
   Instagram,
   Twitter,
 } from "lucide-react";
-import honeyLogo from "@/assets/1.svg";
-import honeycomb from "@/assets/2.png";
+import honeyLogo from "@/assets/logo-madu.webp";
+import honeycomb from "@/assets/madu-footer.webp";
 
 export function Footer() {
   const [email, setEmail] = useState("");
@@ -62,7 +62,10 @@ export function Footer() {
                   untuk pembelian pertama Anda hanya dengan berlangganan
                   newsletter kami.
                 </p>
-                <form onSubmit={handleSubscribe} className="relative mt-4 sm:mt-5 md:mt-5">
+                <form
+                  onSubmit={handleSubscribe}
+                  className="relative mt-4 sm:mt-5 md:mt-5"
+                >
                   {/* Mobile Layout - Stacked */}
                   <div className="flex flex-col sm:hidden gap-3">
                     {/* Email Input Container - Background hijau seperti desktop */}
@@ -91,7 +94,7 @@ export function Footer() {
                       Berlangganan
                     </button>
                   </div>
-                  
+
                   {/* Desktop/Tablet Layout - Horizontal */}
                   <div className="hidden sm:flex bg-[#00b8a9] rounded-full p-1 items-center max-w-lg md:max-w-120">
                     <div className="flex items-center flex-1 pl-4 pr-2">
