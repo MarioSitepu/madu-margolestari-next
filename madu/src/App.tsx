@@ -23,6 +23,7 @@ import { ProductForm } from "@/pages/admin/ProductForm";
 import { Dashboard } from "@/pages/Dashboard";
 import { Settings } from "@/pages/Settings";
 import { default as ProductPage } from "@/pages/Product";
+import { default as ProductDetail } from "@/pages/ProductDetail";
 
 // Replace with your actual Google Client ID
 const GOOGLE_CLIENT_ID =
@@ -76,6 +77,7 @@ export function App() {
                       <Route path="/article-galeri/:id" element={<ArticleGaleri />} />
                       <Route path="/article-galeri" element={<ArticleGaleri />} />
                       <Route path="/product" element={<ProductPage />} />
+                      <Route path="/product/:id" element={<ProductDetail />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/settings" element={<Settings />} />
                     </Routes>
