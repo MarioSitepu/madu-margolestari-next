@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import { AuthProvider } from "@/context/AuthContext";
+import { CartProvider } from "@/context/CartContext";
 import { Navigation } from "@/components/Navigation";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import Home from "@/pages/Home";
@@ -23,6 +24,7 @@ import { ProductForm } from "@/pages/admin/ProductForm";
 import { Dashboard } from "@/pages/Dashboard";
 import { Settings } from "@/pages/Settings";
 import { default as ProductPage } from "@/pages/Product";
+import Checkout from "@/pages/Checkout";
 
 // Replace with your actual Google Client ID
 const GOOGLE_CLIENT_ID =
@@ -41,9 +43,10 @@ export function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <AuthProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <div className="flex min-h-screen w-full flex-col">
+        <CartProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <div className="flex min-h-screen w-full flex-col">
             <Routes>
               {/* Auth routes without navigation */}
               <Route path="/login" element={<Login />} />
@@ -76,6 +79,7 @@ export function App() {
                       <Route path="/article-galeri/:id" element={<ArticleGaleri />} />
                       <Route path="/article-galeri" element={<ArticleGaleri />} />
                       <Route path="/product" element={<ProductPage />} />
+                      <Route path="/checkout" element={<Checkout />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/settings" element={<Settings />} />
                     </Routes>
@@ -85,6 +89,7 @@ export function App() {
             </Routes>
           </div>
         </BrowserRouter>
+        </CartProvider>
       </AuthProvider>
     </GoogleOAuthProvider>
   );

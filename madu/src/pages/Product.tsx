@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, ShoppingCart, CheckCircle, X } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/SEO";
+import { useCart } from "@/context/CartContext";
+import { QuantitySelectorModal } from "@/components/QuantitySelectorModal";
 import productBottlesHero from "@/assets/product-bottles-hero.png";
 import productBottleCard from "@/assets/product-bottle-card.png";
 import axios from "axios";
@@ -21,16 +24,11 @@ interface AddToCartNotificationProps {
   productName: string;
   price: number;
   onClose: () => void;
+  onContinueShopping: () => void;
+  onViewCart: () => void;
 }
 
-const AddToCartNotification = ({ isOpen, productName, price, onClose }: AddToCartNotificationProps) => {
-  useEffect(() => {
-    if (isOpen) {
-      const timer = setTimeout(onClose, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, onClose]);
-
+const AddToCartNotification = ({ isOpen, productName, price, onClose, onContinueShopping, onViewCart }: AddToCartNotificationProps) => {
   if (!isOpen) return null;
 
   return (
@@ -81,10 +79,16 @@ const AddToCartNotification = ({ isOpen, productName, price, onClose }: AddToCar
         {/* Footer */}
         <div className="bg-gray-50 px-6 py-4 flex gap-3">
           <button
-            onClick={onClose}
-            className="flex-1 bg-[#00b8a9] hover:bg-[#009d92] text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
+            onClick={onContinueShopping}
+            className="flex-1 bg-white hover:bg-gray-100 text-[#00b8a9] border-2 border-[#00b8a9] font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
           >
             Lanjut Berbelanja
+          </button>
+          <button
+            onClick={onViewCart}
+            className="flex-1 bg-[#00b8a9] hover:bg-[#009d92] text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
+          >
+            Lihat Keranjang
           </button>
         </div>
       </div>
@@ -93,8 +97,12 @@ const AddToCartNotification = ({ isOpen, productName, price, onClose }: AddToCar
 };
 
 export function ProductPage() {
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [quantityModalOpen, setQuantityModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartNotification, setCartNotification] = useState<{ isOpen: boolean; productName: string; price: number }>({
     isOpen: false,
     productName: '',
@@ -120,17 +128,34 @@ export function ProductPage() {
   };
 
   const handleBuyNow = () => {
-    // Handle buy now logic here
-    alert('Fitur Beli Sekarang akan segera tersedia!');
+    navigate('/checkout');
   };
 
   const handleProductBuy = (product: Product) => {
-    // Show professional add to cart notification
-    setCartNotification({
-      isOpen: true,
-      productName: product.name,
-      price: product.price
-    });
+    setSelectedProduct(product);
+    setQuantityModalOpen(true);
+  };
+
+  const handleQuantityConfirm = (quantity: number) => {
+    if (selectedProduct) {
+      addToCart({
+        _id: selectedProduct._id,
+        name: selectedProduct.name,
+        price: selectedProduct.price,
+        imageUrl: selectedProduct.imageUrl,
+        quantity,
+      });
+
+      // Show notification
+      setCartNotification({
+        isOpen: true,
+        productName: selectedProduct.name,
+        price: selectedProduct.price,
+      });
+
+      setQuantityModalOpen(false);
+      setSelectedProduct(null);
+    }
   };
 
   return (
@@ -335,6 +360,26 @@ export function ProductPage() {
         productName={cartNotification.productName}
         price={cartNotification.price}
         onClose={() => setCartNotification({ ...cartNotification, isOpen: false })}
+        onContinueShopping={() => {
+          setCartNotification({ ...cartNotification, isOpen: false });
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onViewCart={() => {
+          setCartNotification({ ...cartNotification, isOpen: false });
+          navigate('/checkout');
+        }}
+      />
+
+      {/* Quantity Selector Modal */}
+      <QuantitySelectorModal
+        isOpen={quantityModalOpen}
+        productName={selectedProduct?.name || ''}
+        price={selectedProduct?.price || 0}
+        onConfirm={handleQuantityConfirm}
+        onClose={() => {
+          setQuantityModalOpen(false);
+          setSelectedProduct(null);
+        }}
       />
     </div>
   );

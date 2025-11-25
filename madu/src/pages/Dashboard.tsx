@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { API_URL } from '@/lib/api';
+import { ShippingSettings } from '@/pages/admin/ShippingSettings';
 
 // Admin emails - bisa diubah sesuai kebutuhan
 const ADMIN_EMAILS = [
@@ -91,7 +92,7 @@ export function Dashboard() {
   const [articleLoading, setArticleLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
-  const [activeAdminTab, setActiveAdminTab] = useState<'articles' | 'users' | 'comments'>('articles');
+  const [activeAdminTab, setActiveAdminTab] = useState<'articles' | 'users' | 'comments' | 'settings'>('articles');
   
 
   useEffect(() => {
@@ -806,6 +807,19 @@ export function Dashboard() {
                   <span className="hidden sm:inline">Semua Comment</span>
                   <span className="sm:hidden">Comment</span> ({adminComments.length})
                 </button>
+                <button
+                  onClick={() => setActiveAdminTab('settings')}
+                  className={`px-3 sm:px-4 py-2 font-semibold transition-all whitespace-nowrap text-sm sm:text-base ${
+                    activeAdminTab === 'settings'
+                      ? 'text-[#00b8a9] border-b-2 border-[#00b8a9]'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
+                  <Settings className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">Pengaturan</span>
+                  <span className="sm:hidden">Settings</span>
+                </button>
               </div>
             </div>
 
@@ -979,6 +993,13 @@ export function Dashboard() {
                       ))}
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* Settings Tab */}
+              {activeAdminTab === 'settings' && (
+                <div className="bg-white rounded-lg p-6">
+                  <ShippingSettings />
                 </div>
               )}
             </div>

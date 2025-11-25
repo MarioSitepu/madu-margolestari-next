@@ -1,6 +1,7 @@
 import express from 'express';
 import User from '../models/user.js';
 import Article from '../models/article.js';
+import ShippingSettings from '../models/shippingSettings.js';
 import { authenticateToken, verifyAdmin } from './auth.js';
 
 const router = express.Router();
@@ -118,6 +119,81 @@ router.delete('/users/:userId', authenticateToken, verifyAdmin, async (req, res)
     });
   } catch (error) {
     console.error('Error deleting user:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
+  }
+});
+
+// Get shipping settings
+// Get shipping settings
+router.get('/shipping-settings', async (req, res) => {
+  try {
+    let settings = await ShippingSettings.findOne();
+    
+    // If no settings exist, create default ones
+    if (!settings) {
+      settings = new ShippingSettings({
+        cost: 0,
+        description: 'Gratis'
+      });
+      await settings.save();
+    }
+
+    res.json(settings);
+  } catch (error) {
+    console.error('Error fetching shipping settings:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
+  }
+});
+
+// Update or create shipping settings (admin only)
+router.post('/shipping-settings', authenticateToken, verifyAdmin, async (req, res) => {
+  try {
+    const { cost, description } = req.body;
+
+    // Validate input
+    if (typeof cost !== 'number' || cost < 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Biaya pengiriman harus berupa angka non-negatif'
+      });
+    }
+
+    if (typeof description !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Deskripsi pengiriman harus berupa teks'
+      });
+    }
+
+    let settings = await ShippingSettings.findOne();
+
+    if (settings) {
+      // Update existing settings
+      settings.cost = cost;
+      settings.description = description;
+    } else {
+      // Create new settings
+      settings = new ShippingSettings({
+        cost,
+        description
+      });
+    }
+
+    await settings.save();
+
+    res.json({
+      success: true,
+      message: 'Pengaturan pengiriman berhasil disimpan',
+      data: settings
+    });
+  } catch (error) {
+    console.error('Error updating shipping settings:', error);
     res.status(500).json({
       success: false,
       message: 'Terjadi kesalahan server'
