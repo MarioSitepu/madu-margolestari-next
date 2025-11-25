@@ -157,7 +157,7 @@ export function ProductDetail() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
                             <div className="flex flex-col space-y-6">
                                 <div className="flex items-center justify-center">
-                                    <div className="w-full max-w-[450px] h-[500px] flex items-center justify-center bg-white/5 rounded-lg">
+                                    <div className="w-full max-w-[450px] h-[500px] flex items-center justify-center rounded-lg">
                                         <img
                                             src={selectedImage}
                                             alt={product.name}
@@ -175,8 +175,9 @@ export function ProductDetail() {
                                         <button
                                             key={index}
                                             onClick={() => setSelectedImage(img)}
-                                            className={`w-20 h-20 flex items-center justify-center bg-white/10 rounded-none overflow-hidden border-2 transition-all hover:border-[#ffde7d] ${selectedImage === img ? 'border-[#ffde7d]' : 'border-transparent'
+                                            className={`w-20 h-20 flex items-center justify-center bg-white rounded-none overflow-hidden border-2 transition-all hover:border-[#ffde7d] ${selectedImage === img ? 'border-[#ffde7d]' : 'border-transparent'
                                                 }`}
+                                            style={{ boxShadow: '0px 6px 8px 0px rgba(0, 0, 0, 0.6)' }}
                                         >
                                             <img
                                                 src={img}
@@ -205,23 +206,23 @@ export function ProductDetail() {
                                     </span>
                                 </div>
 
-                                <div className="flex items-end justify-between gap-4">
+                                <div className="flex flex-row items-end justify-between gap-3">
                                     <h1
-                                        className="text-[36px] md:text-[42px] font-extrabold text-[#ffde7d] leading-none"
+                                        className="flex-1 text-[22px] sm:text-[32px] md:text-[42px] font-extrabold text-[#ffde7d] leading-tight min-w-0"
                                         style={{ fontFamily: 'Nort, sans-serif' }}
                                     >
                                         {product.name}
                                     </h1>
 
-                                    <div className="flex items-baseline gap-1">
+                                    <div className="flex items-baseline gap-1 shrink-0">
                                         <span
-                                            className="text-[18px] font-medium text-white"
+                                            className="text-[14px] sm:text-[16px] md:text-[18px] font-medium text-white"
                                             style={{ fontFamily: 'Nort, sans-serif' }}
                                         >
                                             Rp
                                         </span>
                                         <span
-                                            className="text-[42px] font-extrabold text-[#ffde7d] leading-none"
+                                            className="text-[24px] sm:text-[36px] md:text-[42px] font-extrabold text-[#ffde7d] leading-none"
                                             style={{ fontFamily: 'Nort, sans-serif' }}
                                         >
                                             {product.price.toLocaleString('id-ID')}
