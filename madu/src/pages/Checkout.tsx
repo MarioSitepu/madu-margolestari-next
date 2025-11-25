@@ -57,7 +57,29 @@ export function Checkout() {
   const total = subtotal + shippingCost;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-200 animate-fade-in">
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideInUp {
+          from { 
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to { 
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-in-out;
+        }
+        .animate-slide-in-up {
+          animation: slideInUp 0.3s ease-in-out;
+        }
+      `}</style>
       <SEO 
         title="Checkout - Madu Margo Lestari"
         description="Lanjutkan pembelian madu alami berkualitas dari Madu Margo Lestari"
@@ -91,19 +113,19 @@ export function Checkout() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-slide-in-up">
             {/* Products List */}
             <div className="lg:col-span-2">
-              <div className="bg-gray-50 rounded-xl overflow-hidden">
+              <div className="bg-white rounded-xl overflow-hidden border-2 border-gray-300 shadow-md">
                 <div className="bg-gray-200 p-6 grid grid-cols-12 gap-4 font-semibold text-gray-700">
                   <div className="col-span-5">Produk</div>
                   <div className="col-span-2">Harga</div>
                   <div className="col-span-3">Jumlah</div>
-                  <div className="col-span-2">Aksi</div>
+                  <div className="col-span-2"></div>
                 </div>
 
                 {items.map((item) => (
-                  <div key={item._id} className="p-6 border-b border-gray-200 grid grid-cols-12 gap-4 items-center hover:bg-gray-100 transition-colors">
+                  <div key={item._id} className="p-6 border-b border-gray-200 grid grid-cols-12 gap-4 items-center hover:bg-gray-100 transition-all duration-200 hover:shadow-sm hover:border-gray-300">
                     {/* Product Name */}
                     <div className="col-span-5">
                       <div className="flex items-center gap-4">
@@ -128,7 +150,7 @@ export function Checkout() {
 
                     {/* Quantity Controls */}
                     <div className="col-span-3">
-                      <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg w-fit">
+                      <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg w-fit hover:border-gray-400 transition-all duration-200">
                         <button
                           onClick={() => handleDecrement(item._id, item.quantity)}
                           disabled={item.quantity <= 1}
@@ -152,7 +174,7 @@ export function Checkout() {
                     <div className="col-span-2 flex justify-end">
                       <button
                         onClick={() => removeFromCart(item._id)}
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        className="p-2 text-red-500 hover:bg-red-50 hover:text-red-700 rounded-lg transition-all duration-200 transform hover:scale-110"
                         title="Hapus dari keranjang"
                       >
                         <Trash2 className="w-5 h-5" />
@@ -169,9 +191,9 @@ export function Checkout() {
             </div>
 
             {/* Order Summary */}
-            <div className="lg:col-span-1">
-              <div className="bg-[#ffde7d] rounded-xl p-6 sticky top-8">
-                <h3 className="text-xl font-bold text-gray-800 mb-6" style={{ fontFamily: 'Nort, sans-serif' }}>
+            <div className="lg:col-span-1 animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
+              <div className="bg-white rounded-xl p-6 sticky top-8 border-2 border-gray-300 shadow-md">
+                <h3 className="text-xl font-bold text-gray-900 mb-6" style={{ fontFamily: 'Nort, sans-serif' }}>
                   Ringkasan Pesanan
                 </h3>
 
@@ -205,14 +227,14 @@ export function Checkout() {
                 </div>
 
                 {/* Checkout Button */}
-                <button className="w-full bg-[#00b8a9] hover:bg-[#009d92] text-white font-bold py-3 px-4 rounded-lg transition-colors mb-4">
+                <button className="w-full bg-[#00b8a9] hover:bg-[#009d92] text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105 mb-4">
                   Lanjut ke Pembayaran
                 </button>
 
                 {/* Continue Shopping Button */}
                 <Link
                   to="/product"
-                  className="block w-full bg-white hover:bg-gray-100 text-[#00b8a9] font-semibold py-3 px-4 rounded-lg transition-colors text-center border-2 border-[#00b8a9]"
+                  className="block w-full bg-white hover:bg-gray-50 text-[#00b8a9] font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center border-2 border-[#00b8a9] hover:shadow-lg"
                 >
                   Lanjut Berbelanja
                 </Link>
@@ -225,7 +247,7 @@ export function Checkout() {
       </div>
 
       {/* Blank Section for Spacing */}
-      <section className="bg-white py-16 md:py-24">
+      <section className="bg-gray-200 py-16 md:py-24">
         <div className="w-full px-2 md:px-4 h-32"></div>
       </section>
 
