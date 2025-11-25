@@ -4,6 +4,7 @@ import { SearchSection } from '@/components/articledoc/SearchSection'
 import { ArticleGrid } from '@/components/articledoc/ArticleGrid'
 import { Gallery } from '@/components/articledoc/Gallery'
 import { SEO } from '@/components/SEO'
+import { ScrollToTopButton } from '@/components/ScrollToTopButton'
 
 export function ArticleDoc() {
   const [isVisible, setIsVisible] = useState(false);
@@ -17,11 +18,16 @@ export function ArticleDoc() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-[#ffde7d]">
       <SEO 
-        title="Artikel & Dokumentasi Madu Margo Lestari"
-        description="Baca artikel dan dokumentasi lengkap tentang madu, manfaat kesehatan, tips penggunaan, dan informasi seputar peternakan lebah dari Madu Margo Lestari. Pelajari lebih lanjut tentang madu murni dan cara memilih madu berkualitas."
-        keywords="artikel madu, dokumentasi madu, manfaat madu, tips madu, peternakan lebah, informasi madu, blog madu, madu margo lestari artikel"
+        title="Artikel & Dokumentasi Madu Jaya Lestari | Blog Informasi Madu"
+        description="Baca artikel dan dokumentasi lengkap tentang madu, manfaat kesehatan, tips penggunaan, dan informasi seputar peternakan lebah dari Madu Jaya Lestari. Pelajari lebih lanjut tentang madu murni dan cara memilih madu berkualitas. Update terbaru tentang dunia madu dan kesehatan."
+        keywords="artikel madu, dokumentasi madu, manfaat madu, tips madu, peternakan lebah, informasi madu, blog madu, madu jaya lestari artikel, madu margo lestari, maps madu jaya lestari, madu di margo lestari, artikel kesehatan madu, tips penggunaan madu, cara memilih madu berkualitas, informasi peternakan lebah"
         url="https://madumargolestari.vercel.app/article"
         type="website"
+        image="https://madumargolestari.vercel.app/article.png"
+        breadcrumbs={[
+          { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' },
+          { name: 'Artikel', url: 'https://madumargolestari.vercel.app/article' }
+        ]}
       />
       <div
         className={
@@ -33,7 +39,13 @@ export function ArticleDoc() {
       >
         <ArticleHeader />
       </div>
-      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-200'}>
+      <div
+        className={
+          isVisible
+            ? "opacity-100"
+            : "opacity-0 transition-opacity duration-1000 delay-200"
+        }
+      >
         <SearchSection 
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -41,7 +53,13 @@ export function ArticleDoc() {
           onSortChange={setSortBy}
         />
       </div>
-      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-300'}>
+      <div
+        className={
+          isVisible
+            ? "opacity-100"
+            : "opacity-0 transition-opacity duration-1000 delay-300"
+        }
+      >
         <ArticleGrid 
           searchQuery={searchQuery}
           sortBy={sortBy}
@@ -56,6 +74,7 @@ export function ArticleDoc() {
       >
         <Gallery />
       </div>
+      <ScrollToTopButton />
     </div>
   );
 }

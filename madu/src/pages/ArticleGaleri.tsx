@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { MessageCircle, Send, Heart, MoreVertical, Clock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
@@ -7,6 +7,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Footer } from "@/components/Footer";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
+import { SEO } from "@/components/SEO";
 import marlesHoney from "@/assets/marles-honey.png";
 import { API_URL } from '@/lib/api';
 
@@ -57,31 +59,22 @@ export function ArticleGaleri() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [commentLoading, setCommentLoading] = useState(false);
-  const viewCountedRef = useRef(false);
 
   useEffect(() => {
     if (id) {
-      if (!viewCountedRef.current) {
-        fetchArticle();
-        viewCountedRef.current = true;
-      }
+      fetchArticle();
       fetchComments();
       fetchRelatedArticles();
     } else {
       // If no ID, redirect to article list or show default
       navigate('/article');
     }
-  }, [id]);
+  }, [id, navigate]);
 
   const fetchArticle = async () => {
     try {
       setLoading(true);
-      const url = new URL(`${API_URL}/articles/${id}`);
-      // Add userId as query parameter if user is logged in
-      if (user?.id) {
-        url.searchParams.append('userId', user.id);
-      }
-      const response = await axios.get(url.toString());
+      const response = await axios.get(`${API_URL}/articles/${id}`);
       if (response.data.success) {
         setArticle(response.data.article);
       }
@@ -303,8 +296,33 @@ export function ArticleGaleri() {
 
   const readingTime = article.content ? calculateReadingTime(article.content) : 1;
 
+  // Format dates for SEO
+  const publishedTime = article.createdAt ? new Date(article.createdAt).toISOString() : undefined;
+  const articleImage = article.image || article.backgroundImage || 'https://madumargolestari.vercel.app/marles-honey.png';
+  const articleUrl = `https://madumargolestari.vercel.app/article-galeri/${id}`;
+
   return (
     <div className="bg-[#ffde7d] min-h-screen">
+      <SEO 
+        title={`${article.title} | Madu Jaya Lestari`}
+        description={article.description || article.content.substring(0, 160) + '...'}
+        keywords={article.tags ? article.tags.join(', ') + ', madu jaya lestari, madu margo lestari, maps madu jaya lestari, madu di margo lestari' : 'artikel madu, informasi madu, madu jaya lestari, madu margo lestari, maps madu jaya lestari, madu di margo lestari'}
+        url={articleUrl}
+        type="article"
+        image={articleImage}
+        breadcrumbs={[
+          { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' },
+          { name: 'Artikel', url: 'https://madumargolestari.vercel.app/article' },
+          { name: article.title, url: articleUrl }
+        ]}
+        article={{
+          publishedTime: publishedTime,
+          modifiedTime: publishedTime,
+          author: article.authorName || 'Madu Jaya Lestari',
+          section: 'Artikel Madu',
+          tags: article.tags || []
+        }}
+      />
       {/* Header Section */}
       <section className="py-12 px-4">
         <div className="max-w-5xl mx-auto">
@@ -339,7 +357,7 @@ export function ArticleGaleri() {
             <div className="mb-8">
               <img
                 src={article.image || article.backgroundImage || "/images/beekeeper-main.jpg"}
-                alt={article.title}
+                alt={`Gambar utama artikel ${article.title} - Dokumentasi lengkap tentang madu dan peternakan lebah dari Madu Jaya Lestari`}
                 className="w-full h-[500px] md:h-[600px] object-cover rounded-lg"
               />
             </div>
@@ -457,7 +475,7 @@ export function ArticleGaleri() {
           <div className="absolute left-6 top-0 -translate-y-1/2 z-30 pointer-events-none">
             <img
               src={marlesHoney}
-              alt="Madu Margo Lestari Honey"
+              alt="Logo Madu Jaya Lestari - Madu murni asli dari peternakan lebah Lampung Selatan"
               className="w-28 md:w-36 lg:w-25 object-contain drop-shadow-2xl"
             />
           </div>
@@ -706,7 +724,7 @@ export function ArticleGaleri() {
                   <div className="overflow-hidden">
                     <img
                       src={relatedArticle.image || marlesHoney}
-                      alt={relatedArticle.title}
+                      alt={`Gambar artikel terkait ${relatedArticle.title} - Artikel madu dan peternakan lebah dari Madu Jaya Lestari`}
                       className="w-full h-44 object-cover"
                     />
                   </div>
@@ -743,7 +761,7 @@ export function ArticleGaleri() {
                             strokeLinejoin="round"
                           />
                         </svg>
-                        <span>Madu Margo Lestari</span>
+                        <span>Madu Jaya Lestari</span>
                       </div>
 
                       <button 
@@ -788,6 +806,7 @@ export function ArticleGaleri() {
         </div>
       </section>
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 }

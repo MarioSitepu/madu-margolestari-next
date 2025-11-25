@@ -31,7 +31,7 @@ export function Footer() {
             <div className="absolute -top-4 sm:-top-6 md:-top-8 lg:-top-10 xl:-top-12 left-0 md:-left-6 w-28 sm:w-40 md:w-56 lg:w-80 xl:w-96 hidden md:block">
               <img
                 src={honeycomb}
-                alt="Honeycomb with honey"
+                alt="Sarang lebah madu alami dari peternakan Madu Jaya Lestari - Produk madu murni berkualitas tinggi"
                 className="w-full h-auto"
               />
             </div>
@@ -62,12 +62,42 @@ export function Footer() {
                   untuk pembelian pertama Anda hanya dengan berlangganan
                   newsletter kami.
                 </p>
-                <form onSubmit={handleSubscribe} className="relative">
-                  <div className="bg-[#00b8a9] rounded-full p-1 flex flex-row items-center sm:items-center max-w-full sm:max-w-lg md:max-w-120 mt-3 sm:mt-4 md:mt-5 mb-1.5 sm:mb-2 md:mb-2.5">
-                    <div className="flex items-center flex-1 pl-3 sm:pl-4">
+                <form onSubmit={handleSubscribe} className="relative mt-4 sm:mt-5 md:mt-5">
+                  {/* Mobile Layout - Stacked */}
+                  <div className="flex flex-col sm:hidden gap-3">
+                    {/* Email Input Container - Background hijau seperti desktop */}
+                    <div className="bg-[#00b8a9] rounded-full px-4 py-3.5 flex items-center gap-3 shadow-md">
+                      <div className="flex items-center justify-center w-5 h-5 shrink-0">
+                        <img
+                          src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
+                          alt="Icon email untuk berlangganan newsletter Madu Jaya Lestari"
+                          className="w-5 h-5"
+                        />
+                      </div>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Masukkan email Anda"
+                        className="bg-transparent text-sm text-white placeholder:text-white/70 outline-none w-full flex-1"
+                        required
+                      />
+                    </div>
+                    {/* Button - Warna kuning seperti desktop */}
+                    <button
+                      type="submit"
+                      className="bg-[#ffde7d] text-black font-bold text-sm py-3.5 px-6 rounded-full hover:bg-[#f5c869] active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl w-full"
+                    >
+                      Berlangganan
+                    </button>
+                  </div>
+                  
+                  {/* Desktop/Tablet Layout - Horizontal */}
+                  <div className="hidden sm:flex bg-[#00b8a9] rounded-full p-1 items-center max-w-lg md:max-w-120">
+                    <div className="flex items-center flex-1 pl-4 pr-2">
                       <img
                         src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
-                        alt=""
+                        alt="Icon email untuk berlangganan newsletter Madu Jaya Lestari"
                         className="w-4 h-4 mr-2 shrink-0"
                       />
                       <input
@@ -75,23 +105,13 @@ export function Footer() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Masukkan email Anda"
-                        className="bg-transparent text-xs sm:text-sm text-black outline-none w-full"
+                        className="bg-transparent text-sm text-white placeholder:text-white/70 outline-none w-full py-2"
                         required
                       />
                     </div>
                     <button
                       type="submit"
-                      className="
-                      bg-[#ffde7d] text-black font-medium 
-                      text-xs sm:text-sm 
-                      py-2 px-3 
-                      sm:px-4 
-                      md:px-3 
-                      sm:mr-3 rounded-full 
-                      hover:bg-[#f5c869] 
-                      transition whitespace-nowrap
-                      flex-shrink-0
-                      "
+                      className="bg-[#ffde7d] text-black font-semibold text-sm py-2 px-4 md:px-3 mr-3 rounded-full hover:bg-[#f5c869] active:scale-95 transition-all duration-200 whitespace-nowrap"
                     >
                       Berlangganan
                     </button>
@@ -122,11 +142,11 @@ export function Footer() {
               <div className="flex items-center -ml-2 sm:-ml-4 md:-ml-7">
                 <img
                   src={honeyLogo}
-                  alt="Honeycomb logo"
+                  alt="Logo Madu Jaya Lestari - UMKM madu murni asli dari Lampung Selatan"
                   className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
                 />
                 <h3 className="text-[#ffde7d] text-xl sm:text-2xl font-bold mt-2 -ml-2 sm:-ml-3">
-                  Madu Margo Lestari
+                  Madu Jaya Lestari
                 </h3>
               </div>
               <p className="text-xs sm:text-sm mt-2 sm:mt-0 pr-2 sm:pr-3 md:pr-4">
@@ -291,7 +311,7 @@ export function Footer() {
           <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 text-xs sm:text-sm">
             <div className="flex items-center">
               <span className="text-center sm:text-left">
-                © {new Date().getFullYear()} Madu Margo Lestari. All rights
+                © {new Date().getFullYear()} Madu Jaya Lestari. All rights
                 reserved.
               </span>
             </div>

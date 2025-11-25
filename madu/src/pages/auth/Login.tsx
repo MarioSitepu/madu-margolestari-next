@@ -37,7 +37,6 @@ export function Login() {
   const [error, setError] = useState('');
   const [isGoogleReady, setIsGoogleReady] = useState(false);
   const [isPromptingGoogle, setIsPromptingGoogle] = useState(false);
-  const [promptShown, setPromptShown] = React.useState(false);
   const navigate = useNavigate();
   const { login, getGoogleAccountHistory } = useAuth();
   const [googleAccounts, setGoogleAccounts] = useState(getGoogleAccountHistory());
@@ -86,7 +85,6 @@ export function Login() {
   const handleGoogleSuccess = useCallback(async (credentialResponse: any) => {
     console.log('Google success callback triggered');
     setIsPromptingGoogle(false); // Stop prompting immediately
-    setPromptShown(false); // Reset prompt flag
     setError('');
 
     try {
