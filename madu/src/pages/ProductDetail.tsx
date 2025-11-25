@@ -309,7 +309,7 @@ export function ProductDetail() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
                             <div className="flex flex-col space-y-6">
                                 <div className="flex items-center justify-center">
-                                    <div className="inline-block border-4 border-white rounded-lg overflow-hidden" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+                                    <div className="w-full max-w-[450px] h-[500px] flex items-center justify-center rounded-lg">
                                         <img
                                             src={selectedImage}
                                             alt={product?.name}
