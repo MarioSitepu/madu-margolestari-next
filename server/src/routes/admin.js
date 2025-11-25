@@ -2,6 +2,7 @@ import express from 'express';
 import User from '../models/user.js';
 import Article from '../models/article.js';
 import ShippingSettings from '../models/shippingSettings.js';
+import GeneralSettings from '../models/generalSettings.js';
 import { authenticateToken, verifyAdmin } from './auth.js';
 
 const router = express.Router();
@@ -194,6 +195,70 @@ router.post('/shipping-settings', authenticateToken, verifyAdmin, async (req, re
     });
   } catch (error) {
     console.error('Error updating shipping settings:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
+  }
+});
+
+// Get general settings
+router.get('/general-settings', async (req, res) => {
+  try {
+    let settings = await GeneralSettings.findOne();
+    
+    // If no settings exist, create default ones
+    if (!settings) {
+      settings = new GeneralSettings({
+        operatingYears: 10
+      });
+      await settings.save();
+    }
+
+    res.json(settings);
+  } catch (error) {
+    console.error('Error fetching general settings:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
+  }
+});
+
+// Update or create general settings (admin only)
+router.post('/general-settings', authenticateToken, verifyAdmin, async (req, res) => {
+  try {
+    const { operatingYears } = req.body;
+
+    // Validate input
+    if (typeof operatingYears !== 'number' || operatingYears < 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Tahun beroperasi harus berupa angka non-negatif'
+      });
+    }
+
+    let settings = await GeneralSettings.findOne();
+
+    if (settings) {
+      // Update existing settings
+      settings.operatingYears = operatingYears;
+    } else {
+      // Create new settings
+      settings = new GeneralSettings({
+        operatingYears
+      });
+    }
+
+    await settings.save();
+
+    res.json({
+      success: true,
+      message: 'Pengaturan umum berhasil disimpan',
+      data: settings
+    });
+  } catch (error) {
+    console.error('Error updating general settings:', error);
     res.status(500).json({
       success: false,
       message: 'Terjadi kesalahan server'

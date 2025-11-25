@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Mail, Calendar, Shield, LogOut, Package, Heart, Settings, MessageCircle, Clock, FileText, Users, Plus, Edit, Trash2, Image as ImageIcon } from 'lucide-react';
+import { User, Mail, Calendar, Shield, LogOut, Package, Heart, Settings, MessageCircle, Clock, FileText, Users, Plus, Edit, Trash2, Image as ImageIcon, Star } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { API_URL } from '@/lib/api';
 import { ShippingSettings } from '@/pages/admin/ShippingSettings';
+import { GeneralSettings } from '@/pages/admin/GeneralSettings';
 
 // Admin emails - bisa diubah sesuai kebutuhan
 const ADMIN_EMAILS = [
@@ -92,7 +93,7 @@ export function Dashboard() {
   const [articleLoading, setArticleLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
-  const [activeAdminTab, setActiveAdminTab] = useState<'articles' | 'users' | 'comments' | 'settings'>('articles');
+  const [activeAdminTab, setActiveAdminTab] = useState<'articles' | 'users' | 'comments' | 'settings' | 'general-settings'>('articles');
   
 
   useEffect(() => {
@@ -694,6 +695,13 @@ export function Dashboard() {
                   <span className="relative z-10">Kelola Komentar</span>
                 </div>
               </Link>
+              <Link to="/admin/reviews">
+                <div className="flex items-center gap-2 sm:gap-3 p-4 sm:p-5 bg-gradient-to-r from-[#b8860b] to-[#9a6f09] text-white rounded-xl hover:shadow-[0_8px_25px_rgba(184,134,11,0.3)] transition-all duration-300 font-semibold hover:-translate-y-1 cursor-pointer text-sm sm:text-base group/action relative overflow-hidden">
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover/action:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                  <Star className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
+                  <span className="relative z-10">Kelola Ulasan</span>
+                </div>
+              </Link>
             </div>
           </div>
         )}
@@ -817,8 +825,21 @@ export function Dashboard() {
                   style={{ fontFamily: 'Nort, sans-serif' }}
                 >
                   <Settings className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1 sm:mr-2" />
-                  <span className="hidden sm:inline">Pengaturan</span>
-                  <span className="sm:hidden">Settings</span>
+                  <span className="hidden sm:inline">Pengiriman</span>
+                  <span className="sm:hidden">Shipping</span>
+                </button>
+                <button
+                  onClick={() => setActiveAdminTab('general-settings')}
+                  className={`px-3 sm:px-4 py-2 font-semibold transition-all whitespace-nowrap text-sm sm:text-base ${
+                    activeAdminTab === 'general-settings'
+                      ? 'text-[#00b8a9] border-b-2 border-[#00b8a9]'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                  style={{ fontFamily: 'Nort, sans-serif' }}
+                >
+                  <Settings className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">Umum</span>
+                  <span className="sm:hidden">General</span>
                 </button>
               </div>
             </div>
@@ -1000,6 +1021,13 @@ export function Dashboard() {
               {activeAdminTab === 'settings' && (
                 <div className="bg-white rounded-lg p-6">
                   <ShippingSettings />
+                </div>
+              )}
+
+              {/* General Settings Tab */}
+              {activeAdminTab === 'general-settings' && (
+                <div className="bg-white rounded-lg p-6">
+                  <GeneralSettings />
                 </div>
               )}
             </div>

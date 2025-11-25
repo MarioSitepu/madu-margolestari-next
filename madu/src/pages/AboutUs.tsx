@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { MapPin, Phone, Mail, Clock, Award, Users, Heart, Sparkles } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Award, Users, Heart, Sparkles, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,13 +10,75 @@ import { SEO } from "@/components/SEO";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import marlesHoney from "@/assets/marles-honey.png";
 import honeyBg from "@/assets/honey-bg-6badc9.png";
+import { API_URL } from "@/lib/api";
+
+interface FeaturedReview {
+  _id: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  productId: {
+    _id: string;
+    name: string;
+    imageUrl: string;
+  };
+  createdAt: string;
+}
 
 export const AboutUs = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [featuredReviews, setFeaturedReviews] = useState<FeaturedReview[]>([]);
+  const [loadingReviews, setLoadingReviews] = useState(true);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [userCount, setUserCount] = useState(0);
+  const [operatingYears, setOperatingYears] = useState(0);
+  const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
     setIsVisible(true);
+    fetchFeaturedReviews();
+    fetchStats();
   }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoadingStats(true);
+      const [reviewRes, userRes, settingsRes] = await Promise.all([
+        axios.get(`${API_URL}/products/reviews/count`),
+        axios.get(`${API_URL}/auth/users/count`),
+        axios.get(`${API_URL}/admin/general-settings`)
+      ]);
+      
+      if (reviewRes.data.success) {
+        setReviewCount(reviewRes.data.count || 0);
+      }
+      if (userRes.data.success) {
+        setUserCount(userRes.data.count || 0);
+      }
+      if (settingsRes.data) {
+        setOperatingYears(settingsRes.data.operatingYears || 0);
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
+  const fetchFeaturedReviews = async () => {
+    try {
+      setLoadingReviews(true);
+      const response = await axios.get(`${API_URL}/products/reviews/featured/list`);
+      if (response.data.success) {
+        setFeaturedReviews(response.data.reviews || []);
+      }
+    } catch (error) {
+      console.error('Error fetching featured reviews:', error);
+      setFeaturedReviews([]);
+    } finally {
+      setLoadingReviews(false);
+    }
+  };
 
   const features = [
     {
@@ -62,10 +125,10 @@ export const AboutUs = () => {
   ];
 
   const stats = [
-    { value: "10+", label: "Tahun Berpengalaman" },
-    { value: "5000+", label: "Pelanggan Puas" },
+    { value: operatingYears > 0 ? `${operatingYears}+` : "10+", label: "Tahun Beroperasi" },
+    { value: reviewCount > 0 ? reviewCount : "0", label: "Jumlah Ulasan" },
     { value: "100%", label: "Madu Murni" },
-    { value: "50+", label: "Mitra Peternak" },
+    { value: userCount > 0 ? userCount : "0", label: "User Terdaftar" },
   ];
 
   return (
@@ -137,17 +200,6 @@ export const AboutUs = () => {
               </div>
 
               <div className="flex flex-col gap-3 pt-4 sm:pt-6 sm:flex-row">
-                <Button 
-                  className="bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none px-10 py-4 text-sm flex-1 sm:flex-none"
-                  style={{ 
-                    fontFamily: 'Nort, sans-serif',
-                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
-                    fontSize: '12px',
-                    lineHeight: '1.342'
-                  }}
-                >
-                  Hubungi Kami
-                </Button>
                 <Link to="/product" className="flex-1 sm:flex-none">
                   <Button
                     className="bg-white text-[#00B8A9] hover:bg-gray-50 font-bold rounded-none px-10 py-4 text-sm w-full sm:w-auto"
@@ -278,7 +330,7 @@ export const AboutUs = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Testimonials / Featured Reviews Section */}
       <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 md:py-24">
         {/* Background image */}
         <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
@@ -309,45 +361,108 @@ export const AboutUs = () => {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card
-                key={index}
-                className="border border-white/20 bg-white/95 backdrop-blur-sm p-6 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl lg:p-8"
-              >
-                <div className="mb-4 flex gap-1">
-                  {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <svg key={i} className="h-5 w-5 text-[#ffde7d]" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p 
-                  className="mb-6 text-sm italic leading-relaxed text-gray-700 lg:text-base"
-                  style={{ fontFamily: 'Nort, sans-serif' }}
+            {loadingReviews ? (
+              <div className="col-span-full text-center py-8">
+                <p className="text-white">Memuat ulasan...</p>
+              </div>
+            ) : featuredReviews.length > 0 ? (
+              featuredReviews.map((review) => (
+                <Link key={review._id} to={`/product/${review.productId._id}`} className="block">
+                  <Card
+                    className="border border-white/20 bg-white/95 backdrop-blur-sm overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl lg:p-0 flex flex-col cursor-pointer h-full"
+                  >
+                    {/* Product Image */}
+                    <div className="relative h-40 bg-gray-200 overflow-hidden hover:opacity-90 transition-opacity">
+                      <img 
+                        src={review.productId.imageUrl} 
+                        alt={review.productId.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    
+                    {/* Review Content */}
+                    <div className="p-6 flex flex-col flex-grow">
+                      <div className="mb-4 flex gap-1">
+                        {Array.from({ length: review.rating }).map((_, i) => (
+                          <svg key={i} className="h-5 w-5 text-[#ffde7d]" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                      
+                      <p 
+                        className="mb-4 text-sm italic leading-relaxed text-gray-700 lg:text-base flex-grow"
+                        style={{ fontFamily: 'Nort, sans-serif' }}
+                      >
+                        "{review.comment}"
+                      </p>
+                      
+                      {/* Product Name Badge */}
+                      <div className="mb-4">
+                        <div className="inline-block bg-[#00b8a9] text-white px-3 py-1 rounded-full text-xs font-semibold hover:bg-[#009a8d] transition-colors">
+                          {review.productId.name}
+                        </div>
+                      </div>
+                      
+                      {/* Reviewer Info */}
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#00b8a9] text-sm font-bold text-white">
+                          {review.userName.charAt(0)}
+                        </div>
+                        <div>
+                          <div 
+                            className="font-semibold text-gray-900 text-sm"
+                            style={{ fontFamily: 'Nort, sans-serif' }}
+                          >
+                            {review.userName}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </Link>
+              ))
+            ) : (
+              testimonials.map((testimonial, index) => (
+                <Card
+                  key={index}
+                  className="border border-white/20 bg-white/95 backdrop-blur-sm p-6 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl lg:p-8"
                 >
-                  "{testimonial.quote}"
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#00b8a9] text-lg font-bold text-white">
-                    {testimonial.name.charAt(0)}
+                  <div className="mb-4 flex gap-1">
+                    {Array.from({ length: testimonial.rating }).map((_, i) => (
+                      <svg key={i} className="h-5 w-5 text-[#ffde7d]" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
                   </div>
-                  <div>
-                    <div 
-                      className="font-semibold text-gray-900"
-                      style={{ fontFamily: 'Nort, sans-serif' }}
-                    >
-                      {testimonial.name}
+                  <p 
+                    className="mb-6 text-sm italic leading-relaxed text-gray-700 lg:text-base"
+                    style={{ fontFamily: 'Nort, sans-serif' }}
+                  >
+                    "{testimonial.quote}"
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#00b8a9] text-lg font-bold text-white">
+                      {testimonial.name.charAt(0)}
                     </div>
-                    <div 
-                      className="text-sm text-gray-600"
-                      style={{ fontFamily: 'Nort, sans-serif' }}
-                    >
-                      {testimonial.role}
+                    <div>
+                      <div 
+                        className="font-semibold text-gray-900"
+                        style={{ fontFamily: 'Nort, sans-serif' }}
+                      >
+                        {testimonial.name}
+                      </div>
+                      <div 
+                        className="text-sm text-gray-600"
+                        style={{ fontFamily: 'Nort, sans-serif' }}
+                      >
+                        {testimonial.role}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </section>

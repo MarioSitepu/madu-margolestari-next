@@ -13,7 +13,6 @@ import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
 import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
-import { AdminLogin } from "@/pages/auth/AdminLogin";
 import { ArticleManagement } from "@/pages/admin/ArticleManagement";
 import { ArticleForm } from "@/pages/admin/ArticleForm";
 import { UserManagement } from "@/pages/admin/UserManagement";
@@ -21,9 +20,11 @@ import { CommentManagement } from "@/pages/admin/CommentManagement";
 import { GalleryManagement } from "@/pages/admin/GalleryManagement";
 import { ProductManagement } from "@/pages/admin/ProductManagement";
 import { ProductForm } from "@/pages/admin/ProductForm";
+import { ReviewManagement } from "@/pages/admin/ReviewManagement";
 import { Dashboard } from "@/pages/Dashboard";
 import { Settings } from "@/pages/Settings";
 import { default as ProductPage } from "@/pages/Product";
+import ProductDetail from "@/pages/ProductDetail";
 import Checkout from "@/pages/Checkout";
 
 // Replace with your actual Google Client ID
@@ -50,7 +51,6 @@ export function App() {
             <Routes>
               {/* Auth routes without navigation */}
               <Route path="/login" element={<Login />} />
-              <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
@@ -65,6 +65,7 @@ export function App() {
               <Route path="/admin/products" element={<ProductManagement />} />
               <Route path="/admin/products/new" element={<ProductForm />} />
               <Route path="/admin/products/:id/edit" element={<ProductForm />} />
+              <Route path="/admin/reviews" element={<ReviewManagement />} />
 
               {/* Main routes with navigation */}
               <Route
@@ -79,6 +80,7 @@ export function App() {
                       <Route path="/article-galeri/:id" element={<ArticleGaleri />} />
                       <Route path="/article-galeri" element={<ArticleGaleri />} />
                       <Route path="/product" element={<ProductPage />} />
+                      <Route path="/product/:id" element={<ProductDetail />} />
                       <Route path="/checkout" element={<Checkout />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/settings" element={<Settings />} />

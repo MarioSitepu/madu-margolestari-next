@@ -34,7 +34,7 @@ export function CommentManagement() {
 
   useEffect(() => {
     if (!isLoading && (!user || user.role !== 'admin')) {
-      navigate('/admin/login');
+      navigate('/login');
       return;
     }
 
