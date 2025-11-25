@@ -1,68 +1,59 @@
 import honeyBg from "@/assets/honey-bg-6badc9.png";
 
 export const AboutSection = () => {
-  return <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 md:py-24">
-      {/* Background image */}
-      <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
-        <img src={honeyBg} alt="Background tetesan madu alami dari peternakan lebah Madu Jaya Lestari - Visualisasi madu murni berkualitas" className="object-cover w-full h-full opacity-40" />
+  return (
+    <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 md:py-24">
+      {/* Background image overlay */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none">
+        <img 
+          src={honeyBg} 
+          alt="Tekstur madu alami" 
+          className="w-full h-full object-cover opacity-20 md:opacity-30 mix-blend-overlay" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#00b8a9]/80 to-[#00b8a9]/95"></div>
       </div>
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8 md:gap-16">
-          {/* Title */}
-          <div className="mb-8 md:mb-0">
-            <div className="flex flex-col md:flex-row items-start">
-              <h2 
-                className="text-4xl md:text-5xl font-bold text-white"
-                style={{ fontFamily: 'Nort, sans-serif' }}
-              >
-                Tentang
-              </h2>
-              <div className="flex flex-col ml-2">
-                <h2 
-                  className="text-4xl md:text-5xl font-bold text-[#ffde7d] relative inline-block"
-                  style={{ fontFamily: 'Nort, sans-serif' }}
-                >
-                  Kami
-                  {/* Underline matching home page style */}
-                  <span 
-                    className="absolute left-0 bg-black"
-                    style={{ 
-                      width: 'clamp(100px, 15vw, 200px)', 
-                      height: 'clamp(8px, 0.77vw, 11.02px)',
-                      bottom: 'clamp(-8px, -0.77vw, -11.02px)'
-                    }}
-                  ></span>
-                </h2>
-              </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="flex flex-col md:flex-row gap-12 lg:gap-20 items-start">
+          
+          {/* Title Section - Sticky on desktop for better reading flow */}
+          <div className="w-full md:w-1/3 md:sticky md:top-24">
+            <h2 
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight"
+              style={{ fontFamily: 'Nort, sans-serif' }}
+            >
+              Tentang <br />
+              <span className="text-[#ffde7d] relative inline-block mt-2">
+                Kami
+                {/* Decorative Underline */}
+                <span className="absolute bottom-1 left-0 w-full h-3 bg-black/20 -z-10 rounded-full transform -rotate-1"></span>
+              </span>
+            </h2>
+            <div className="w-20 h-1 bg-[#ffde7d] mt-6 rounded-full"></div>
+          </div>
+
+          {/* Content Section */}
+          <div className="w-full md:w-2/3 space-y-6 text-white/90 text-lg leading-relaxed">
+            <p>
+              Selamat datang di <strong className="text-[#ffde7d] font-semibold">Madu Jaya Lestari</strong>, 
+              jantung dari produksi madu alami berkualitas di Lampung Selatan. Kami bukan sekadar penjual madu; 
+              kami adalah mitra alam yang berdedikasi untuk menghadirkan kemurnian hutan tropis langsung ke meja makan Anda.
+            </p>
+            <p>
+              Berkomitmen pada keberlanjutan, setiap tetes madu kami dipanen dengan metode etis yang memprioritaskan 
+              kesejahteraan koloni lebah. Kami percaya bahwa madu terbaik hanya bisa dihasilkan dari lingkungan yang 
+              sehat dan lebah yang bahagia.
+            </p>
+            <div className="bg-white/10 p-6 rounded-xl border-l-4 border-[#ffde7d] mt-8 backdrop-blur-sm">
+              <p className="italic">
+                "Kami menjamin 100% kemurnian tanpa proses pasteurisasi berlebih, menjaga enzim dan nutrisi 
+                alami tetap utuh demi kesehatan keluarga Anda."
+              </p>
             </div>
           </div>
-          {/* About text */}
-          <div className="max-w-2xl">
-            <p className="text-white text-lg leading-relaxed">
-              Selamat datang di{' '}
-              <span className="text-[#ffde7d]">[Nama UMKM Lebah Madu]</span>,
-              penyedia madu alami terbaik yang berasal dari lebah pilihan. Kami
-              berkomitmen untuk menyediakan produk madu berkualitas tinggi,
-              murni, dan kaya akan manfaat kesehatan. Di{' '}
-              <span className="text-[#ffde7d]">[Nama UMKM Lebah Madu]</span>,
-              kami mengutamakan keberlanjutan dan kesejahteraan lebah,
-              memastikan bahwa setiap tetes madu yang kami hasilkan berasal dari
-              proses yang alami dan ramah lingkungan.
-            </p>
-            <p className="text-white text-lg leading-relaxed mt-4">
-              Sebagai UMKM yang berbasis di{' '}
-              <span className="text-[#ffde7d]">[Lokasi]</span>, kami bekerja
-              sama dengan peternak lebah lokal yang memiliki keahlian dan
-              pengalaman dalam memproduksi madu yang murni dan tidak tercampur
-              dengan bahan kimia apapun. Setiap produk kami dipanen dengan
-              hati-hati dan dikelola dengan{' '}
-              <span className="text-[#ffde7d]">
-                standar kebersihan yang ketat untuk menjaga kualitas dan
-                keaslian rasa.
-              </span>
-            </p>
-          </div>
+
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };

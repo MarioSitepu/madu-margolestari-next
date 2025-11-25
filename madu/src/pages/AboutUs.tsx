@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
-import marlesHoney from "@/assets/marles-honey.png";
+import marlesHoney from "@/assets/honey-bg-6badc9.png";
 import honeyBg from "@/assets/honey-bg-6badc9.png";
 
 export const AboutUs = () => {
