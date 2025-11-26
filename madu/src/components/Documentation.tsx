@@ -1,7 +1,7 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import headerImage from "@/assets/header-image-1a216d.png";
+import headerImage from "@/assets/madu-beranda-sec1.webp";
 
 export function Documentation() {
   return (

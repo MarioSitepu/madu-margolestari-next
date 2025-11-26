@@ -9,7 +9,7 @@ import { QuantitySelectorModal } from "@/components/QuantitySelectorModal";
 import productBottlesHero from "@/assets/product-bottles-hero.png";
 import productBottleCard from "@/assets/product-bottle-card.png";
 import axios from "axios";
-import { API_URL } from '@/lib/api';
+import { API_URL } from "@/lib/api";
 
 interface Product {
   _id: string;
@@ -122,7 +122,7 @@ export function ProductPage() {
         setProducts(response.data.products);
       }
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
@@ -158,9 +158,11 @@ export function ProductPage() {
   const seoProducts = products.map(product => ({
     name: product.name,
     description: product.description,
-    image: product.imageUrl || 'https://madumargolestari.vercel.app/product-bottle-card.png',
+    image:
+      product.imageUrl ||
+      "https://madumargolestari.vercel.app/product-bottle-card.png",
     price: product.price,
-    url: `https://madumargolestari.vercel.app/product`
+    url: `https://madumargolestari.vercel.app/product`,
   }));
 
   return (
@@ -205,9 +207,9 @@ export function ProductPage() {
             <div className="mb-4 md:mb-6">
               <h2
                 className="text-[28px] md:text-[48px] font-extrabold text-white leading-[1.342] mb-2"
-                style={{ fontFamily: 'Nort, sans-serif' }}
+                style={{ fontFamily: "Nort, sans-serif" }}
               >
-                Nikmati kelezatan dan manfaat dari Madu Alami{' '}
+                Nikmati kelezatan dan manfaat dari Madu Alami{" "}
                 <span className="text-[#ffde7d] relative inline-block">
                   100%
                   <span className="absolute bottom-0 left-0 w-20 md:w-[122px] h-2 md:h-2.5 bg-white"></span>
@@ -218,9 +220,11 @@ export function ProductPage() {
             <div className="mb-6 md:mb-8">
               <p
                 className="text-[14px] font-normal text-white leading-[1.342]"
-                style={{ fontFamily: 'Nort, sans-serif' }}
+                style={{ fontFamily: "Nort, sans-serif" }}
               >
-                Jangan lewatkan kesempatan untuk merasakan manfaat kesehatan dari madu yang dipanen langsung dari peternakan lebah terbaik. Pesan sekarang dan rasakan sendiri perbedaannya!
+                Jangan lewatkan kesempatan untuk merasakan manfaat kesehatan
+                dari madu yang dipanen langsung dari peternakan lebah terbaik.
+                Pesan sekarang dan rasakan sendiri perbedaannya!
               </p>
             </div>
 
@@ -239,9 +243,9 @@ export function ProductPage() {
           <div className="text-center mb-12 md:mb-16">
             <h2
               className="text-[32px] md:text-[48px] font-extrabold text-black leading-[1.342] mb-2"
-              style={{ fontFamily: 'Nort, sans-serif' }}
+              style={{ fontFamily: "Nort, sans-serif" }}
             >
-              Produk{' '}
+              Produk{" "}
               <span className="text-[#00b8a9] relative inline-block">
                 Kami
               </span>

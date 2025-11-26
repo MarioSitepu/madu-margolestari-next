@@ -46,7 +46,7 @@ export function ProductList() {
             className="text-[32px] md:text-[48px] font-extrabold text-black leading-[1.342] mb-2"
             style={{ fontFamily: 'Nort, sans-serif' }}
           >
-            Produk{' '}
+            Produk{" "}
             <span className="text-[#00b8a9] relative inline-block">
               Kami
               <span className="absolute bottom-0 left-0 w-full h-2.5 bg-black"></span>

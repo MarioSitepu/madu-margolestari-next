@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { MapPin, Phone, Mail, Clock, Award, Users, Heart, Sparkles } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Award,
+  Users,
+  Heart,
+  Sparkles,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -103,19 +112,22 @@ export const AboutUs = () => {
     {
       name: "Ibu Siti",
       role: "Pelanggan Setia",
-      quote: "Madu dari UMKM ini benar-benar murni dan berkualitas. Anak-anak saya sangat suka!",
+      quote:
+        "Madu dari UMKM ini benar-benar murni dan berkualitas. Anak-anak saya sangat suka!",
       rating: 5,
     },
     {
       name: "Pak Ahmad",
       role: "Pemilik Toko",
-      quote: "Sudah 5 tahun saya menjual produk mereka. Pelanggan selalu puas dengan kualitasnya.",
+      quote:
+        "Sudah 5 tahun saya menjual produk mereka. Pelanggan selalu puas dengan kualitasnya.",
       rating: 5,
     },
     {
       name: "Ibu Maya",
       role: "Konsumen",
-      quote: "Rasanya autentik dan manfaatnya terasa. Sangat recommended untuk kesehatan keluarga!",
+      quote:
+        "Rasanya autentik dan manfaatnya terasa. Sangat recommended untuk kesehatan keluarga!",
       rating: 5,
     },
   ];
@@ -129,15 +141,18 @@ export const AboutUs = () => {
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <SEO 
+      <SEO
         title="Tentang Kami - Madu Jaya Lestari | Profil UMKM Madu Terpercaya"
         description="Kenali Madu Jaya Lestari - UMKM madu terpercaya dengan lebih dari 10 tahun pengalaman. Kami menyediakan madu murni 100% asli dari peternakan lebah terbaik di Margo Lestari, Jati Agung, Lampung Selatan. Komitmen kami adalah memberikan produk berkualitas tinggi dengan standar kebersihan ketat. Lebih dari 5000 pelanggan puas dan 50+ mitra peternak."
         keywords="tentang madu jaya lestari, madu margo lestari, maps madu jaya lestari, madu di margo lestari, profil perusahaan madu, sejarah madu jaya lestari, visi misi madu, umkm madu lampung, peternakan lebah lampung selatan, madu jati agung, profil umkm madu, sejarah madu jaya lestari, komitmen kualitas madu, lokasi madu jaya lestari, alamat madu jaya lestari"
         url="https://madumargolestari.vercel.app/about"
         image="https://madumargolestari.vercel.app/marles-honey.png"
         breadcrumbs={[
-          { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' },
-          { name: 'Tentang Kami', url: 'https://madumargolestari.vercel.app/about' }
+          { name: "Beranda", url: "https://madumargolestari.vercel.app/" },
+          {
+            name: "Tentang Kami",
+            url: "https://madumargolestari.vercel.app/about",
+          },
         ]}
       />
       {/* Hero Section with Honey Image */}
@@ -158,40 +173,51 @@ export const AboutUs = () => {
             {/* Left Content */}
             <div
               className={`z-10 space-y-6 transition-all duration-1000 lg:space-y-7 ${
-                isVisible ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
+                isVisible
+                  ? "translate-x-0 opacity-100"
+                  : "-translate-x-10 opacity-0"
               }`}
             >
               <div className="space-y-4 lg:space-y-5">
-                <h1 
+                <h1
                   className="text-3xl font-black leading-tight text-black sm:text-4xl lg:mb-4 lg:text-5xl"
-                  style={{ fontFamily: 'Nort, sans-serif' }}
+                  style={{ fontFamily: "Nort, sans-serif" }}
                 >
                   Tentang{" "}
                   <span className="relative inline-block">
                     <span className="relative z-10 text-[#00b8a9]">Kami</span>
                     {/* Underline matching home page style */}
-                    <span 
+                    <span
                       className="absolute left-0 bg-black"
-                      style={{ 
-                        width: 'clamp(80px, 12vw, 150px)', 
-                        height: 'clamp(6px, 0.6vw, 9px)',
-                        bottom: 'clamp(-6px, -0.6vw, -9px)'
+                      style={{
+                        width: "clamp(80px, 12vw, 150px)",
+                        height: "clamp(6px, 0.6vw, 9px)",
+                        bottom: "clamp(-6px, -0.6vw, -9px)",
                       }}
                     ></span>
                   </span>
                 </h1>
                 <p className="text-sm leading-relaxed text-black/70 sm:text-base lg:text-lg">
-                  Selamat datang di <span className="font-semibold text-[#00b8a9]">UMKM Lebah Madu</span>, penyedia madu alami terbaik
-                  yang berasal dari lebah pilihan.
+                  Selamat datang di{" "}
+                  <span className="font-semibold text-[#00b8a9]">
+                    UMKM Lebah Madu
+                  </span>
+                  , penyedia madu alami terbaik yang berasal dari lebah pilihan.
                 </p>
               </div>
 
               <div className="space-y-3 text-xs leading-relaxed text-black/70 sm:text-sm lg:max-w-2xl lg:text-base">
                 <p>
-                  Kami berkomitmen untuk menyediakan produk madu berkualitas tinggi, murni, dan kaya akan manfaat kesehatan.
+                  Kami berkomitmen untuk menyediakan produk madu berkualitas
+                  tinggi, murni, dan kaya akan manfaat kesehatan.
                 </p>
                 <p>
-                  Di lokasi kami, kami menjamin <span className="font-semibold text-[#00b8a9]">keberlanjutan dan kelestarian lebah</span>, memastikan bahwa setiap produk yang kami hasilkan berasal dari lingkungan alami dan ramah lingkungan.
+                  Di lokasi kami, kami menjamin{" "}
+                  <span className="font-semibold text-[#00b8a9]">
+                    keberlanjutan dan kelestarian lebah
+                  </span>
+                  , memastikan bahwa setiap produk yang kami hasilkan berasal
+                  dari lingkungan alami dan ramah lingkungan.
                 </p>
               </div>
 
@@ -199,11 +225,11 @@ export const AboutUs = () => {
                 <Link to="/product" className="flex-1 sm:flex-none">
                   <Button
                     className="bg-white text-[#00B8A9] hover:bg-gray-50 font-bold rounded-none px-10 py-4 text-sm w-full sm:w-auto"
-                    style={{ 
-                      fontFamily: 'Nort, sans-serif',
-                      boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
-                      fontSize: '12px',
-                      lineHeight: '1.342'
+                    style={{
+                      fontFamily: "Nort, sans-serif",
+                      boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 1)",
+                      fontSize: "12px",
+                      lineHeight: "1.342",
                     }}
                   >
                     Lihat Produk
@@ -215,13 +241,15 @@ export const AboutUs = () => {
             {/* Right Content - Honey Image */}
             <div
               className={`relative transition-all duration-1000 delay-200 ${
-                isVisible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+                isVisible
+                  ? "translate-x-0 opacity-100"
+                  : "translate-x-10 opacity-0"
               }`}
             >
               <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/40 bg-white/40 shadow-xl backdrop-blur lg:aspect-4/5 max-w-md mx-auto">
-                <img 
-                  src={marlesHoney} 
-                  alt="Madu murni asli dari peternakan lebah Madu Jaya Lestari di Jati Agung, Lampung Selatan - Produk madu berkualitas tinggi 100% alami" 
+                <img
+                  src={marlesHoney}
+                  alt="Madu murni asli dari peternakan lebah Madu Jaya Lestari di Jati Agung, Lampung Selatan - Produk madu berkualitas tinggi 100% alami"
                   className="w-full h-full object-cover"
                 />
                 {/* Overlay gradient untuk efek */}
@@ -239,7 +267,12 @@ export const AboutUs = () => {
 
         {/* Wave Divider */}
         <div className="absolute bottom-0 left-0 right-0">
-          <svg className="w-full" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            className="w-full"
+            viewBox="0 0 1440 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path
               d="M0 0L60 10C120 20 240 40 360 46.7C480 53 600 47 720 43.3C840 40 960 40 1080 46.7C1200 53 1320 67 1380 73.3L1440 80V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V0Z"
               fill="#ffffff"
@@ -257,15 +290,15 @@ export const AboutUs = () => {
                 key={index}
                 className="border border-[#00b8a9]/20 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-8"
               >
-                <div 
+                <div
                   className="mb-2 text-3xl font-black text-[#00b8a9] lg:text-5xl"
-                  style={{ fontFamily: 'Nort, sans-serif' }}
+                  style={{ fontFamily: "Nort, sans-serif" }}
                 >
                   {stat.value}
                 </div>
-                <div 
+                <div
                   className="text-sm font-medium text-gray-700 lg:text-base"
-                  style={{ fontFamily: 'Nort, sans-serif' }}
+                  style={{ fontFamily: "Nort, sans-serif" }}
                 >
                   {stat.label}
                 </div>
@@ -279,20 +312,20 @@ export const AboutUs = () => {
       <section className="bg-[#ffde7d] py-16 lg:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center lg:mb-16">
-            <h2 
+            <h2
               className="text-4xl md:text-5xl lg:text-6xl font-black text-center mb-10 md:mb-12"
-              style={{ fontFamily: 'Nort, sans-serif' }}
+              style={{ fontFamily: "Nort, sans-serif" }}
             >
               Mengapa Memilih{" "}
               <span className="text-[#00b8a9] relative inline-block">
                 Kami?
                 {/* Underline matching home page style */}
-                <span 
+                <span
                   className="absolute left-0 bg-black"
-                  style={{ 
-                    width: 'clamp(100px, 15vw, 200px)', 
-                    height: 'clamp(8px, 0.77vw, 11.02px)',
-                    bottom: 'clamp(-8px, -0.77vw, -11.02px)'
+                  style={{
+                    width: "clamp(100px, 15vw, 200px)",
+                    height: "clamp(8px, 0.77vw, 11.02px)",
+                    bottom: "clamp(-8px, -0.77vw, -11.02px)",
                   }}
                 ></span>
               </span>
@@ -303,19 +336,22 @@ export const AboutUs = () => {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div key={index} className="flex flex-col items-center text-center">
+                <div
+                  key={index}
+                  className="flex flex-col items-center text-center"
+                >
                   <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center mb-4 md:mb-5 shadow-xl border-4 border-white">
                     <Icon size={56} stroke="#00b8a9" strokeWidth={2.5} />
                   </div>
-                  <h3 
+                  <h3
                     className="text-xl md:text-2xl font-black mb-2 md:mb-3"
-                    style={{ fontFamily: 'Nort, sans-serif' }}
+                    style={{ fontFamily: "Nort, sans-serif" }}
                   >
                     {feature.title}
                   </h3>
-                  <p 
+                  <p
                     className="text-xs md:text-sm leading-relaxed text-gray-800"
-                    style={{ fontFamily: 'Nort, sans-serif' }}
+                    style={{ fontFamily: "Nort, sans-serif" }}
                   >
                     {feature.description}
                   </p>
@@ -330,21 +366,25 @@ export const AboutUs = () => {
       <section className="relative w-full overflow-hidden bg-[#00b8a9] py-16 md:py-24">
         {/* Background image */}
         <div className="absolute left-0 top-0 w-full h-full overflow-hidden">
-          <img src={honeyBg} alt="Background tetesan madu alami dari peternakan lebah Madu Jaya Lestari - Visualisasi madu murni berkualitas" className="object-cover w-full h-full opacity-30" />
+          <img
+            src={honeyBg}
+            alt="Background tetesan madu alami dari peternakan lebah Madu Jaya Lestari - Visualisasi madu murni berkualitas"
+            className="object-cover w-full h-full opacity-30"
+          />
         </div>
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="mb-12 text-center lg:mb-16">
             <div className="flex flex-wrap justify-center items-baseline mb-8">
-              <h2 
+              <h2
                 className="text-4xl md:text-5xl font-bold text-white mr-3"
-                style={{ fontFamily: 'Nort, sans-serif' }}
+                style={{ fontFamily: "Nort, sans-serif" }}
               >
                 Apa Kata
               </h2>
               <div className="flex flex-col">
-                <h2 
+                <h2
                   className="text-4xl md:text-5xl font-bold text-[#ffde7d]"
-                  style={{ fontFamily: 'Nort, sans-serif' }}
+                  style={{ fontFamily: "Nort, sans-serif" }}
                 >
                   Mereka?
                 </h2>
@@ -469,34 +509,35 @@ export const AboutUs = () => {
           <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
             <div className="space-y-6 lg:space-y-8">
               <div>
-                <h2 
+                <h2
                   className="text-3xl font-bold text-black sm:text-4xl lg:text-5xl"
-                  style={{ fontFamily: 'Nort, sans-serif' }}
+                  style={{ fontFamily: "Nort, sans-serif" }}
                 >
                   Kunjungi{" "}
                   <span className="relative inline-block">
                     <span className="relative z-10 text-[#00b8a9]">Kami</span>
                     {/* Underline matching home page style */}
-                    <span 
+                    <span
                       className="absolute left-0 bg-black"
-                      style={{ 
-                        width: 'clamp(80px, 12vw, 150px)', 
-                        height: 'clamp(6px, 0.6vw, 9px)',
-                        bottom: 'clamp(-6px, -0.6vw, -9px)'
+                      style={{
+                        width: "clamp(80px, 12vw, 150px)",
+                        height: "clamp(6px, 0.6vw, 9px)",
+                        bottom: "clamp(-6px, -0.6vw, -9px)",
                       }}
                     ></span>
                   </span>
                 </h2>
                 <p className="text-base leading-relaxed text-black lg:text-lg">
-                  Ayo kunjungi kami di tempat ini untuk melihat proses pengerjaan serta melihat langsung dari sarangnya
+                  Ayo kunjungi kami di tempat ini untuk melihat proses
+                  pengerjaan serta melihat langsung dari sarangnya
                 </p>
               </div>
 
               <div className="space-y-4">
-                <div 
+                <div
                   className="flex items-start gap-4 rounded-none bg-[#00B8A9] p-4"
-                  style={{ 
-                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
+                  style={{
+                    boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 1)",
                   }}
                 >
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white">
@@ -504,14 +545,17 @@ export const AboutUs = () => {
                   </div>
                   <div>
                     <div className="mb-1 font-semibold text-white">Alamat</div>
-                    <div className="text-sm text-white">Margo Lestari, Kec. Jati Agung, Kabupaten Lampung Selatan, Lampung 35365</div>
+                    <div className="text-sm text-white">
+                      Margo Lestari, Kec. Jati Agung, Kabupaten Lampung Selatan,
+                      Lampung 35365
+                    </div>
                   </div>
                 </div>
 
-                <div 
+                <div
                   className="flex items-start gap-4 rounded-none bg-[#00B8A9] p-4"
-                  style={{ 
-                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
+                  style={{
+                    boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 1)",
                   }}
                 >
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white">
@@ -523,10 +567,10 @@ export const AboutUs = () => {
                   </div>
                 </div>
 
-                <div 
+                <div
                   className="flex items-start gap-4 rounded-none bg-[#00B8A9] p-4"
-                  style={{ 
-                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
+                  style={{
+                    boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 1)",
                   }}
                 >
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white">
@@ -534,36 +578,43 @@ export const AboutUs = () => {
                   </div>
                   <div>
                     <div className="mb-1 font-semibold text-white">Email</div>
-                    <div className="text-sm text-white">info@lebahmadu.co.id</div>
+                    <div className="text-sm text-white">
+                      info@lebahmadu.co.id
+                    </div>
                   </div>
                 </div>
 
-                <div 
+                <div
                   className="flex items-start gap-4 rounded-none bg-[#00B8A9] p-4"
-                  style={{ 
-                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)'
+                  style={{
+                    boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 1)",
                   }}
                 >
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white">
                     <Clock className="h-6 w-6 text-[#00b8a9]" />
                   </div>
                   <div>
-                    <div className="mb-1 font-semibold text-white">Jam Operasional</div>
-                    <div className="text-sm text-white">Senin - Sabtu: 08:00 - 17:00 WIB</div>
+                    <div className="mb-1 font-semibold text-white">
+                      Jam Operasional
+                    </div>
+                    <div className="text-sm text-white">
+                      Senin - Sabtu: 08:00 - 17:00 WIB
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             <Card className="border-0 bg-white p-6 text-left text-black shadow-2xl lg:p-8">
-              <h3 
+              <h3
                 className="text-xl font-bold text-black lg:text-2xl mb-4"
-                style={{ fontFamily: 'Nort, sans-serif' }}
+                style={{ fontFamily: "Nort, sans-serif" }}
               >
                 Temukan Lokasi Kami
               </h3>
               <p className="mb-6 text-sm text-black lg:text-base">
-                Kunjungi farm kami dan lihat langsung proses pembuatan madu berkualitas tinggi
+                Kunjungi farm kami dan lihat langsung proses pembuatan madu
+                berkualitas tinggi
               </p>
               <div className="mb-6 overflow-hidden rounded-xl border-2 border-[#00b8a9]/20 shadow-lg">
                 <iframe
@@ -578,15 +629,20 @@ export const AboutUs = () => {
                   className="w-full"
                 ></iframe>
               </div>
-              <Button 
+              <Button
                 className="w-full bg-[#00B8A9] text-white hover:bg-[#009a8d] font-bold rounded-none py-6"
-                style={{ 
-                  fontFamily: 'Nort, sans-serif',
-                  boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 1)',
-                  fontSize: '14px',
-                  lineHeight: '1.342'
+                style={{
+                  fontFamily: "Nort, sans-serif",
+                  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 1)",
+                  fontSize: "14px",
+                  lineHeight: "1.342",
                 }}
-                onClick={() => window.open('https://maps.app.goo.gl/vzmv6BV4oFboJmqW7', '_blank')}
+                onClick={() =>
+                  window.open(
+                    "https://maps.app.goo.gl/vzmv6BV4oFboJmqW7",
+                    "_blank"
+                  )
+                }
               >
                 Buka di Google Maps
               </Button>
@@ -603,4 +659,3 @@ export const AboutUs = () => {
 };
 
 export default AboutUs;
-
