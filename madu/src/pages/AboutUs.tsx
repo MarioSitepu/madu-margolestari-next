@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MapPin, Phone, Mail, Clock, Award, Users, Heart, Sparkles, Star } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Award, Users, Heart, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
-import marlesHoney from "@/assets/marles-honey.png";
+import marlesHoney from "@/assets/honey-bg-6badc9.png";
 import honeyBg from "@/assets/honey-bg-6badc9.png";
 import { API_URL } from "@/lib/api";
 
@@ -32,7 +32,6 @@ export const AboutUs = () => {
   const [reviewCount, setReviewCount] = useState(0);
   const [userCount, setUserCount] = useState(0);
   const [operatingYears, setOperatingYears] = useState(0);
-  const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
     setIsVisible(true);
@@ -42,7 +41,6 @@ export const AboutUs = () => {
 
   const fetchStats = async () => {
     try {
-      setLoadingStats(true);
       const [reviewRes, userRes, settingsRes] = await Promise.all([
         axios.get(`${API_URL}/products/reviews/count`),
         axios.get(`${API_URL}/auth/users/count`),
@@ -60,8 +58,6 @@ export const AboutUs = () => {
       }
     } catch (error) {
       console.error('Error fetching stats:', error);
-    } finally {
-      setLoadingStats(false);
     }
   };
 
@@ -89,7 +85,7 @@ export const AboutUs = () => {
     {
       icon: Users,
       title: "Berpengalaman",
-      description: "Lebih dari 10 tahun di industri madu",
+      description: operatingYears > 0 ? `Lebih dari ${operatingYears} tahun di industri madu` : "Lebih dari 10 tahun di industri madu",
     },
     {
       icon: Heart,

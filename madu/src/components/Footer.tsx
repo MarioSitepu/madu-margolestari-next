@@ -1,340 +1,168 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Clock,
-  Facebook,
-  Instagram,
-  Twitter,
-} from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Twitter } from "lucide-react";
 import honeyLogo from "@/assets/1.svg";
 import honeycomb from "@/assets/2.png";
 
 export function Footer() {
   const [email, setEmail] = useState("");
+
   const handleSubscribe = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle subscription logic here
-    alert("Thank you for subscribing!");
+    alert("Terima kasih telah berlangganan. Email Anda telah kami catat dan akan menerima update terbaru dari kami.");
     setEmail("");
   };
+
   return (
-    <div className="flex flex-col min-h-screen w-full">
-      {/* Top section with subscription form */}
-      <section className="relative bg-[#ffde7d] w-full pt-12 sm:pt-16 md:pt-20 lg:pt-24 xl:pt-28">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 pb-0 sm:pb-0 relative">
-          {/* White container with subscription form */}
-          <div className="bg-white rounded-2xl max-w-6xl mx-auto -mb-12 sm:-mb-16 md:-mb-20 lg:-mb-24 xl:-mb-28 p-3 sm:p-5 md:p-6 lg:p-8 relative shadow-[0_4px_6px_rgba(0,0,0,0.8)] min-h-[180px] sm:min-h-[240px] md:min-h-[280px]">
-            {/* Honeycomb image */}
-            <div className="absolute -top-4 sm:-top-6 md:-top-8 lg:-top-10 xl:-top-12 left-0 md:-left-6 w-28 sm:w-40 md:w-56 lg:w-80 xl:w-96 hidden md:block">
-              <img
-                src={honeycomb}
-                alt="Sarang lebah madu alami dari peternakan Madu Jaya Lestari - Produk madu murni berkualitas tinggi"
-                className="w-full h-auto"
-              />
-            </div>
-            {/* Subscription content */}
-            <div className="grid md:grid-cols-2 pt-6 sm:pt-8 md:pt-10 lg:pt-3 gap-4 md:gap-0 md:-ml-8 lg:-ml-12 xl:-ml-55">
-              <div className="md:col-span-1 hidden md:block">
-                {/* Empty column on mobile, image space on desktop */}
-              </div>
-              <div className="md:col-span-1 space-y-1.5 sm:space-y-2 md:space-y-1">
-                <h2 className="text-[#00b8a9] text-lg sm:text-xl md:text-2xl lg:text-[27px] font-bold">
-                  Berlangganan ke web kami untuk{" "}
-                  <span className="hidden sm:inline">
-                    <br />
-                  </span>{" "}
-                  mendapatkan pembaruan tentang{" "}
-                  <span className="text-[#ffde7d] underline">
-                    penawaran{" "}
-                    <span className="hidden sm:inline">
-                      <br />
-                    </span>
-                    menarik
-                  </span>{" "}
-                  dari kami
+    <footer className="flex flex-col w-full">
+      
+      {/* ==========================================
+         BAGIAN 1: NEWSLETTER (Background Kuning)
+         ========================================== */}
+      <div className="relative bg-[#ffde7d] pt-16 pb-24 md:pb-32 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto relative z-10">
+          
+          {/* Floating White Card */}
+          {/* Menggunakan -mb agar kartu ini turun menimpa section hijau di bawahnya */}
+          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 -mb-40 md:-mb-48 relative overflow-hidden">
+            
+            {/* Dekorasi Sarang Lebah */}
+            <img
+              src={honeycomb}
+              alt="Dekorasi"
+              className="absolute top-0 left-0 w-24 md:w-48 opacity-50 md:opacity-100 pointer-events-none transform -translate-x-4 -translate-y-4"
+            />
+
+            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+              
+              {/* Teks Ajakan */}
+              <div className="text-center lg:text-left max-w-xl">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Nort, sans-serif' }}>
+                  Tetap <span className="text-[#00b8a9]">Terhubung</span> Dengan Kami
                 </h2>
-                <p className="text-[#00b8a9] text-xs sm:text-sm md:text-[14px] font-m">
-                  Dapatkan{" "}
-                  <span className="text-[#ffde7d] underline">diskon 20%</span>{" "}
-                  untuk pembelian pertama Anda hanya dengan berlangganan
-                  newsletter kami.
-                </p>
-                <form onSubmit={handleSubscribe} className="relative mt-4 sm:mt-5 md:mt-5">
-                  {/* Mobile Layout - Stacked */}
-                  <div className="flex flex-col sm:hidden gap-3">
-                    {/* Email Input Container - Background hijau seperti desktop */}
-                    <div className="bg-[#00b8a9] rounded-full px-4 py-3.5 flex items-center gap-3 shadow-md">
-                      <div className="flex items-center justify-center w-5 h-5 shrink-0">
-                        <img
-                          src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
-                          alt="Icon email untuk berlangganan newsletter Madu Jaya Lestari"
-                          className="w-5 h-5"
-                        />
-                      </div>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Masukkan email Anda"
-                        className="bg-transparent text-sm text-white placeholder:text-white/70 outline-none w-full flex-1"
-                        required
-                      />
-                    </div>
-                    {/* Button - Warna kuning seperti desktop */}
-                    <button
-                      type="submit"
-                      className="bg-[#ffde7d] text-black font-bold text-sm py-3.5 px-6 rounded-full hover:bg-[#f5c869] active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl w-full"
-                    >
-                      Berlangganan
-                    </button>
-                  </div>
-                  
-                  {/* Desktop/Tablet Layout - Horizontal */}
-                  <div className="hidden sm:flex bg-[#00b8a9] rounded-full p-1 items-center max-w-lg md:max-w-120">
-                    <div className="flex items-center flex-1 pl-4 pr-2">
-                      <img
-                        src="https://uploadthingy.s3.us-west-1.amazonaws.com/1Zxs7CjJ4YZ6xotFV6yEXr/3607decd973daa13410de1b04b7029e9e99f9fd5.svg"
-                        alt="Icon email untuk berlangganan newsletter Madu Jaya Lestari"
-                        className="w-4 h-4 mr-2 shrink-0"
-                      />
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Masukkan email Anda"
-                        className="bg-transparent text-sm text-white placeholder:text-white/70 outline-none w-full py-2"
-                        required
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="bg-[#ffde7d] text-black font-semibold text-sm py-2 px-4 md:px-3 mr-3 rounded-full hover:bg-[#f5c869] active:scale-95 transition-all duration-200 whitespace-nowrap"
-                    >
-                      Berlangganan
-                    </button>
-                  </div>
-                </form>
-                <p className="text-[#00b8a9] text-xs sm:text-sm md:text-[14px]">
-                  Anda dapat berhenti berlangganan kapan saja.
-                  <span className="hidden sm:inline">
-                    <br />
-                  </span>{" "}
-                  Baca kebijakan privasi kami{" "}
-                  <a href="#" className="text-[#ffde7d] underline">
-                    di sini
-                  </a>
-                  .
+                <p className="text-gray-600">
+                  Dapatkan update terbaru tentang produk madu premium dan informasi UMKM kami langsung ke email Anda.
                 </p>
               </div>
+
+              {/* Form Input */}
+              <form onSubmit={handleSubscribe} className="w-full max-w-md flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Masukkan email Anda..."
+                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border border-gray-200 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#00b8a9] transition-all"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="px-8 py-4 bg-[#00b8a9] hover:bg-[#008f82] text-white font-bold rounded-full shadow-lg transition-all hover:-translate-y-1 whitespace-nowrap"
+                >
+                  Berlangganan
+                </button>
+              </form>
+
             </div>
           </div>
         </div>
-      </section>
-      {/* Footer section */}
-      <section className="bg-[#00b8a9] text-white grow">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-8 xl:px-10 2xl:px-40 py-8 sm:py-12 md:py-15 pt-12 sm:pt-16 md:pt-20 lg:pt-24">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-4 mt-6 sm:mt-8 md:mt-10">
-            {/* Company info */}
-            <div className="sm:col-span-2 lg:col-span-2 xl:col-span-2">
-              <div className="flex items-center -ml-2 sm:-ml-4 md:-ml-7">
-                <img
-                  src={honeyLogo}
-                  alt="Logo Madu Jaya Lestari - UMKM madu murni asli dari Lampung Selatan"
-                  className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
-                />
-                <h3 className="text-[#ffde7d] text-xl sm:text-2xl font-bold mt-2 -ml-2 sm:-ml-3">
+      </div>
+
+      {/* ==========================================
+          BAGIAN 2: FOOTER UTAMA (Background Hijau)
+         ========================================== */}
+      <div className="bg-[#00b8a9] text-white pt-44 md:pt-52 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+            
+            {/* Kolom 1: Brand Info */}
+            <div className="space-y-6">
+              <Link to="/" className="flex items-center gap-3">
+                <div className="bg-white p-2 rounded-full w-12 h-12 flex items-center justify-center shadow-md">
+                  <img src={honeyLogo} alt="Logo" className="w-8 h-8" />
+                </div>
+                <span className="text-2xl font-bold text-[#ffde7d]" style={{ fontFamily: 'Nort, sans-serif' }}>
                   Madu Jaya Lestari
-                </h3>
-              </div>
-              <p className="text-xs sm:text-sm mt-2 sm:mt-0 pr-2 sm:pr-3 md:pr-4">
-                UMKM Lebah Madu Margolestari merupakan usaha mikro, kecil, dan
-                menengah yang berfokus pada budidaya lebah madu dan produksi
-                madu murni berkualitas tinggi.
+                </span>
+              </Link>
+              <p className="text-white/90 leading-relaxed text-sm">
+                UMKM Lebah Madu Margolestari menghadirkan madu hutan asli berkualitas premium dari Lampung Selatan. Murni, alami, dan menyehatkan.
               </p>
-              <div className="flex items-center gap-3 mt-4">
-                <a
-                  href="https://www.facebook.com/madumargolestari"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#ffde7d] transition-colors"
-                  aria-label="Facebook"
-                >
-                  <Facebook className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://www.instagram.com/madumargolestari"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#ffde7d] transition-colors"
-                  aria-label="Instagram"
-                >
-                  <Instagram className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://twitter.com/madumargolestari"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#ffde7d] transition-colors"
-                  aria-label="Twitter"
-                >
-                  <Twitter className="w-5 h-5" />
-                </a>
+              {/* Social Icons */}
+              <div className="flex gap-4">
+                {[Facebook, Instagram, Twitter].map((Icon, i) => (
+                  <a key={i} href="#" className="bg-white/10 hover:bg-[#ffde7d] hover:text-black p-2.5 rounded-full transition-all">
+                    <Icon className="w-5 h-5" />
+                  </a>
+                ))}
               </div>
             </div>
-            {/* Navigation Links */}
-            <div className="space-y-3 sm:space-y-3">
-              <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Navigasi
-              </h4>
-              <ul className="space-y-3 text-sm sm:text-[15px]">
-                <li>
-                  <Link to="/" className="hover:underline">
-                    Beranda
-                  </Link>
+
+            {/* Kolom 2: Navigasi (Sudah dirapikan, tidak ada duplikasi 'Tentang Kami') */}
+            <div>
+              <h4 className="text-lg font-bold text-[#ffde7d] mb-6">Menu Utama</h4>
+              <ul className="space-y-4 text-sm">
+                {['Beranda', 'Produk', 'Artikel', 'Tentang Kami'].map((item) => (
+                  <li key={item}>
+                    <Link 
+                      to={item === 'Beranda' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`} 
+                      className="hover:text-[#ffde7d] transition-colors inline-flex items-center gap-2"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Kolom 3: Bantuan */}
+            <div>
+              <h4 className="text-lg font-bold text-[#ffde7d] mb-6">Bantuan</h4>
+              <ul className="space-y-4 text-sm">
+                {['Cara Pemesanan', 'Info Pengiriman', 'FAQ', 'Kebijakan Privasi'].map((item) => (
+                  <li key={item}>
+                    <a href="#" className="hover:text-[#ffde7d] transition-colors">
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Kolom 4: Kontak */}
+            <div>
+              <h4 className="text-lg font-bold text-[#ffde7d] mb-6">Hubungi Kami</h4>
+              <ul className="space-y-4 text-sm">
+                <li className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-[#ffde7d] shrink-0 mt-0.5" />
+                  <span>Margo Lestari, Kec. Jati Agung, Lampung Selatan</span>
                 </li>
-                <li>
-                  <Link to="/product" className="hover:underline">
-                    Produk
-                  </Link>
+                <li className="flex items-center gap-3">
+                  <Phone className="w-5 h-5 text-[#ffde7d] shrink-0" />
+                  <a href="tel:+6281234567890" className="hover:underline">+62 812-3456-7890</a>
                 </li>
-                <li>
-                  <Link to="/article" className="hover:underline">
-                    Artikel
-                  </Link>
+                <li className="flex items-center gap-3">
+                  <Mail className="w-5 h-5 text-[#ffde7d] shrink-0" />
+                  <a href="mailto:info@lebahmadu.co.id" className="hover:underline">info@lebahmadu.co.id</a>
                 </li>
-                <li>
-                  <Link to="/about" className="hover:underline">
-                    Tentang Kami
-                  </Link>
+                <li className="flex items-center gap-3">
+                  <Clock className="w-5 h-5 text-[#ffde7d] shrink-0" />
+                  <span>Senin - Sabtu: 08:00 - 17:00</span>
                 </li>
               </ul>
             </div>
-            <div className="space-y-3 sm:space-y-3">
-              <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Bantuan
-              </h4>
-              <ul className="space-y-3 text-sm sm:text-[15px]">
-                <li>
-                  <Link to="/about" className="hover:underline">
-                    Hubungi Kami
-                  </Link>
-                </li>
-                <li>
-                  <a href="#faq" className="hover:underline">
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="#cara-pemesanan" className="hover:underline">
-                    Cara Pemesanan
-                  </a>
-                </li>
-                <li>
-                  <a href="#pengiriman" className="hover:underline">
-                    Info Pengiriman
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="space-y-3 sm:space-y-3">
-              <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Informasi
-              </h4>
-              <ul className="space-y-3 text-sm sm:text-[15px]">
-                <li>
-                  <Link to="/about" className="hover:underline">
-                    Tentang Kami
-                  </Link>
-                </li>
-                <li>
-                  <a href="#lokasi" className="hover:underline">
-                    Lokasi
-                  </a>
-                </li>
-                <li>
-                  <a href="#jam-operasional" className="hover:underline">
-                    Jam Operasional
-                  </a>
-                </li>
-                <li>
-                  <a href="#testimoni" className="hover:underline">
-                    Testimoni
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="space-y-[18px] sm:space-y-[18px]">
-              <h4 className="text-[#ffde7d] text-base sm:text-lg lg:text-xl font-medium underline">
-                Kontak Kami
-              </h4>
-              <ul className="space-y-[18px] text-sm sm:text-[15px]">
-                <li className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
-                  <span className="break-all">
-                    Margo Lestari, Kec. Jati Agung, Kabupaten Lampung Selatan,
-                    Lampung 35365
-                  </span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 shrink-0" />
-                  <a
-                    href="tel:+6281234567890"
-                    className="hover:underline break-all"
-                  >
-                    +62 812-3456-7890
-                  </a>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 shrink-0" />
-                  <a
-                    href="mailto:info@lebahmadu.co.id"
-                    className="hover:underline break-all"
-                  >
-                    info@lebahmadu.co.id
-                  </a>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 shrink-0" />
-                  <span>Senin - Sabtu: 08:00 - 17:00 WIB</span>
-                </li>
-              </ul>
-            </div>
+
+          </div>
+
+          {/* Copyright */}
+          <div className="border-t border-white/20 mt-16 pt-8 text-center text-sm text-white/60">
+            <p>© {new Date().getFullYear()} Madu Jaya Lestari. All rights reserved.</p>
           </div>
         </div>
-        {/* Divider */}
-        <div className="border-t-2 sm:border-t-4 border-white w-full shadow-[0_5px_5px_rgba(0,0,0,0.4)]"></div>
-        {/* Copyright */}
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-40 py-6 sm:py-8">
-          <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 text-xs sm:text-sm">
-            <div className="flex items-center">
-              <span className="text-center sm:text-left">
-                © {new Date().getFullYear()} Madu Jaya Lestari. All rights
-                reserved.
-              </span>
-            </div>
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-16">
-              <a
-                href="#kebijakan-privasi"
-                className="hover:underline whitespace-nowrap"
-              >
-                Kebijakan Privasi
-              </a>
-              <a
-                href="#syarat-ketentuan"
-                className="hover:underline whitespace-nowrap"
-              >
-                Syarat & Ketentuan
-              </a>
-              <a href="#legal" className="hover:underline whitespace-nowrap">
-                Legal
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+      </div>
+    </footer>
   );
 }

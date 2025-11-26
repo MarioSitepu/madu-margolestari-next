@@ -28,27 +28,36 @@ export function Home() {
           { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' }
         ]}
       />
+      
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000'}>
         <Header />
       </div>
+
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-200'}>
         <ProductHighlight />
       </div>
+
+      {/* ProductList akan me-render grid yang sama persis dengan Product.tsx */}
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-300'}>
         <ProductList />
       </div>
+
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-400'}>
         <InfoSection />
       </div>
+
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-500'}>
         <Documentation />
       </div>
+
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-600'}>
         <WhyUs />
       </div>
+
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-700'}>
         <Footer />
       </div>
+      
       <ScrollToTopButton />
     </div>
   );

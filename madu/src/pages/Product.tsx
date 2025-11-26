@@ -167,15 +167,12 @@ export function ProductPage() {
     <div className="min-h-screen bg-white animate-in fade-in duration-500">
       <SEO
         title="Produk Madu Jaya Lestari - Beli Madu Murni Online | Katalog Lengkap"
-        description="Jelajahi koleksi produk madu murni berkualitas tinggi dari Madu Jaya Lestari. Dapatkan madu asli 100% tanpa campuran, dipanen langsung dari peternakan lebah terbaik. Pesan sekarang dan nikmati manfaat kesehatan yang luar biasa. Harga terjangkau dengan kualitas premium. Pengiriman cepat ke seluruh Indonesia."
-        keywords="produk madu, beli madu online, madu murni lampung, madu asli lampung selatan, harga madu, jual madu murni, madu kesehatan, madu organik indonesia, madu jaya lestari produk, madu margo lestari, maps madu jaya lestari, madu di margo lestari, madu jati agung, katalog madu, daftar produk madu, beli madu murni, toko madu online, lokasi madu jaya lestari"
+        description="Katalog Lengkap Madu Murni."
+        keywords="madu, beli madu"
         url="https://madumargolestari.vercel.app/product"
         image="https://madumargolestari.vercel.app/product-bottles-hero.png"
         type="website"
-        breadcrumbs={[
-          { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' },
-          { name: 'Produk', url: 'https://madumargolestari.vercel.app/product' }
-        ]}
+        breadcrumbs={[{ name: 'Beranda', url: '/' }, { name: 'Produk', url: '/product' }]}
         products={seoProducts}
       />
 
