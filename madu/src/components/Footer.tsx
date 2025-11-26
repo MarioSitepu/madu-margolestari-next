@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Twitter, CheckCircle, X } from "lucide-react";
-import honeyLogo from "@/assets/1.svg";
-import honeycomb from "@/assets/2.png";
+import honeyLogo from "@/assets/logo-madu.webp";
+import honeycomb from "@/assets/madu-footer.webp";
 
 export function Footer() {
   const [email, setEmail] = useState("");

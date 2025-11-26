@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import botolKacaBest from "@/assets/honey-bg-6badc9.png";
-import honeyBg from "@/assets/honey-bg-6badc9.png";
+import botolKacaBest from "@/assets/madu-beranda-sec2.webp";
+import honeyBg from "@/assets/madu-beranda-sec2.webp";
 
 export function ProductHighlight() {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -63,8 +63,8 @@ export function ProductHighlight() {
           {/* 2. Bagian Gambar (Kanan) - DIPERBESAR & RESPONSIF */}
           <div className="w-full md:w-1/2 flex justify-center md:justify-end relative order-1 md:order-2">
 
-            {/* Container Gambar */}
-            <div className="relative w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] h-auto cursor-pointer group">
+            {/* Container Gambar (dibesarkan agar sesuai tampilan sebelumnya) */}
+            <div className="relative w-[420px] sm:w-[640px] md:w-[760px] lg:w-[900px] h-[420px] sm:h-[520px] md:h-[640px] lg:h-[760px] cursor-pointer group">
               
               {/* Efek Glow di Belakang */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-white/20 rounded-full blur-[80px] -z-10 transition-all duration-500 group-hover:bg-white/30 group-hover:blur-[100px]"></div>
@@ -73,7 +73,7 @@ export function ProductHighlight() {
               <img
                 src={botolKacaBest}
                 alt="Botol Kaca Madu Best Seller"
-                className={`w-full h-full object-contain drop-shadow-2xl transition-all duration-500 ease-out transform group-hover:scale-110 group-hover:-rotate-2 ${imageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                className={`w-auto h-full max-w-none object-contain drop-shadow-2xl transition-all duration-500 ease-out transform group-hover:scale-110 group-hover:-rotate-2 ${imageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                 onLoad={() => setImageLoaded(true)}
               />
             </div>

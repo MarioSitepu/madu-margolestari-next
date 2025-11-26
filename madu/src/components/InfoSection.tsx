@@ -1,11 +1,8 @@
-import { HelpCircle } from "lucide-react";
-import apakahKamuTahuImage1 from "@/assets/apakah-kamu-tahu-image-1-57d8f7.png";
-import apakahKamuTahuImage2 from "@/assets/apakah-kamu-tahu-image-2-2d9ce4.png";
+import apakahKamuTahuImage from "@/assets/logo-tanya.webp";
 
 export function InfoSection() {
   return (
-    <section className="w-full bg-[#FFDE7D] relative overflow-hidden py-16 md:py-24">
-      
+    <section className="w-full bg-[#FFDE7D] relative overflow-hidden py-12 md:py-16">
       {/* Background Decoration Elements */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
@@ -20,11 +17,6 @@ export function InfoSection() {
             
             {/* Header Title */}
             <div>
-              <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
-                <HelpCircle className="w-8 h-8 text-[#00B8A9]" />
-                <span className="text-[#00B8A9] font-bold tracking-wider uppercase text-sm">Edukasi Madu</span>
-              </div>
-              
               <h2 
                 className="text-4xl sm:text-5xl font-extrabold leading-tight text-gray-900"
                 style={{ fontFamily: 'Nort, sans-serif' }}
@@ -52,29 +44,19 @@ export function InfoSection() {
 
           {/* 2. Bagian Kanan: Gambar Ilustrasi */}
           <div className="w-full lg:w-1/2 flex justify-center items-center relative order-1 lg:order-2">
-            {/* Container Gambar dengan komposisi tumpuk */}
-            <div className="relative w-[300px] sm:w-[400px] h-[300px] sm:h-[400px]">
+            {/* Container Gambar */}
+            <div className="relative w-[260px] sm:w-[360px] md:w-[460px] h-[260px] sm:h-[360px] md:h-[460px] flex items-center justify-center group">
               
-              {/* Gambar Belakang (Image 2) */}
-              <div className="absolute top-0 right-0 w-2/3 h-full transform translate-x-4 -translate-y-4 transition-transform hover:scale-105 duration-500">
+              {/* Circle background centered */}
+              <div className="relative w-[88%] h-[88%] rounded-full bg-white flex items-center justify-center shadow-lg overflow-hidden">
+                
+                {/* Image with popout hover effect */}
                 <img
-                  src={apakahKamuTahuImage2}
-                  alt="Ilustrasi manfaat madu"
-                  className="w-full h-full object-contain drop-shadow-2xl"
+                  src={apakahKamuTahuImage}
+                  alt="Tanda tanya"
+                  className="w-[90%] h-[90%] object-contain drop-shadow-2xl transition-all duration-300 ease-out transform group-hover:scale-110 group-hover:-rotate-3"
                 />
               </div>
-
-              {/* Gambar Depan (Image 1) */}
-              <div className="absolute bottom-0 left-0 w-2/3 h-3/4 transform -translate-x-4 translate-y-4 transition-transform hover:scale-105 duration-500 delay-100">
-                <img
-                  src={apakahKamuTahuImage1}
-                  alt="Ilustrasi madu murni"
-                  className="w-full h-full object-contain drop-shadow-2xl"
-                />
-              </div>
-
-              {/* Lingkaran Dekorasi di tengah */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] border-2 border-[#FFDE7D]/30 rounded-full -z-10 animate-pulse"></div>
             </div>
           </div>
 

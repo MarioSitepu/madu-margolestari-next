@@ -1,4 +1,4 @@
-import honeyBg from "@/assets/honey-bg-6badc9.png";
+import honeyBg from "@/assets/madu-beranda-sec2.webp";
 
 export const AboutSection = () => {
   return (

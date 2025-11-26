@@ -5,7 +5,7 @@ import { NavLink, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
-import honeyLogo from "@/assets/1.svg";
+import honeyLogo from "@/assets/logo-madu.webp";
 
 type NavigationItem =
   | { label: string; type: "route"; to: string }

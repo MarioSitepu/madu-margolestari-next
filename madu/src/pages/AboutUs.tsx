@@ -17,8 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
-import marlesHoney from "@/assets/honey-bg-6badc9.png";
-import honeyBg from "@/assets/honey-bg-6badc9.png";
+import marlesHoney from "@/assets/marles-honey.png";
+import honeyBg from "@/assets/madu-beranda-sec2.webp";
 import { API_URL } from "@/lib/api";
 
 interface FeaturedReview {
@@ -246,20 +246,15 @@ export const AboutUs = () => {
                   : "translate-x-10 opacity-0"
               }`}
             >
-              <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/40 bg-white/40 shadow-xl backdrop-blur lg:aspect-4/5 max-w-md mx-auto">
-                <img
-                  src={marlesHoney}
-                  alt="Madu murni asli dari peternakan lebah Madu Jaya Lestari di Jati Agung, Lampung Selatan - Produk madu berkualitas tinggi 100% alami"
-                  className="w-full h-full object-cover"
-                />
-                {/* Overlay gradient untuk efek */}
-                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/20" />
-                {/* Decorative elements */}
-                <div className="absolute right-6 top-6 h-12 w-12 animate-float rounded-full bg-white/40 blur-xl" />
-                <div
-                  className="absolute left-6 bottom-12 h-20 w-20 animate-float rounded-full bg-white/30 blur-2xl"
-                  style={{ animationDelay: "1s" }}
-                />
+              <div className="relative w-full h-auto max-w-xs mx-auto">
+                {/* Main Image Container - seamless with background */}
+                <div className="relative overflow-hidden rounded-xl">
+                  <img
+                    src={marlesHoney}
+                    alt="Madu murni asli dari peternakan lebah Madu Jaya Lestari di Jati Agung, Lampung Selatan - Produk madu berkualitas tinggi 100% alami"
+                    className="w-full h-auto object-contain"
+                  />
+                </div>
               </div>
             </div>
           </div>

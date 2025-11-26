@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ShoppingCart } from "lucide-react";
-import productBottleCard from "@/assets/product-bottle-card.png";
+import productBottleCard from "@/assets/madu-beranda-sec2.webp";
 import axios from "axios";
 import { API_URL } from '@/lib/api';
 
