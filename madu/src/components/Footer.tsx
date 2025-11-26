@@ -9,7 +9,7 @@ export function Footer() {
 
   const handleSubscribe = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert("Terima kasih telah berlangganan. Email Anda telah kami catat dan akan menerima update terbaru dari kami.");
+    alert("Pendaftaran berhasil. Kami akan mengirimkan update terbaru mengenai produk dan informasi terkini langsung ke email Anda.");
     setEmail("");
   };
 
