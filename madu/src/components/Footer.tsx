@@ -1,20 +1,53 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Twitter } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Twitter, CheckCircle, X } from "lucide-react";
 import honeyLogo from "@/assets/1.svg";
 import honeycomb from "@/assets/2.png";
 
 export function Footer() {
   const [email, setEmail] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubscribe = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert("Pendaftaran berhasil. Kami akan mengirimkan update terbaru mengenai produk dan informasi terkini langsung ke email Anda.");
+    setShowSuccess(true);
     setEmail("");
+    setTimeout(() => setShowSuccess(false), 5000);
   };
 
   return (
     <footer className="flex flex-col w-full">
+      
+      {/* Success Modal */}
+      {showSuccess && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full animate-in fade-in zoom-in-95 duration-300">
+            <div className="flex justify-between items-start mb-6">
+              <div className="flex items-center gap-3">
+                <div className="bg-green-100 p-3 rounded-full">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Pendaftaran Berhasil</h3>
+              </div>
+              <button 
+                onClick={() => setShowSuccess(false)} 
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-gray-600 leading-relaxed mb-6">
+              Terima kasih telah mendaftar. Kami akan mengirimkan update terbaru mengenai produk dan informasi terkini langsung ke email Anda.
+            </p>
+            <button 
+              onClick={() => setShowSuccess(false)} 
+              className="w-full bg-[#00b8a9] hover:bg-[#009d92] text-white font-bold py-3 rounded-lg transition-colors duration-200"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      )}
       
       {/* ==========================================
          BAGIAN 1: NEWSLETTER (Background Kuning)
