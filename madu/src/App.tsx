@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+﻿import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import { AuthProvider } from "@/context/AuthContext";
@@ -24,7 +24,8 @@ import { ReviewManagement } from "@/pages/admin/ReviewManagement";
 import { Dashboard } from "@/pages/Dashboard";
 import { Settings } from "@/pages/Settings";
 import { default as ProductPage } from "@/pages/Product";
-import { default as ProductDetail } from "@/pages/ProductDetail";
+import ProductDetail from "@/pages/ProductDetail";
+import Checkout from "@/pages/Checkout";
 
 // Replace with your actual Google Client ID
 const GOOGLE_CLIENT_ID =
@@ -33,7 +34,7 @@ const GOOGLE_CLIENT_ID =
 // Warning if Google Client ID is not configured
 if (!import.meta.env.VITE_GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID === "your-google-client-id-here") {
   console.warn(
-    "⚠️ VITE_GOOGLE_CLIENT_ID tidak dikonfigurasi! " +
+    "ΓÜá∩╕Å VITE_GOOGLE_CLIENT_ID tidak dikonfigurasi! " +
     "Google login tidak akan berfungsi. " +
     "Silakan set VITE_GOOGLE_CLIENT_ID di file .env"
   );
@@ -80,6 +81,7 @@ export function App() {
                       <Route path="/article-galeri" element={<ArticleGaleri />} />
                       <Route path="/product" element={<ProductPage />} />
                       <Route path="/product/:id" element={<ProductDetail />} />
+                      <Route path="/checkout" element={<Checkout />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/settings" element={<Settings />} />
                     </Routes>
