@@ -85,6 +85,11 @@ app.use('/api/admin', adminRouter);
 app.use('/api/gallery', galleryRouter);
 app.use('/', sitemapRouter); // Sitemap at root level /sitemap.xml
 
+// HOTFIX: Direct inline endpoint for testing (Nov 29)
+app.get('/api/test/general-settings', (req, res) => {
+  res.json({ status: 'ok', message: 'Endpoint accessible - inline test Nov 29', timestamp: new Date().toISOString() });
+});
+
 // Debug middleware untuk logging semua request
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
