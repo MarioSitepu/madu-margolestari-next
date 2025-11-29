@@ -14,13 +14,21 @@ interface ShippingConfig {
   updatedAt?: string;
 }
 
+interface GeneralSettings {
+  whatsappNumber: string;
+}
+
 export function Checkout() {
   const { items, removeFromCart, updateQuantity, getTotalPrice } = useCart();
   const [shippingConfig, setShippingConfig] = useState<ShippingConfig>({
     cost: 0,
     description: ''
   });
+  const [generalSettings, setGeneralSettings] = useState<GeneralSettings>({
+    whatsappNumber: '6287888888888'
+  });
   const [loadingShipping, setLoadingShipping] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   // Fetch shipping settings from API
   useEffect(() => {
@@ -39,7 +47,20 @@ export function Checkout() {
       }
     };
 
+    const fetchGeneralSettings = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/admin/general-settings`);
+        if (response.data) {
+          setGeneralSettings(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching general settings:', error);
+        // Keep default value if fetch fails
+      }
+    };
+
     fetchShippingConfig();
+    fetchGeneralSettings();
   }, []);
 
   const handleIncrement = (productId: string, currentQuantity: number) => {
@@ -49,6 +70,101 @@ export function Checkout() {
   const handleDecrement = (productId: string, currentQuantity: number) => {
     if (currentQuantity > 1) {
       updateQuantity(productId, currentQuantity - 1);
+    }
+  };
+
+  // Helper function to detect if user is on mobile device
+  const isMobileDevice = (): boolean => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  };
+
+  // Helper function to detect desktop OS
+  const isDesktopOS = (): string => {
+    const ua = navigator.userAgent;
+    if (ua.indexOf('Win') > -1) return 'windows';
+    if (ua.indexOf('Mac') > -1) return 'mac';
+    if (ua.indexOf('Linux') > -1) return 'linux';
+    return 'other';
+  };
+
+  // Handle WhatsApp checkout
+  const handleWhatsAppCheckout = async () => {
+    try {
+      setCheckoutLoading(true);
+
+      // Check if items exist
+      if (!items || items.length === 0) {
+        alert('Keranjang Anda kosong. Silakan tambahkan produk terlebih dahulu.');
+        setCheckoutLoading(false);
+        return;
+      }
+      
+      let whatsappNumber = generalSettings.whatsappNumber || '6287888888888';
+      
+      if (!whatsappNumber) {
+        alert('Nomor WhatsApp belum dikonfigurasi. Hubungi admin.');
+        return;
+      }
+
+      // Remove all non-digit characters
+      let phoneNumber = whatsappNumber.replace(/\D/g, '');
+
+      // If phone number starts with 0 (Indonesia format), replace with 62
+      if (phoneNumber.startsWith('0')) {
+        phoneNumber = '62' + phoneNumber.slice(1);
+      }
+
+      // Validate phone number format (should have at least 10 digits after country code)
+      if (phoneNumber.length < 10 || !phoneNumber.startsWith('62')) {
+        alert('Nomor WhatsApp tidak valid. Gunakan format: 628123456789 atau 0812-3456789');
+        return;
+      }
+
+      // Build detailed message with product list
+      const productList = items.map(item => 
+        `• ${item.name} - Rp ${item.price.toLocaleString('id-ID')} x${item.quantity}`
+      ).join('\n');
+      
+      const subtotalAmount = getTotalPrice();
+      const shippingAmount = shippingConfig.cost || 0;
+      const totalAmount = subtotalAmount + shippingAmount;
+
+      const message = `Halo, saya ingin melakukan pemesanan madu:
+
+PRODUK YANG DIPESAN:
+${productList}
+
+RINGKASAN PESANAN:
+Subtotal: Rp ${subtotalAmount.toLocaleString('id-ID')}
+Pengiriman: Rp ${shippingAmount.toLocaleString('id-ID')}
+Total: Rp ${totalAmount.toLocaleString('id-ID')}
+
+Terima kasih!`;
+      
+      const encodedMessage = encodeURIComponent(message);
+
+      console.log('WhatsApp Debug:', {
+        phoneNumber,
+        message,
+        isMobile: isMobileDevice(),
+      });
+
+      // Use wa.me for all platforms - most reliable
+      // Opens WhatsApp App on mobile, WhatsApp Web or prompts install on desktop
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+      console.log('Final WhatsApp URL:', whatsappUrl);
+      console.log('Device:', { isMobile: isMobileDevice(), os: isDesktopOS() });
+      
+      // Test if URL is valid
+      if (!whatsappUrl || whatsappUrl.length === 0) {
+        alert('Gagal membuat URL WhatsApp');
+        return;
+      }
+
+      window.open(whatsappUrl, '_blank');
+    } finally {
+      setCheckoutLoading(false);
     }
   };
 
@@ -226,9 +342,27 @@ export function Checkout() {
                   </span>
                 </div>
 
+                {/* Info Box */}
+                <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4 rounded">
+                  <p className="text-sm text-blue-800">
+                    <strong>Jangan lupa untuk bagikan lokasi anda:</strong> Setelah membuka WhatsApp, klik tombol attachment (📎) → pilih Lokasi → pilih "Bagikan Lokasi Real-time" atau pin lokasi Anda secara manual.
+                  </p>
+                </div>
+
                 {/* Checkout Button */}
-                <button className="w-full bg-[#00b8a9] hover:bg-[#009d92] text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105 mb-4">
-                  Lanjut ke Pembayaran
+                <button 
+                  onClick={handleWhatsAppCheckout}
+                  disabled={checkoutLoading}
+                  className="w-full bg-[#00b8a9] hover:bg-[#009d92] disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105 disabled:scale-100 mb-4 disabled:cursor-not-allowed"
+                >
+                  {checkoutLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      Memproses...
+                    </span>
+                  ) : (
+                    'Lanjut ke Pembayaran via WhatsApp'
+                  )}
                 </button>
 
                 {/* Continue Shopping Button */}

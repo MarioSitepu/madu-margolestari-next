@@ -6,6 +6,7 @@ import { API_URL } from '@/lib/api';
 interface GeneralConfig {
   _id?: string;
   operatingYears: number;
+  whatsappNumber?: string;
   updatedAt?: string;
 }
 
@@ -56,10 +57,19 @@ export function GeneralSettings() {
       setErrorMessage('');
       setSuccessMessage('');
 
+      const token = localStorage.getItem('token');
+
       const response = await axios.post(
         `${API_URL}/admin/general-settings`,
         {
-          operatingYears: generalConfig.operatingYears
+          operatingYears: generalConfig.operatingYears,
+          whatsappNumber: generalConfig.whatsappNumber
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
         }
       );
 
@@ -70,9 +80,10 @@ export function GeneralSettings() {
       }
       setSuccessMessage('Pengaturan umum berhasil disimpan!');
       setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving general settings:', error);
-      setErrorMessage('Gagal menyimpan pengaturan umum');
+      const errorMsg = error.response?.data?.message || error.message || 'Gagal menyimpan pengaturan umum';
+      setErrorMessage(errorMsg);
     } finally {
       setSaving(false);
     }
@@ -136,13 +147,35 @@ export function GeneralSettings() {
           </p>
         </div>
 
+        {/* Nomor WhatsApp */}
+        <div className="space-y-2">
+          <label className="block text-sm font-semibold text-gray-700">
+            Nomor WhatsApp Penjualan
+          </label>
+          <input
+            type="text"
+            name="whatsappNumber"
+            value={generalConfig.whatsappNumber || ''}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition"
+            placeholder="Contoh: 628123456789"
+          />
+          <p className="text-sm text-gray-500 mt-1">
+            Nomor WhatsApp yang akan digunakan untuk checkout (format: kode negara + nomor, contoh: 62 untuk Indonesia)
+          </p>
+        </div>
+
         {/* Preview */}
         <div className="mt-8 p-4 bg-[#ffde7d]/20 border border-[#ffde7d] rounded-lg">
-          <h3 className="font-semibold text-gray-800 mb-3">Preview Statistik</h3>
+          <h3 className="font-semibold text-gray-800 mb-3">Preview Pengaturan</h3>
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-gray-700">
               <span>Tahun Beroperasi</span>
               <span className="font-semibold">{generalConfig.operatingYears}+</span>
+            </div>
+            <div className="flex justify-between text-sm text-gray-700">
+              <span>Nomor WhatsApp</span>
+              <span className="font-semibold">{generalConfig.whatsappNumber || 'Belum diatur'}</span>
             </div>
           </div>
         </div>

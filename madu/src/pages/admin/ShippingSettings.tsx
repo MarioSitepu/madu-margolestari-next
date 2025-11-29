@@ -59,11 +59,19 @@ export function ShippingSettings() {
       setErrorMessage('');
       setSuccessMessage('');
 
+      const token = localStorage.getItem('token');
+
       const response = await axios.post(
         `${API_URL}/admin/shipping-settings`,
         {
           cost: shippingConfig.cost,
           description: shippingConfig.description
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
         }
       );
 
@@ -74,9 +82,10 @@ export function ShippingSettings() {
       }
       setSuccessMessage('Pengaturan pengiriman berhasil disimpan!');
       setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving shipping settings:', error);
-      setErrorMessage('Gagal menyimpan pengaturan pengiriman');
+      const errorMsg = error.response?.data?.message || error.message || 'Gagal menyimpan pengaturan pengiriman';
+      setErrorMessage(errorMsg);
     } finally {
       setSaving(false);
     }
