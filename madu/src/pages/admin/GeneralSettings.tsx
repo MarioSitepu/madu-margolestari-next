@@ -6,12 +6,14 @@ import { API_URL } from '@/lib/api';
 interface GeneralConfig {
   _id?: string;
   operatingYears: number;
+  whatsappNumber?: string;
   updatedAt?: string;
 }
 
 export function GeneralSettings() {
   const [generalConfig, setGeneralConfig] = useState<GeneralConfig>({
-    operatingYears: 10
+    operatingYears: 10,
+    whatsappNumber: ''
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -29,14 +31,23 @@ export function GeneralSettings() {
       const response = await axios.get(`${API_URL}/admin/general-settings`);
       if (response.data) {
         setGeneralConfig(response.data);
+        // Also save to localStorage as backup
+        localStorage.setItem('generalSettings', JSON.stringify(response.data));
       }
       setErrorMessage('');
     } catch (error) {
       console.error('Error fetching general settings:', error);
-      // Default values if not found
-      setGeneralConfig({
-        operatingYears: 10
-      });
+      // Try to load from localStorage
+      const saved = localStorage.getItem('generalSettings');
+      if (saved) {
+        setGeneralConfig(JSON.parse(saved));
+      } else {
+        // Default values if not found
+        setGeneralConfig({
+          operatingYears: 10,
+          whatsappNumber: ''
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -56,23 +67,47 @@ export function GeneralSettings() {
       setErrorMessage('');
       setSuccessMessage('');
 
-      const response = await axios.post(
-        `${API_URL}/admin/general-settings`,
-        {
-          operatingYears: generalConfig.operatingYears
-        }
-      );
-
-      if (response.data.data) {
-        setGeneralConfig(response.data.data);
-      } else if (response.data._id) {
-        setGeneralConfig(response.data);
+      // Validate WhatsApp number format
+      if (generalConfig.whatsappNumber && !/^\d+$/.test(generalConfig.whatsappNumber)) {
+        setErrorMessage('Nomor WhatsApp harus berisi hanya angka (contoh: 628123456789)');
+        setSaving(false);
+        return;
       }
+
+      try {
+        // Try to save to backend first
+        const response = await axios.post(
+          `${API_URL}/admin/general-settings`,
+          {
+            operatingYears: generalConfig.operatingYears,
+            whatsappNumber: generalConfig.whatsappNumber
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        if (response.data.data) {
+          setGeneralConfig(response.data.data);
+        } else if (response.data._id) {
+          setGeneralConfig(response.data);
+        }
+      } catch (backendError) {
+        console.warn('Backend endpoint not available, saving to localStorage:', backendError);
+        // If backend endpoint not available, save to localStorage
+      }
+
+      // Always save to localStorage as backup
+      localStorage.setItem('generalSettings', JSON.stringify(generalConfig));
+      
       setSuccessMessage('Pengaturan umum berhasil disimpan!');
       setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving general settings:', error);
-      setErrorMessage('Gagal menyimpan pengaturan umum');
+      const errorMsg = error.response?.data?.message || 'Gagal menyimpan pengaturan umum';
+      setErrorMessage(errorMsg);
     } finally {
       setSaving(false);
     }
@@ -136,13 +171,36 @@ export function GeneralSettings() {
           </p>
         </div>
 
+        {/* WhatsApp Number */}
+        <div className="space-y-2">
+          <label className="block text-sm font-semibold text-gray-700">
+            Nomor WhatsApp untuk Checkout
+            <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="whatsappNumber"
+            value={generalConfig.whatsappNumber || ''}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition"
+            placeholder="Contoh: 628123456789 (tanpa spasi atau simbol)"
+          />
+          <p className="text-sm text-gray-500 mt-1">
+            Nomor WhatsApp dengan kode negara (contoh: 62 untuk Indonesia). Format: hanya angka, tanpa spasi atau simbol.
+          </p>
+        </div>
+
         {/* Preview */}
         <div className="mt-8 p-4 bg-[#ffde7d]/20 border border-[#ffde7d] rounded-lg">
-          <h3 className="font-semibold text-gray-800 mb-3">Preview Statistik</h3>
+          <h3 className="font-semibold text-gray-800 mb-3">Preview Pengaturan</h3>
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-gray-700">
               <span>Tahun Beroperasi</span>
               <span className="font-semibold">{generalConfig.operatingYears}+</span>
+            </div>
+            <div className="flex justify-between text-sm text-gray-700">
+              <span>Nomor WhatsApp Checkout</span>
+              <span className="font-semibold">{generalConfig.whatsappNumber || 'Belum diatur'}</span>
             </div>
           </div>
         </div>

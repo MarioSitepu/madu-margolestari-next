@@ -5,6 +5,11 @@ const generalSettingsSchema = new mongoose.Schema({
     type: Number,
     default: 10,
     min: 0
+  },
+  whatsappNumber: {
+    type: String,
+    default: '62812345678', // Format: country code + number (Indonesia example)
+    trim: true
   }
 }, {
   timestamps: true

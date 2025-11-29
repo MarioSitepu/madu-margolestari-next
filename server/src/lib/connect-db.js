@@ -47,8 +47,12 @@ async function connectDB(uri) {
 
   try {
     await mongoose.connect(trimmedUri, {
-      serverSelectionTimeoutMS: 10000, // Increase timeout for production
+      serverSelectionTimeoutMS: 30000, // Increased timeout for DNS resolution
       socketTimeoutMS: 45000,
+      connectTimeoutMS: 30000,
+      retryWrites: true,
+      maxPoolSize: 10,
+      family: 4, // Force IPv4 (sometimes helps with DNS issues)
     });
     console.log('✅ Koneksi MongoDB berhasil dibuat');
   } catch (error) {

@@ -14,13 +14,22 @@ interface ShippingConfig {
   updatedAt?: string;
 }
 
+interface GeneralSettings {
+  whatsappNumber: string;
+}
+
 export function Checkout() {
   const { items, removeFromCart, updateQuantity, getTotalPrice } = useCart();
   const [shippingConfig, setShippingConfig] = useState<ShippingConfig>({
     cost: 0,
     description: ''
   });
+  const [generalSettings, setGeneralSettings] = useState<GeneralSettings>({
+    whatsappNumber: '6287888888888' // Default WhatsApp number
+  });
   const [loadingShipping, setLoadingShipping] = useState(true);
+  const [loadingSettings, setLoadingSettings] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   // Fetch shipping settings from API
   useEffect(() => {
@@ -39,16 +48,131 @@ export function Checkout() {
       }
     };
 
+    const fetchGeneralSettings = async () => {
+      try {
+        setLoadingSettings(true);
+        const response = await axios.get(`${API_URL}/admin/general-settings`);
+        if (response.data && response.data.whatsappNumber) {
+          setGeneralSettings(response.data);
+          localStorage.setItem('generalSettings', JSON.stringify(response.data));
+        } else {
+          // Try to load from localStorage
+          const saved = localStorage.getItem('generalSettings');
+          if (saved) {
+            try {
+              setGeneralSettings(JSON.parse(saved));
+            } catch (e) {
+              console.error('Error parsing localStorage:', e);
+              setGeneralSettings({
+                whatsappNumber: '628123456789'
+              });
+            }
+          } else {
+            // Use default if not found or empty
+            setGeneralSettings({
+              whatsappNumber: '628123456789' // Default WhatsApp number
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching general settings:', error);
+        // Try to load from localStorage
+        const saved = localStorage.getItem('generalSettings');
+        if (saved) {
+          try {
+            setGeneralSettings(JSON.parse(saved));
+          } catch (e) {
+            console.error('Error parsing localStorage:', e);
+            setGeneralSettings({
+              whatsappNumber: '628123456789'
+            });
+          }
+        } else {
+          // Use default WhatsApp number if fetch fails
+          setGeneralSettings({
+            whatsappNumber: '628123456789' // Default WhatsApp number
+          });
+        }
+      } finally {
+        setLoadingSettings(false);
+      }
+    };
+
     fetchShippingConfig();
+    fetchGeneralSettings();
   }, []);
+
+  const handleDecrement = (productId: string, currentQuantity: number) => {
+    if (currentQuantity > 1) {
+      updateQuantity(productId, currentQuantity - 1);
+    }
+  };
+
+  // Helper function to detect if user is on mobile device
+  const isMobileDevice = (): boolean => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  };
 
   const handleIncrement = (productId: string, currentQuantity: number) => {
     updateQuantity(productId, currentQuantity + 1);
   };
 
-  const handleDecrement = (productId: string, currentQuantity: number) => {
-    if (currentQuantity > 1) {
-      updateQuantity(productId, currentQuantity - 1);
+  // Helper function to format product list for WhatsApp message
+  const formatProductsForMessage = (): string => {
+    return items
+      .map((item) => `• ${item.name} - Rp ${item.price.toLocaleString('id-ID')} x${item.quantity}`)
+      .join('\n');
+  };
+
+  // Generate WhatsApp message
+  const generateWhatsAppMessage = (): string => {
+    const productsList = formatProductsForMessage();
+    const subtotal = getTotalPrice();
+    const shippingCost = shippingConfig.cost || 0;
+    const total = subtotal + shippingCost;
+
+    return `Halo, saya ingin melakukan pemesanan madu dengan detail berikut:
+
+*PRODUK YANG DIPESAN:*
+${productsList}
+
+*RINGKASAN PESANAN:*
+Subtotal: Rp ${subtotal.toLocaleString('id-ID')}
+Pengiriman: ${shippingCost === 0 ? 'Gratis' : `Rp ${shippingCost.toLocaleString('id-ID')}`}
+*Total: Rp ${total.toLocaleString('id-ID')}*
+
+Terima kasih!`;
+  };
+
+  // Handle WhatsApp checkout
+  const handleWhatsAppCheckout = async () => {
+    try {
+      setCheckoutLoading(true);
+      
+      const whatsappNumber = generalSettings.whatsappNumber || '6287888888888'; // Default fallback
+      
+      if (!whatsappNumber) {
+        alert('Nomor WhatsApp belum dikonfigurasi. Hubungi admin.');
+        return;
+      }
+
+      const message = encodeURIComponent(generateWhatsAppMessage());
+      const phoneNumber = whatsappNumber.replace(/\D/g, ''); // Remove non-digits
+
+      let whatsappUrl = '';
+
+      if (isMobileDevice()) {
+        // For mobile: use wa.me with phone number
+        whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+      } else {
+        // For desktop: use WhatsApp Web
+        whatsappUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+      }
+
+      // Open WhatsApp in new tab
+      window.open(whatsappUrl, '_blank');
+    } finally {
+      setCheckoutLoading(false);
     }
   };
 
@@ -226,9 +350,27 @@ export function Checkout() {
                   </span>
                 </div>
 
+                {/* Info Box */}
+                <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4 rounded">
+                  <p className="text-sm text-blue-800">
+                    <strong>Jangan lupa untuk bagikan lokasi anda:</strong> Setelah membuka WhatsApp, klik tombol attachment (📎) → pilih Lokasi → pilih "Bagikan Lokasi Real-time" atau pin lokasi Anda secara manual.
+                  </p>
+                </div>
+
                 {/* Checkout Button */}
-                <button className="w-full bg-[#00b8a9] hover:bg-[#009d92] text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105 mb-4">
-                  Lanjut ke Pembayaran
+                <button 
+                  onClick={handleWhatsAppCheckout}
+                  disabled={checkoutLoading}
+                  className="w-full bg-[#00b8a9] hover:bg-[#009d92] disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105 disabled:scale-100 mb-4 disabled:cursor-not-allowed"
+                >
+                  {checkoutLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      Memproses...
+                    </span>
+                  ) : (
+                    'Lanjut ke Pembayaran via WhatsApp'
+                  )}
                 </button>
 
                 {/* Continue Shopping Button */}
