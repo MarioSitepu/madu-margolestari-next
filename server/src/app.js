@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
+// Force rebuild - WhatsApp settings endpoints
+// Updated: Nov 29, 2025
+
 import healthRouter from './routes/health.js';
 import productRouter from './routes/products.js';
 import authRouter from './routes/auth.js';
