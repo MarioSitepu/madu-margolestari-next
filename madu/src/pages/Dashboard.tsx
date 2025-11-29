@@ -115,23 +115,33 @@ export function Dashboard() {
     }
   }, [userProfile, user]);
 
-  const loadCommentHistory = () => {
+  const loadCommentHistory = async () => {
     if (!user) return;
-    const userId = user.id || user.email || userProfile?.id || userProfile?.email;
-    if (!userId) return;
-    const stored = localStorage.getItem(`commentHistory_${userId}`);
-    if (stored) {
-      setCommentHistory(JSON.parse(stored));
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_URL}/comments/history/comments`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setCommentHistory(response.data.commentHistory);
+      }
+    } catch (error) {
+      console.error('Error loading comment history:', error);
     }
   };
 
-  const loadLikedComments = () => {
+  const loadLikedComments = async () => {
     if (!user) return;
-    const userId = user.id || user.email || userProfile?.id || userProfile?.email;
-    if (!userId) return;
-    const stored = localStorage.getItem(`likedComments_${userId}`);
-    if (stored) {
-      setLikedComments(JSON.parse(stored));
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_URL}/comments/history/liked`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setLikedComments(response.data.likedComments);
+      }
+    } catch (error) {
+      console.error('Error loading liked comments:', error);
     }
   };
 

@@ -154,23 +154,7 @@ export function ArticleGaleri() {
         setComments([newCommentData, ...comments]);
         fetchComments(); // Refresh comments to get updated data
         
-        // Save to comment history
-        if (user?.id || user?.email) {
-          const userId = user.id || user.email;
-          const commentHistory = {
-            id: response.data.comment._id,
-            content: newComment,
-            articleTitle: article?.title || '',
-            articleId: id,
-            createdAt: new Date().toLocaleString('id-ID'),
-            likes: 0,
-          };
-          
-          const stored = localStorage.getItem(`commentHistory_${userId}`);
-          const history = stored ? JSON.parse(stored) : [];
-          localStorage.setItem(`commentHistory_${userId}`, JSON.stringify([commentHistory, ...history]));
-        }
-        
+        // Backend automatically saves to user's comment history via the create comment endpoint
         setNewComment("");
       }
     } catch (error: any) {
@@ -194,31 +178,7 @@ export function ArticleGaleri() {
         const wasLiked = comments.find(c => c._id === commentId)?.isLiked || false;
         const newIsLiked = !wasLiked;
         
-        // Save to liked comments history
-        if (user?.id || user?.email) {
-          const userId = user.id || user.email;
-          const stored = localStorage.getItem(`likedComments_${userId}`);
-          const likedHistory = stored ? JSON.parse(stored) : [];
-          const currentComment = comments.find(c => c._id === commentId);
-          
-          if (newIsLiked && !wasLiked) {
-            // Add to liked history
-            const likedComment = {
-              id: `${commentId}_${Date.now()}`,
-              commentId: commentId,
-              content: currentComment?.content || '',
-              author: currentComment?.authorName || '',
-              articleTitle: article?.title || '',
-              articleId: id,
-              likedAt: new Date().toLocaleString('id-ID'),
-            };
-            localStorage.setItem(`likedComments_${userId}`, JSON.stringify([likedComment, ...likedHistory]));
-          } else if (!newIsLiked && wasLiked) {
-            // Remove from liked history
-            const filtered = likedHistory.filter((item: any) => item.commentId !== commentId);
-            localStorage.setItem(`likedComments_${userId}`, JSON.stringify(filtered));
-          }
-        }
+        // Backend automatically saves to user's liked comments via the like endpoint
         
         // Update comments with new like status
         setComments(comments.map(comment => {
