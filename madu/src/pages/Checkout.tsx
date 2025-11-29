@@ -28,7 +28,6 @@ export function Checkout() {
     whatsappNumber: '6287888888888' // Default WhatsApp number
   });
   const [loadingShipping, setLoadingShipping] = useState(true);
-  const [loadingSettings, setLoadingSettings] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   // Fetch shipping settings from API
@@ -50,7 +49,6 @@ export function Checkout() {
 
     const fetchGeneralSettings = async () => {
       try {
-        setLoadingSettings(true);
         const response = await axios.get(`${API_URL}/admin/general-settings`);
         if (response.data && response.data.whatsappNumber) {
           setGeneralSettings(response.data);
@@ -93,8 +91,6 @@ export function Checkout() {
             whatsappNumber: '628123456789' // Default WhatsApp number
           });
         }
-      } finally {
-        setLoadingSettings(false);
       }
     };
 
