@@ -205,6 +205,7 @@ router.post('/shipping-settings', authenticateToken, verifyAdmin, async (req, re
 // Get general settings
 router.get('/general-settings', async (req, res) => {
   try {
+    console.log('🎯 ENDPOINT REACHED: /api/admin/general-settings - Nov 29 Hotfix');
     let settings = await GeneralSettings.findOne();
     
     // If no settings exist, create default ones
