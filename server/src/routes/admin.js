@@ -205,7 +205,6 @@ router.post('/shipping-settings', authenticateToken, verifyAdmin, async (req, re
 // Get general settings
 router.get('/general-settings', async (req, res) => {
   try {
-    console.log('🎯 ENDPOINT REACHED: /api/admin/general-settings - Nov 29 Hotfix');
     let settings = await GeneralSettings.findOne();
     
     // If no settings exist, create default ones
@@ -229,7 +228,7 @@ router.get('/general-settings', async (req, res) => {
 // Update or create general settings (admin only)
 router.post('/general-settings', authenticateToken, verifyAdmin, async (req, res) => {
   try {
-    const { operatingYears, whatsappNumber } = req.body;
+    const { operatingYears } = req.body;
 
     // Validate input
     if (typeof operatingYears !== 'number' || operatingYears < 0) {
@@ -239,26 +238,15 @@ router.post('/general-settings', authenticateToken, verifyAdmin, async (req, res
       });
     }
 
-    if (whatsappNumber && !/^\d+$/.test(whatsappNumber)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Nomor WhatsApp harus berisi hanya angka (contoh: 628123456789)'
-      });
-    }
-
     let settings = await GeneralSettings.findOne();
 
     if (settings) {
       // Update existing settings
       settings.operatingYears = operatingYears;
-      if (whatsappNumber) {
-        settings.whatsappNumber = whatsappNumber;
-      }
     } else {
       // Create new settings
       settings = new GeneralSettings({
-        operatingYears,
-        whatsappNumber: whatsappNumber || '62812345678'
+        operatingYears
       });
     }
 

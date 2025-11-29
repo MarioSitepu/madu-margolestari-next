@@ -2,9 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
-// Force rebuild - WhatsApp settings endpoints
-// Updated: Nov 29, 2025
-
 import healthRouter from './routes/health.js';
 import productRouter from './routes/products.js';
 import authRouter from './routes/auth.js';
@@ -84,11 +81,6 @@ app.use('/api/comments', commentRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/gallery', galleryRouter);
 app.use('/', sitemapRouter); // Sitemap at root level /sitemap.xml
-
-// HOTFIX: Direct inline endpoint for testing (Nov 29)
-app.get('/api/test/general-settings', (req, res) => {
-  res.json({ status: 'ok', message: 'Endpoint accessible - inline test Nov 29', timestamp: new Date().toISOString() });
-});
 
 // Debug middleware untuk logging semua request
 app.use((req, res, next) => {

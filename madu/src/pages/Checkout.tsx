@@ -38,10 +38,20 @@ export function Checkout() {
         const response = await axios.get(`${API_URL}/admin/shipping-settings`);
         if (response.data) {
           setShippingConfig(response.data);
+          // Save to localStorage as backup
+          localStorage.setItem('shippingConfig', JSON.stringify(response.data));
         }
       } catch (error) {
         console.error('Error fetching shipping settings:', error);
-        // Keep default values if fetch fails
+        // Try to load from localStorage fallback
+        const cachedConfig = localStorage.getItem('shippingConfig');
+        if (cachedConfig) {
+          try {
+            setShippingConfig(JSON.parse(cachedConfig));
+          } catch (e) {
+            console.error('Failed to parse cached shipping config');
+          }
+        }
       } finally {
         setLoadingShipping(false);
       }
@@ -52,10 +62,20 @@ export function Checkout() {
         const response = await axios.get(`${API_URL}/admin/general-settings`);
         if (response.data) {
           setGeneralSettings(response.data);
+          // Save to localStorage as backup
+          localStorage.setItem('generalSettings', JSON.stringify(response.data));
         }
       } catch (error) {
         console.error('Error fetching general settings:', error);
-        // Keep default value if fetch fails
+        // Try to load from localStorage fallback
+        const cachedSettings = localStorage.getItem('generalSettings');
+        if (cachedSettings) {
+          try {
+            setGeneralSettings(JSON.parse(cachedSettings));
+          } catch (e) {
+            console.error('Failed to parse cached general settings');
+          }
+        }
       }
     };
 
