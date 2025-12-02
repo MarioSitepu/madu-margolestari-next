@@ -1,5 +1,5 @@
 import { MapPin } from "lucide-react";
-import headerImage from "@/assets/header-image-1a216d.png";
+import headerImage from "@/assets/madu-beranda-sec1.webp";
 
 export const VisitUsSection = () => {
   return <section className="w-full bg-[#ffde7d] py-16 md:py-24">

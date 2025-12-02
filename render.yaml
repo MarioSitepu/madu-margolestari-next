@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: madu-server
+    root_dir: server
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+    autoDeploy: true
+    branch: merge26nov

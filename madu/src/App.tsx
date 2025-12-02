@@ -1,7 +1,8 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+﻿import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import { AuthProvider } from "@/context/AuthContext";
+import { CartProvider } from "@/context/CartContext";
 import { Navigation } from "@/components/Navigation";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import Home from "@/pages/Home";
@@ -12,7 +13,6 @@ import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
 import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
-import { AdminLogin } from "@/pages/auth/AdminLogin";
 import { ArticleManagement } from "@/pages/admin/ArticleManagement";
 import { ArticleForm } from "@/pages/admin/ArticleForm";
 import { UserManagement } from "@/pages/admin/UserManagement";
@@ -20,9 +20,12 @@ import { CommentManagement } from "@/pages/admin/CommentManagement";
 import { GalleryManagement } from "@/pages/admin/GalleryManagement";
 import { ProductManagement } from "@/pages/admin/ProductManagement";
 import { ProductForm } from "@/pages/admin/ProductForm";
+import { ReviewManagement } from "@/pages/admin/ReviewManagement";
 import { Dashboard } from "@/pages/Dashboard";
 import { Settings } from "@/pages/Settings";
 import { default as ProductPage } from "@/pages/Product";
+import ProductDetail from "@/pages/ProductDetail";
+import Checkout from "@/pages/Checkout";
 
 // Replace with your actual Google Client ID
 const GOOGLE_CLIENT_ID =
@@ -31,7 +34,7 @@ const GOOGLE_CLIENT_ID =
 // Warning if Google Client ID is not configured
 if (!import.meta.env.VITE_GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID === "your-google-client-id-here") {
   console.warn(
-    "⚠️ VITE_GOOGLE_CLIENT_ID tidak dikonfigurasi! " +
+    "ΓÜá∩╕Å VITE_GOOGLE_CLIENT_ID tidak dikonfigurasi! " +
     "Google login tidak akan berfungsi. " +
     "Silakan set VITE_GOOGLE_CLIENT_ID di file .env"
   );
@@ -41,13 +44,13 @@ export function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <AuthProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <div className="flex min-h-screen w-full flex-col">
+        <CartProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <div className="flex min-h-screen w-full flex-col">
             <Routes>
               {/* Auth routes without navigation */}
               <Route path="/login" element={<Login />} />
-              <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
@@ -62,6 +65,7 @@ export function App() {
               <Route path="/admin/products" element={<ProductManagement />} />
               <Route path="/admin/products/new" element={<ProductForm />} />
               <Route path="/admin/products/:id/edit" element={<ProductForm />} />
+              <Route path="/admin/reviews" element={<ReviewManagement />} />
 
               {/* Main routes with navigation */}
               <Route
@@ -76,6 +80,8 @@ export function App() {
                       <Route path="/article-galeri/:id" element={<ArticleGaleri />} />
                       <Route path="/article-galeri" element={<ArticleGaleri />} />
                       <Route path="/product" element={<ProductPage />} />
+                      <Route path="/product/:id" element={<ProductDetail />} />
+                      <Route path="/checkout" element={<Checkout />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/settings" element={<Settings />} />
                     </Routes>
@@ -85,6 +91,7 @@ export function App() {
             </Routes>
           </div>
         </BrowserRouter>
+        </CartProvider>
       </AuthProvider>
     </GoogleOAuthProvider>
   );

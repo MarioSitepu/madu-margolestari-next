@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Menu, X, LogIn, LogOut, ChevronDown, User } from "lucide-react";
+import { Menu, X, LogIn, LogOut, ChevronDown, User, ShoppingCart } from "lucide-react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
-import honeyLogo from "@/assets/1.svg";
+import { useCart } from "@/context/CartContext";
+import honeyLogo from "@/assets/logo-madu.webp";
 
 type NavigationItem =
   | { label: string; type: "route"; to: string }
@@ -25,7 +26,9 @@ export function Navigation() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { user, logout, isLoading } = useAuth();
+  const { getItemCount } = useCart();
   const navigate = useNavigate();
+  const cartCount = getItemCount();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -120,85 +123,103 @@ export function Navigation() {
           
           {/* User Menu or Login Button */}
           {!isLoading && (
-            user ? (
-              <div className="relative ml-2">
-                <button
-                  onClick={handleToggleUserMenu}
-                  className="flex items-center gap-2 bg-white/60 hover:bg-white/80 px-3 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg border border-white/50 hover:border-[#00b8a9]/40"
-                >
-                  <UserAvatar />
-                  <span className="font-semibold text-gray-900 max-w-24 truncate hidden lg:inline">
-                    {user.name.split(' ')[0]}
-                  </span>
-                  <ChevronDown size={16} className={cn(
-                    "transition-transform duration-300 text-gray-800",
-                    isUserMenuOpen && "rotate-180"
-                  )} />
-                </button>
-                
-                {isUserMenuOpen && (
-                  <>
-                    <div 
-                      className="fixed inset-0 z-40" 
-                      onClick={() => setIsUserMenuOpen(false)}
-                    />
-                    <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200/50 py-2 z-50 animate-scale-in overflow-hidden">
-                      <div className="px-4 py-3 border-b border-gray-200 bg-gradient-to-r from-[#ffde7d]/20 to-[#00b8a9]/10">
-                        <div className="flex items-center gap-3 mb-2">
-                          <UserAvatar size="w-12 h-12" />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold text-gray-900 truncate">{user.name}</p>
-                            <p className="text-sm text-gray-600 truncate">{user.email}</p>
-                          </div>
-                        </div>
-                        {user.provider === 'google' && (
-                          <div className="flex items-center gap-2 mt-2 p-2 bg-white/60 rounded-lg border border-gray-200/50">
-                            <svg width="16" height="16" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                              <g fill="none" fillRule="evenodd">
-                                <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
-                                <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
-                                <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.348 6.173 0 7.55 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
-                                <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
-                              </g>
-                            </svg>
-                            <p className="text-xs text-gray-700 font-medium">Login sebagai {user.name?.split(' ')[0] || 'User'}</p>
-                          </div>
-                        )}
-                        {user.provider !== 'google' && (
-                          <p className="text-xs text-gray-500 capitalize mt-1 flex items-center gap-1">
-                            <span className="w-2 h-2 bg-[#00b8a9] rounded-full"></span>
-                            Login via Email
-                          </p>
-                        )}
-                      </div>
-                      <Link
-                        to="/dashboard"
-                        onClick={() => setIsUserMenuOpen(false)}
-                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-[#00b8a9]/10 hover:text-[#00b8a9] flex items-center gap-3 transition-all duration-200"
-                      >
-                        <User size={18} className="text-[#00b8a9]" />
-                        <span className="font-medium">Dashboard</span>
-                      </Link>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 flex items-center gap-3 transition-all duration-200"
-                      >
-                        <LogOut size={18} />
-                        <span className="font-medium">Logout</span>
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ) : (
+            <>
+              {/* Checkout Button - Always Show */}
               <Link 
-                to="/login"
-                className="bg-[#00b8a9] text-white px-5 md:px-6 py-2 rounded-lg font-semibold hover:bg-[#00a298] transition-all duration-300 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+                to="/checkout"
+                className="relative bg-[#ffde7d] text-[#00b8a9] px-5 md:px-6 py-2 rounded-lg font-semibold hover:bg-[#f5c869] transition-all duration-300 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+                title="Keranjang Belanja"
               >
-                <LogIn size={18} />
-                <span className="hidden sm:inline">Login</span>
+                <ShoppingCart size={18} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartCount > 9 ? '9+' : cartCount}
+                  </span>
+                )}
+                <span className="hidden sm:inline">Keranjang</span>
               </Link>
-            )
+
+              {/* User Menu or Login Button */}
+              {user ? (
+                <div className="relative ml-2">
+                  <button
+                    onClick={handleToggleUserMenu}
+                    className="flex items-center gap-2 bg-white/60 hover:bg-white/80 px-3 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg border border-white/50 hover:border-[#00b8a9]/40"
+                  >
+                    <UserAvatar />
+                    <span className="font-semibold text-gray-900 max-w-24 truncate hidden lg:inline">
+                      {user.name.split(' ')[0]}
+                    </span>
+                    <ChevronDown size={16} className={cn(
+                      "transition-transform duration-300 text-gray-800",
+                      isUserMenuOpen && "rotate-180"
+                    )} />
+                  </button>
+                  
+                  {isUserMenuOpen && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setIsUserMenuOpen(false)}
+                      />
+                      <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200/50 py-2 z-50 animate-scale-in overflow-hidden">
+                        <div className="px-4 py-3 border-b border-gray-200 bg-gradient-to-r from-[#ffde7d]/20 to-[#00b8a9]/10">
+                          <div className="flex items-center gap-3 mb-2">
+                            <UserAvatar size="w-12 h-12" />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-bold text-gray-900 truncate">{user.name}</p>
+                              <p className="text-sm text-gray-600 truncate">{user.email}</p>
+                            </div>
+                          </div>
+                          {user.provider === 'google' && (
+                            <div className="flex items-center gap-2 mt-2 p-2 bg-white/60 rounded-lg border border-gray-200/50">
+                              <svg width="16" height="16" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                                <g fill="none" fillRule="evenodd">
+                                  <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
+                                  <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+                                  <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.348 6.173 0 7.55 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+                                  <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                                </g>
+                              </svg>
+                              <p className="text-xs text-gray-700 font-medium">Login sebagai {user.name?.split(' ')[0] || 'User'}</p>
+                            </div>
+                          )}
+                          {user.provider !== 'google' && (
+                            <p className="text-xs text-gray-500 capitalize mt-1 flex items-center gap-1">
+                              <span className="w-2 h-2 bg-[#00b8a9] rounded-full"></span>
+                              Login via Email
+                            </p>
+                          )}
+                        </div>
+                        <Link
+                          to="/dashboard"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="w-full text-left px-4 py-3 text-gray-700 hover:bg-[#00b8a9]/10 hover:text-[#00b8a9] flex items-center gap-3 transition-all duration-200"
+                        >
+                          <User size={18} className="text-[#00b8a9]" />
+                          <span className="font-medium">Dashboard</span>
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 flex items-center gap-3 transition-all duration-200"
+                        >
+                          <LogOut size={18} />
+                          <span className="font-medium">Logout</span>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ) : (
+                <Link 
+                  to="/login"
+                  className="bg-[#00b8a9] text-white px-5 md:px-6 py-2 rounded-lg font-semibold hover:bg-[#00a298] transition-all duration-300 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+                >
+                  <LogIn size={18} />
+                  <span className="hidden sm:inline">Login</span>
+                </Link>
+              )}
+            </>
           )}
         </div>
         

@@ -1,6 +1,7 @@
 import express from 'express';
 import Comment from '../models/comment.js';
 import Article from '../models/article.js';
+import User from '../models/user.js';
 import { authenticateToken, verifyAdmin } from './auth.js';
 
 const router = express.Router();
@@ -57,6 +58,25 @@ router.post('/', authenticateToken, async (req, res) => {
 
     await comment.save();
 
+    // Save to user's comment history
+    const article = await Article.findById(articleId);
+    if (article) {
+      await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $push: {
+            commentHistory: {
+              commentId: comment._id,
+              articleId: articleId,
+              articleTitle: article.title,
+              content: content.trim()
+            }
+          }
+        },
+        { new: true }
+      );
+    }
+
     res.status(201).json({
       success: true,
       message: 'Komentar berhasil ditambahkan',
@@ -88,9 +108,36 @@ router.post('/:id/like', authenticateToken, async (req, res) => {
     if (isLiked) {
       comment.likedBy = comment.likedBy.filter(id => id.toString() !== userId.toString());
       comment.likes = Math.max(0, comment.likes - 1);
+      
+      // Remove from user's liked comments
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $pull: {
+            likedComments: { commentId: comment._id }
+          }
+        },
+        { new: true }
+      );
     } else {
       comment.likedBy.push(userId);
       comment.likes += 1;
+      
+      // Add to user's liked comments
+      const article = await Article.findById(comment.articleId);
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: {
+            likedComments: {
+              commentId: comment._id,
+              articleId: comment.articleId,
+              articleTitle: article ? article.title : 'Unknown'
+            }
+          }
+        },
+        { new: true }
+      );
     }
 
     await comment.save();
@@ -150,6 +197,72 @@ router.get('/', authenticateToken, verifyAdmin, async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching all comments:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
+  }
+});
+
+// Get user's comment history
+router.get('/history/comments', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate({
+        path: 'commentHistory.commentId',
+        select: 'content likes likedBy'
+      })
+      .populate({
+        path: 'commentHistory.articleId',
+        select: 'title'
+      });
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User tidak ditemukan'
+      });
+    }
+
+    res.json({
+      success: true,
+      commentHistory: user.commentHistory || []
+    });
+  } catch (error) {
+    console.error('Error fetching comment history:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
+  }
+});
+
+// Get user's liked comments
+router.get('/history/liked', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate({
+        path: 'likedComments.commentId',
+        select: 'content author authorName likes'
+      })
+      .populate({
+        path: 'likedComments.articleId',
+        select: 'title'
+      });
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User tidak ditemukan'
+      });
+    }
+
+    res.json({
+      success: true,
+      likedComments: user.likedComments || []
+    });
+  } catch (error) {
+    console.error('Error fetching liked comments:', error);
     res.status(500).json({
       success: false,
       message: 'Terjadi kesalahan server'

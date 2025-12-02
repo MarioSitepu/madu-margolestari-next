@@ -48,7 +48,38 @@ const userSchema = new mongoose.Schema({
   resetTokenExpiry: {
     type: Date,
     default: null
-  }
+  },
+  commentHistory: [{
+    commentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment'
+    },
+    articleId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Article'
+    },
+    articleTitle: String,
+    content: String,
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  likedComments: [{
+    commentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment'
+    },
+    articleId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Article'
+    },
+    articleTitle: String,
+    likedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }]
 }, {
   timestamps: true
 });

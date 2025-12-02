@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { ProductHighlight } from "@/components/ProductHighlight";
-import { ProductList } from "@/components/ProductList";
 import { InfoSection } from "@/components/InfoSection";
 import { Documentation } from "@/components/Documentation";
 import { WhyUs } from "@/components/WhyUs";
@@ -28,27 +27,31 @@ export function Home() {
           { name: 'Beranda', url: 'https://madumargolestari.vercel.app/' }
         ]}
       />
+      
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000'}>
         <Header />
       </div>
+
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-200'}>
         <ProductHighlight />
       </div>
+
       <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-300'}>
-        <ProductList />
-      </div>
-      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-400'}>
         <InfoSection />
       </div>
-      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-500'}>
+
+      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-400'}>
         <Documentation />
       </div>
-      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-600'}>
+
+      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-500'}>
         <WhyUs />
       </div>
-      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-700'}>
+
+      <div className={isVisible ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000 delay-600'}>
         <Footer />
       </div>
+      
       <ScrollToTopButton />
     </div>
   );

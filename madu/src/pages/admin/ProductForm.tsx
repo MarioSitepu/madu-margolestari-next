@@ -2,16 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
-import { ArrowLeft, Save, Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Save, Upload, X, Image as ImageIcon, AlertCircle, Trash2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { API_URL } from '@/lib/api';
-
-// Success Modal Component
-interface SuccessModalProps {
-  message: string;
-  onClose: () => void;
-}
 
 // Validation Error Modal Component
 interface ValidationErrorModalProps {
@@ -59,11 +53,22 @@ const ValidationErrorModal = ({ isOpen, title, message, onClose }: ValidationErr
   );
 };
 
-const SuccessModal = ({ message, onClose }: SuccessModalProps) => {
+// Success Modal Component
+interface SuccessModalWithIsOpenProps {
+  isOpen: boolean;
+  message: string;
+  onClose: () => void;
+}
+
+const SuccessModal = ({ isOpen, message, onClose }: SuccessModalWithIsOpenProps) => {
   useEffect(() => {
-    const timer = setTimeout(onClose, 1500);
-    return () => clearTimeout(timer);
-  }, [onClose]);
+    if (isOpen) {
+      const timer = setTimeout(onClose, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in" style={{ opacity: 0, animationDelay: '0s', animation: 'fadeIn 0.2s ease-out forwards' }}>
@@ -122,12 +127,15 @@ export function ProductForm() {
     name: '',
     description: '',
     price: '',
-    imageUrl: ''
+    imageUrl: '',
+    images: [] as string[]
   });
+  
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imagePreview, setImagePreview] = useState<string>('');
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [successModal, setSuccessModal] = useState<{ isOpen: boolean; message: string }>({
     isOpen: false,
@@ -145,7 +153,7 @@ export function ProductForm() {
 
   useEffect(() => {
     if (!isLoading && (!user || user.role !== 'admin')) {
-      navigate('/admin/login');
+      navigate('/login');
       return;
     }
 
@@ -153,6 +161,11 @@ export function ProductForm() {
       fetchProduct();
     }
   }, [user, isLoading, navigate, id]);
+
+  // Sync imagePreviews with formData.images whenever images change
+  useEffect(() => {
+    setImagePreviews(formData.images);
+  }, [formData.images]);
 
   const fetchProduct = async () => {
     try {
@@ -169,9 +182,11 @@ export function ProductForm() {
           name: product.name || '',
           description: product.description || '',
           price: product.price?.toString() || '',
-          imageUrl: product.imageUrl || ''
+          imageUrl: product.imageUrl || '',
+          images: product.images || []
         });
         setImagePreview(product.imageUrl || '');
+        setImagePreviews(product.images || []);
       }
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -182,8 +197,9 @@ export function ProductForm() {
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const additionalFileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = async (file: File) => {
+  const handleImageUpload = async (file: File, isMainImage: boolean = true) => {
     if (!file) return;
 
     const formDataUpload = new FormData();
@@ -193,7 +209,6 @@ export function ProductForm() {
       setUploadingImage(true);
 
       const token = localStorage.getItem('token');
-      // Don't set Content-Type manually - let axios set it with boundary automatically
       const response = await axios.post(`${API_URL}/products/upload-image`, formDataUpload, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -202,8 +217,27 @@ export function ProductForm() {
 
       if (response.data.success) {
         const imageUrl = response.data.imageUrl;
-        setFormData({ ...formData, imageUrl });
-        setImagePreview(imageUrl);
+        
+        if (isMainImage) {
+          setFormData(prev => ({ ...prev, imageUrl }));
+          setImagePreview(imageUrl);
+        } else {
+          // Add to images array (max 3)
+          setFormData(prev => {
+            if (prev.images.length < 3) {
+              const newImages = [...prev.images, imageUrl];
+              return { ...prev, images: newImages };
+            } else {
+              setValidationError({
+                isOpen: true,
+                title: 'Batas Gambar Tercapai',
+                message: 'Maksimal 3 gambar tambahan per produk. Silakan hapus salah satu gambar terlebih dahulu.'
+              });
+              return prev;
+            }
+          });
+        }
+        
         setSuccessModal({ isOpen: true, message: 'Gambar berhasil diupload!' });
       }
     } catch (error: any) {
@@ -219,7 +253,7 @@ export function ProductForm() {
     }
   };
 
-  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>, isMainImage: boolean = true) => {
     const file = e.target.files?.[0];
     if (file) {
       // Validate file type
@@ -240,17 +274,22 @@ export function ProductForm() {
         });
         return;
       }
-      handleImageUpload(file);
+      handleImageUpload(file, isMainImage);
     }
   };
 
-  const removeImage = () => {
-    setFormData({ ...formData, imageUrl: '' });
-    setImagePreview('');
-  };
-
-  const closeSuccessModal = () => {
-    setSuccessModal({ isOpen: false, message: '' });
+  const removeImage = (index?: number) => {
+    if (index === undefined) {
+      // Remove main image
+      setFormData(prev => ({ ...prev, imageUrl: '' }));
+      setImagePreview('');
+    } else {
+      // Remove from additional images
+      setFormData(prev => {
+        const newImages = prev.images.filter((_, i) => i !== index);
+        return { ...prev, images: newImages };
+      });
+    }
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -265,7 +304,7 @@ export function ProductForm() {
     setIsDragging(false);
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, isMainImage: boolean = true) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -289,7 +328,7 @@ export function ProductForm() {
         });
         return;
       }
-      handleImageUpload(file);
+      handleImageUpload(file, isMainImage);
     }
   };
 
@@ -301,7 +340,7 @@ export function ProductForm() {
       setValidationError({
         isOpen: true,
         title: 'Data Tidak Lengkap',
-        message: 'Nama dan harga produk wajib diisi untuk melanjutkan. Silakan lengkapi kedua field terlebih dahulu.'
+        message: 'Nama dan harga produk wajib diisi untuk melanjutkan.'
       });
       return;
     }
@@ -310,7 +349,7 @@ export function ProductForm() {
       setValidationError({
         isOpen: true,
         title: 'Gambar Produk Wajib Diisi',
-        message: 'Upload gambar produk Anda untuk memastikan produk terlihat menarik di katalog. Gunakan format JPG, PNG, atau GIF dengan ukuran maksimal 10MB.'
+        message: 'Upload gambar utama produk Anda. Gunakan format JPG, PNG, atau GIF dengan ukuran maksimal 10MB.'
       });
       return;
     }
@@ -320,8 +359,11 @@ export function ProductForm() {
     try {
       const token = localStorage.getItem('token');
       const data = {
-        ...formData,
-        price: Number(formData.price)
+        name: formData.name,
+        description: formData.description,
+        price: Number(formData.price),
+        imageUrl: formData.imageUrl,
+        images: formData.images
       };
 
       if (isEdit) {
@@ -419,198 +461,281 @@ export function ProductForm() {
           animation: scaleIn 0.3s ease-out forwards;
         }
       `}</style>
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#ffde7d] via-[#f9e4a3] to-[#f4d58d] py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      </div>
-
-      <div className="max-w-4xl mx-auto relative z-10">
-        <div className="flex items-center gap-4 mb-8 animate-slide-in-left" style={{ opacity: 0 }}>
-          <Link to="/admin/products">
-            <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50" style={{ fontFamily: 'Nort, sans-serif' }}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Kembali
-            </Button>
-          </Link>
-          <h1 className="text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>
-            {isEdit ? 'Edit Produk' : 'Buat Produk Baru'}
-          </h1>
+      <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#ffde7d] via-[#f9e4a3] to-[#f4d58d] py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
 
-        <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-2xl animate-fade-up" style={{ opacity: 0, animationDelay: '0.2s' }}>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Product Name */}
-            <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.3s' }}>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Nama Produk <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-[#00b8a9] outline-none transition-all duration-300 hover:border-[#00b8a9]/50"
-                placeholder="Contoh: Lebah Cerana Premium"
-                required
-              />
-            </div>
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="flex items-center gap-4 mb-8 animate-slide-in-left" style={{ opacity: 0 }}>
+            <Link to="/admin/products">
+              <Button variant="outline" className="bg-white/90 hover:bg-white shadow-md backdrop-blur-sm border-2 border-white/50" style={{ fontFamily: 'Nort, sans-serif' }}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Kembali
+              </Button>
+            </Link>
+            <h1 className="text-4xl font-black text-white drop-shadow-lg" style={{ fontFamily: 'Nort, sans-serif' }}>
+              {isEdit ? 'Edit Produk' : 'Buat Produk Baru'}
+            </h1>
+          </div>
 
-            {/* Product Description */}
-            <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.4s' }}>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Deskripsi Produk
-              </label>
-              <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-[#00b8a9] outline-none resize-none transition-all duration-300 hover:border-[#00b8a9]/50"
-                rows={4}
-                placeholder="Deskripsi singkat tentang produk..."
-              />
-            </div>
-
-            {/* Product Price */}
-            <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.5s' }}>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Harga <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-[#00b8a9] outline-none transition-all duration-300 hover:border-[#00b8a9]/50"
-                placeholder="50000"
-                min="0"
-                required
-              />
-            </div>
-
-            {/* Product Image */}
-            <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.6s' }}>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Gambar Produk <span className="text-red-500">*</span>
-              </label>
-              {imagePreview ? (
-                <div className="relative mb-4 inline-block">
-                  <div className="w-full max-w-md h-64 bg-[#ffde7d] border border-gray-300 rounded-lg flex items-center justify-center p-4">
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="w-full h-full object-contain"
-                      style={{ 
-                        backgroundColor: 'transparent',
-                        imageRendering: 'auto'
-                      }}
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={removeImage}
-                    className="absolute -top-3 -right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all duration-300 hover:scale-110 shadow-lg"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ) : (
-                <div 
-                  className={`border-2 border-dashed rounded-lg p-8 text-center mb-4 transition-all duration-300 ${
-                    isDragging
-                      ? 'border-[#ffde7d] bg-[#ffde7d]/10 scale-105'
-                      : 'border-gray-300 hover:border-[#ffde7d] hover:bg-[#ffde7d]/5'
-                  }`}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                >
-                  <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500 mb-2">Drag and drop gambar di sini</p>
-                  <p className="text-xs text-gray-400">atau klik tombol di bawah</p>
-                </div>
-              )}
-              <div className="flex items-center gap-4">
+          <Card className="p-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 shadow-2xl animate-fade-up" style={{ opacity: 0, animationDelay: '0.2s' }}>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Product Name */}
+              <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.3s' }}>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Nama Produk <span className="text-red-500">*</span>
+                </label>
                 <input
-                  ref={fileInputRef}
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-[#00b8a9] outline-none transition-all duration-300 hover:border-[#00b8a9]/50"
+                  placeholder="Contoh: Lebah Cerana Premium"
+                  required
+                />
+              </div>
+
+              {/* Product Description */}
+              <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.4s' }}>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Deskripsi Produk
+                </label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-[#00b8a9] outline-none resize-none transition-all duration-300 hover:border-[#00b8a9]/50"
+                  rows={4}
+                  placeholder="Deskripsi lengkap tentang produk yang akan ditampilkan di halaman detail..."
+                />
+              </div>
+
+              {/* Product Price */}
+              <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.5s' }}>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Harga <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-[#00b8a9] outline-none transition-all duration-300 hover:border-[#00b8a9]/50"
+                  placeholder="50000"
+                  min="0"
+                  required
+                />
+              </div>
+
+              {/* Main Product Image */}
+              <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.6s' }}>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Gambar Utama Produk <span className="text-red-500">*</span>
+                </label>
+                {imagePreview ? (
+                  <div className="relative mb-4 inline-block">
+                    <div className="w-full max-w-md h-64 bg-[#ffde7d] border border-gray-300 rounded-lg flex items-center justify-center p-4">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="w-full h-full object-contain"
+                        style={{ 
+                          backgroundColor: 'transparent',
+                          imageRendering: 'auto'
+                        }}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeImage()}
+                      className="absolute -top-3 -right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all duration-300 hover:scale-110 shadow-lg"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <div 
+                    className={`border-2 border-dashed rounded-lg p-8 text-center mb-4 transition-all duration-300 ${
+                      isDragging
+                        ? 'border-[#ffde7d] bg-[#ffde7d]/10 scale-105'
+                        : 'border-gray-300 hover:border-[#ffde7d] hover:bg-[#ffde7d]/5'
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, true)}
+                  >
+                    <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                    <p className="text-gray-500 mb-2">Drag and drop gambar di sini</p>
+                    <p className="text-xs text-gray-400">atau klik tombol di bawah</p>
+                  </div>
+                )}
+                <div className="flex items-center gap-4">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageFileChange(e, true)}
+                    className="hidden"
+                    disabled={uploadingImage}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={uploadingImage}
+                    className="bg-white"
+                    onClick={() => {
+                      if (fileInputRef.current && !uploadingImage) {
+                        fileInputRef.current.click();
+                      }
+                    }}
+                  >
+                    {uploadingImage ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin mr-2" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="w-4 h-4 mr-2" />
+                        Upload Gambar Utama
+                      </>
+                    )}
+                  </Button>
+                  {imagePreview && (
+                    <span className="text-sm text-gray-500">Gambar sudah diupload</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Additional Images (Max 3) */}
+              <div className="animate-fade-up" style={{ opacity: 0, animationDelay: '0.7s' }}>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Gambar Tambahan ({formData.images.length}/3)
+                </label>
+                
+                {imagePreviews.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                    {imagePreviews.map((preview, index) => (
+                      <div key={index} className="relative group">
+                        <div className="relative w-full aspect-square bg-gray-100 border-2 border-gray-200 rounded-lg overflow-hidden hover:border-[#00b8a9] transition-all duration-300">
+                          <img
+                            src={preview}
+                            alt={`Image ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute top-1 right-1 bg-gray-900/80 text-white text-xs font-bold px-2 py-1 rounded">
+                            {index + 1}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition-all duration-300 hover:scale-110 shadow-lg opacity-0 group-hover:opacity-100"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {formData.images.length < 3 && (
+                  <div 
+                    className={`border-2 border-dashed rounded-lg p-8 text-center mb-4 transition-all duration-300 ${
+                      isDragging
+                        ? 'border-[#ffde7d] bg-[#ffde7d]/10 scale-105'
+                        : 'border-gray-300 hover:border-[#ffde7d] hover:bg-[#ffde7d]/5'
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, false)}
+                  >
+                    <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                    <p className="text-gray-500 mb-2">Tambahkan gambar tambahan (maksimal 3)</p>
+                    <p className="text-xs text-gray-400">Drag and drop atau klik tombol di bawah</p>
+                  </div>
+                )}
+
+                <input
+                  ref={additionalFileInputRef}
                   type="file"
                   accept="image/*"
-                  onChange={handleImageFileChange}
+                  onChange={(e) => handleImageFileChange(e, false)}
                   className="hidden"
-                  disabled={uploadingImage}
+                  disabled={uploadingImage || formData.images.length >= 3}
                 />
+                
+                {formData.images.length < 3 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={uploadingImage || formData.images.length >= 3}
+                    className="bg-white"
+                    onClick={() => {
+                      if (additionalFileInputRef.current && !uploadingImage && formData.images.length < 3) {
+                        additionalFileInputRef.current.click();
+                      }
+                    }}
+                  >
+                    {uploadingImage ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin mr-2" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="w-4 h-4 mr-2" />
+                        Upload Gambar Tambahan
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex gap-4 animate-fade-up" style={{ opacity: 0, animationDelay: '0.8s' }}>
                 <Button
-                  type="button"
-                  variant="outline"
-                  disabled={uploadingImage}
-                  className="bg-white"
-                  onClick={() => {
-                    if (fileInputRef.current && !uploadingImage) {
-                      fileInputRef.current.click();
-                    }
-                  }}
+                  type="submit"
+                  disabled={loading}
+                  className="bg-[#00b8a9] hover:bg-[#009c91] text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 disabled:opacity-70"
                 >
-                  {uploadingImage ? (
+                  {loading ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin mr-2" />
-                      Uploading...
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                      Menyimpan...
                     </>
                   ) : (
                     <>
-                      <Upload className="w-4 h-4 mr-2" />
-                      Upload Gambar
+                      <Save className="w-4 h-4 mr-2" />
+                      {isEdit ? 'Update Produk' : 'Simpan Produk'}
                     </>
                   )}
                 </Button>
-                {imagePreview && (
-                  <span className="text-sm text-gray-500">Gambar sudah diupload</span>
-                )}
+                <Link to="/admin/products">
+                  <Button type="button" variant="outline" className="transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                    Batal
+                  </Button>
+                </Link>
               </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex gap-4 animate-fade-up" style={{ opacity: 0, animationDelay: '0.7s' }}>
-              <Button
-                type="submit"
-                disabled={loading}
-                className="bg-[#00b8a9] hover:bg-[#009c91] text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 disabled:opacity-70"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                    Menyimpan...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    {isEdit ? 'Update Produk' : 'Simpan Produk'}
-                  </>
-                )}
-              </Button>
-              <Link to="/admin/products">
-                <Button type="button" variant="outline" className="transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-                  Batal
-                </Button>
-              </Link>
-            </div>
-          </form>
-        </Card>
-      </div>
+            </form>
+          </Card>
+        </div>
       </div>
 
       {/* Success Modal */}
-      {successModal.isOpen && (
-        <SuccessModal
-          message={successModal.message}
-          onClose={closeSuccessModal}
-        />
-      )}
+      <SuccessModal
+        isOpen={successModal.isOpen}
+        message={successModal.message}
+        onClose={() => setSuccessModal({ isOpen: false, message: '' })}
+      />
 
       {/* Submit Success Modal */}
-      {submitSuccessModal.isOpen && (
-        <SuccessModal
-          message={submitSuccessModal.message}
-          onClose={() => setSubmitSuccessModal({ isOpen: false, message: '' })}
-        />
-      )}
+      <SuccessModal
+        isOpen={submitSuccessModal.isOpen}
+        message={submitSuccessModal.message}
+        onClose={() => setSubmitSuccessModal({ isOpen: false, message: '' })}
+      />
 
       {/* Validation Error Modal */}
       <ValidationErrorModal
@@ -622,4 +747,6 @@ export function ProductForm() {
     </>
   );
 }
+
+export default ProductForm;
 

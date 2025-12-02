@@ -1183,4 +1183,21 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+// Get total user count
+router.get('/users/count', async (req, res) => {
+  try {
+    const count = await User.countDocuments();
+    res.json({
+      success: true,
+      count
+    });
+  } catch (error) {
+    console.error('Error counting users:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat menghitung user'
+    });
+  }
+});
+
 export default router;

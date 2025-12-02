@@ -16,7 +16,7 @@ export function ArticleDoc() {
   }, []);
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-[#ffde7d]">
+    <div className="flex min-h-screen w-full flex-col bg-[#ffde7d] animate-in fade-in duration-500">
       <SEO 
         title="Artikel & Dokumentasi Madu Jaya Lestari | Blog Informasi Madu"
         description="Baca artikel dan dokumentasi lengkap tentang madu, manfaat kesehatan, tips penggunaan, dan informasi seputar peternakan lebah dari Madu Jaya Lestari. Pelajari lebih lanjut tentang madu murni dan cara memilih madu berkualitas. Update terbaru tentang dunia madu dan kesehatan."
