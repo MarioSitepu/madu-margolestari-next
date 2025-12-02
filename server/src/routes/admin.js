@@ -228,6 +228,8 @@ router.get('/general-settings', async (req, res) => {
 // Update or create general settings (admin only)
 router.post('/general-settings', authenticateToken, verifyAdmin, async (req, res) => {
   try {
+    console.log('POST /admin/general-settings - Request received');
+    console.log('Request body:', req.body);
     const { operatingYears, whatsappNumber } = req.body;
 
     // Validate input
@@ -263,6 +265,8 @@ router.post('/general-settings', authenticateToken, verifyAdmin, async (req, res
     }
 
     await settings.save();
+
+    console.log('General settings saved successfully:', settings);
 
     res.json({
       success: true,

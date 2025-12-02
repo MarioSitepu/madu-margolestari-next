@@ -58,9 +58,19 @@ export function GeneralSettings() {
       setSuccessMessage('');
 
       const token = localStorage.getItem('token');
+      
+      if (!token) {
+        setErrorMessage('Anda harus login terlebih dahulu');
+        setSaving(false);
+        return;
+      }
+
+      // Build the correct endpoint URL
+      const endpoint = `${API_URL}/admin/general-settings`;
+      console.log('Saving to endpoint:', endpoint);
 
       const response = await axios.post(
-        `${API_URL}/admin/general-settings`,
+        endpoint,
         {
           operatingYears: generalConfig.operatingYears,
           whatsappNumber: generalConfig.whatsappNumber
@@ -73,16 +83,42 @@ export function GeneralSettings() {
         }
       );
 
-      if (response.data.data) {
+      if (response.data.success && response.data.data) {
         setGeneralConfig(response.data.data);
+        setSuccessMessage('Pengaturan umum berhasil disimpan!');
       } else if (response.data._id) {
         setGeneralConfig(response.data);
+        setSuccessMessage('Pengaturan umum berhasil disimpan!');
+      } else {
+        setSuccessMessage('Pengaturan umum berhasil disimpan!');
       }
-      setSuccessMessage('Pengaturan umum berhasil disimpan!');
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error: any) {
       console.error('Error saving general settings:', error);
-      const errorMsg = error.response?.data?.message || error.message || 'Gagal menyimpan pengaturan umum';
+      console.error('Error response:', error.response);
+      console.error('Error config:', error.config);
+      
+      let errorMsg = 'Gagal menyimpan pengaturan umum';
+      
+      if (error.response) {
+        // Server responded with error
+        if (error.response.status === 404) {
+          errorMsg = `Endpoint tidak ditemukan. Pastikan server berjalan dan VITE_API_URL di-set dengan benar.\n\nURL yang digunakan: ${error.config?.url || 'unknown'}\n\nPastikan endpoint: ${API_URL}/admin/general-settings`;
+        } else if (error.response.status === 401) {
+          errorMsg = 'Sesi Anda telah berakhir. Silakan login kembali.';
+        } else if (error.response.status === 403) {
+          errorMsg = 'Akses ditolak. Hanya admin yang dapat mengakses fitur ini.';
+        } else {
+          errorMsg = error.response.data?.message || error.response.data?.error || `Error ${error.response.status}: ${error.response.statusText}`;
+        }
+      } else if (error.request) {
+        // Request was made but no response received
+        errorMsg = `Tidak dapat terhubung ke server. Pastikan backend berjalan dan VITE_API_URL di-set dengan benar.\n\nURL yang digunakan: ${error.config?.url || 'unknown'}\n\nVITE_API_URL seharusnya: ${API_URL}`;
+      } else {
+        // Error setting up the request
+        errorMsg = error.message || 'Terjadi kesalahan saat menyimpan pengaturan';
+      }
+      
       setErrorMessage(errorMsg);
     } finally {
       setSaving(false);

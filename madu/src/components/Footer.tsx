@@ -57,14 +57,24 @@ export function Footer() {
           
           {/* Floating White Card */}
           {/* Menggunakan -mb agar kartu ini turun menimpa section hijau di bawahnya */}
-          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 -mb-40 md:-mb-48 relative overflow-hidden">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 -mb-40 md:-mb-48 relative overflow-visible">
             
-            {/* Dekorasi Sarang Lebah */}
-            <img
-              src={honeycomb}
-              alt="Dekorasi"
-              className="absolute top-0 left-0 w-24 md:w-48 opacity-50 md:opacity-100 pointer-events-none transform -translate-x-4 -translate-y-4"
-            />
+            {/* Dekorasi Sarang Lebah - Background Pattern */}
+            <div className="absolute inset-0 rounded-3xl pointer-events-none overflow-hidden">
+              <img
+                src={honeycomb}
+                alt="Dekorasi Sarang Lebah"
+                className="absolute -top-8 -right-8 md:-top-12 md:-right-12 w-56 md:w-80 lg:w-96 h-auto opacity-50 md:opacity-70 pointer-events-none object-contain"
+                style={{ 
+                  filter: 'blur(0.5px)',
+                  mixBlendMode: 'multiply'
+                }}
+                onError={(e) => {
+                  console.error('Error loading honeycomb image:', e);
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
 
             <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
               

@@ -59,7 +59,6 @@ router.post('/', authenticateToken, async (req, res) => {
     await comment.save();
 
     // Save to user's comment history
-    const article = await Article.findById(articleId);
     if (article) {
       await User.findByIdAndUpdate(
         req.user._id,
