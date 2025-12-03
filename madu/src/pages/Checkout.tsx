@@ -16,6 +16,8 @@ interface ShippingConfig {
 
 interface GeneralSettings {
   whatsappNumber: string;
+  whatsappMessageTemplate?: string;
+  operatingYears?: number;
 }
 
 export function Checkout() {
@@ -149,17 +151,33 @@ export function Checkout() {
       const shippingAmount = shippingConfig.cost || 0;
       const totalAmount = subtotalAmount + shippingAmount;
 
-      const message = `Halo, saya ingin melakukan pemesanan madu:
+      // Use template from settings or default template
+      const defaultTemplate = `Halo, saya ingin melakukan pemesanan madu:
 
 PRODUK YANG DIPESAN:
-${productList}
+{productList}
 
 RINGKASAN PESANAN:
-Subtotal: Rp ${subtotalAmount.toLocaleString('id-ID')}
-Pengiriman: Rp ${shippingAmount.toLocaleString('id-ID')}
-Total: Rp ${totalAmount.toLocaleString('id-ID')}
+Subtotal: Rp {subtotal}
+Pengiriman: Rp {shipping}
+Total: Rp {total}
 
 Terima kasih!`;
+
+      const template = generalSettings.whatsappMessageTemplate || defaultTemplate;
+
+      // Replace placeholders with actual values
+      // Format nomor WhatsApp untuk ditampilkan (jika digunakan di template)
+      const formattedPhone = phoneNumber.replace(/(\d{2})(\d{3})(\d{4})(\d+)/, '$1-$2-$3-$4');
+      const operatingYears = generalSettings.operatingYears || 10;
+      
+      const message = template
+        .replace(/{productList}/g, productList)
+        .replace(/{subtotal}/g, subtotalAmount.toLocaleString('id-ID'))
+        .replace(/{shipping}/g, shippingAmount.toLocaleString('id-ID'))
+        .replace(/{total}/g, totalAmount.toLocaleString('id-ID'))
+        .replace(/{whatsappNumber}/g, formattedPhone)
+        .replace(/{operatingYears}/g, operatingYears.toString());
       
       const encodedMessage = encodeURIComponent(message);
 

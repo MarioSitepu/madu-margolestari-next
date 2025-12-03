@@ -7,12 +7,27 @@ interface GeneralConfig {
   _id?: string;
   operatingYears: number;
   whatsappNumber?: string;
+  whatsappMessageTemplate?: string;
   updatedAt?: string;
 }
 
+// Default template message
+const DEFAULT_WHATSAPP_TEMPLATE = `Halo, saya ingin melakukan pemesanan madu:
+
+PRODUK YANG DIPESAN:
+{productList}
+
+RINGKASAN PESANAN:
+Subtotal: Rp {subtotal}
+Pengiriman: Rp {shipping}
+Total: Rp {total}
+
+Terima kasih!`;
+
 export function GeneralSettings() {
   const [generalConfig, setGeneralConfig] = useState<GeneralConfig>({
-    operatingYears: 10
+    operatingYears: 10,
+    whatsappMessageTemplate: DEFAULT_WHATSAPP_TEMPLATE
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -29,21 +44,33 @@ export function GeneralSettings() {
       setLoading(true);
       const response = await axios.get(`${API_URL}/admin/general-settings`);
       if (response.data) {
-        setGeneralConfig(response.data);
+        // Jika tidak ada template, gunakan default
+        const config = {
+          ...response.data,
+          whatsappMessageTemplate: response.data.whatsappMessageTemplate || DEFAULT_WHATSAPP_TEMPLATE
+        };
+        setGeneralConfig(config);
+      } else {
+        // Jika tidak ada data, gunakan default
+        setGeneralConfig({
+          operatingYears: 10,
+          whatsappMessageTemplate: DEFAULT_WHATSAPP_TEMPLATE
+        });
       }
       setErrorMessage('');
     } catch (error) {
       console.error('Error fetching general settings:', error);
       // Default values if not found
       setGeneralConfig({
-        operatingYears: 10
+        operatingYears: 10,
+        whatsappMessageTemplate: DEFAULT_WHATSAPP_TEMPLATE
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setGeneralConfig(prev => ({
       ...prev,
@@ -73,7 +100,8 @@ export function GeneralSettings() {
         endpoint,
         {
           operatingYears: generalConfig.operatingYears,
-          whatsappNumber: generalConfig.whatsappNumber
+          whatsappNumber: generalConfig.whatsappNumber,
+          whatsappMessageTemplate: generalConfig.whatsappMessageTemplate
         },
         {
           headers: {
@@ -201,19 +229,86 @@ export function GeneralSettings() {
           </p>
         </div>
 
+        {/* Template Pesan WhatsApp */}
+        <div className="space-y-2">
+          <label className="block text-sm font-semibold text-gray-700">
+            Template Pesan WhatsApp untuk Checkout
+          </label>
+          <textarea
+            name="whatsappMessageTemplate"
+            value={generalConfig.whatsappMessageTemplate || DEFAULT_WHATSAPP_TEMPLATE}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00b8a9] focus:border-transparent outline-none transition resize-y min-h-[200px] font-mono text-sm"
+            placeholder={DEFAULT_WHATSAPP_TEMPLATE}
+          />
+          <div className="text-sm text-gray-500 mt-1 space-y-1">
+            <p>Gunakan placeholder berikut untuk menampilkan data dinamis:</p>
+            <ul className="list-disc list-inside ml-2 space-y-0.5">
+              <li><code className="bg-gray-100 px-1 rounded">&#123;productList&#125;</code> - Daftar produk yang dipesan</li>
+              <li><code className="bg-gray-100 px-1 rounded">&#123;subtotal&#125;</code> - Subtotal harga</li>
+              <li><code className="bg-gray-100 px-1 rounded">&#123;shipping&#125;</code> - Biaya pengiriman</li>
+              <li><code className="bg-gray-100 px-1 rounded">&#123;total&#125;</code> - Total harga</li>
+              <li><code className="bg-gray-100 px-1 rounded">&#123;whatsappNumber&#125;</code> - Nomor WhatsApp (dari pengaturan)</li>
+              <li><code className="bg-gray-100 px-1 rounded">&#123;operatingYears&#125;</code> - Tahun beroperasi (dari pengaturan)</li>
+            </ul>
+          </div>
+        </div>
+
         {/* Preview */}
-        <div className="mt-8 p-4 bg-[#ffde7d]/20 border border-[#ffde7d] rounded-lg">
-          <h3 className="font-semibold text-gray-800 mb-3">Preview Pengaturan</h3>
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm text-gray-700">
-              <span>Tahun Beroperasi</span>
-              <span className="font-semibold">{generalConfig.operatingYears}+</span>
-            </div>
-            <div className="flex justify-between text-sm text-gray-700">
-              <span>Nomor WhatsApp</span>
-              <span className="font-semibold">{generalConfig.whatsappNumber || 'Belum diatur'}</span>
+        <div className="mt-8 space-y-4">
+          <div className="p-4 bg-[#ffde7d]/20 border border-[#ffde7d] rounded-lg">
+            <h3 className="font-semibold text-gray-800 mb-3">Preview Pengaturan</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm text-gray-700">
+                <span>Tahun Beroperasi</span>
+                <span className="font-semibold">{generalConfig.operatingYears}+</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-700">
+                <span>Nomor WhatsApp</span>
+                <span className="font-semibold">{generalConfig.whatsappNumber || 'Belum diatur'}</span>
+              </div>
             </div>
           </div>
+
+          {/* Preview Template Message */}
+          {generalConfig.whatsappMessageTemplate && (
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+              <h3 className="font-semibold text-gray-800 mb-3">Preview Pesan WhatsApp</h3>
+              <div className="bg-white p-4 rounded border border-gray-300">
+                <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">
+                  {(() => {
+                    // Format nomor WhatsApp untuk preview
+                    const formattedPhone = generalConfig.whatsappNumber 
+                      ? generalConfig.whatsappNumber.replace(/(\d{2})(\d{3})(\d{4})(\d+)/, '$1-$2-$3-$4')
+                      : '62-812-3456-7890';
+                    
+                    // Contoh data produk
+                    const exampleProductList = '• Madu Murni Premium - Rp 150.000 x2\n• Madu Hutan Asli - Rp 200.000 x1';
+                    const exampleSubtotal = '500.000';
+                    const exampleShipping = '20.000';
+                    const exampleTotal = '520.000';
+                    
+                    // Replace placeholders dengan data yang tersimpan dan contoh
+                    return generalConfig.whatsappMessageTemplate
+                      .replace(/{productList}/g, exampleProductList)
+                      .replace(/{subtotal}/g, exampleSubtotal)
+                      .replace(/{shipping}/g, exampleShipping)
+                      .replace(/{total}/g, exampleTotal)
+                      .replace(/{whatsappNumber}/g, formattedPhone)
+                      .replace(/{operatingYears}/g, generalConfig.operatingYears.toString());
+                  })()}
+                </pre>
+              </div>
+              <div className="mt-3 space-y-1 text-xs text-gray-600">
+                <p className="font-semibold">Data yang digunakan dalam preview:</p>
+                <ul className="list-disc list-inside ml-2 space-y-0.5">
+                  <li>Nomor WhatsApp: <span className="font-mono">{generalConfig.whatsappNumber || 'Belum diatur'}</span></li>
+                  <li>Tahun Beroperasi: <span className="font-mono">{generalConfig.operatingYears}+</span></li>
+                  <li>Data produk, harga, dan ongkir menggunakan contoh</li>
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Save Button */}

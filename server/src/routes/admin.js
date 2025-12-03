@@ -215,6 +215,21 @@ router.get('/general-settings', async (req, res) => {
       await settings.save();
     }
 
+    // Ensure whatsappMessageTemplate exists (use default if not set)
+    if (!settings.whatsappMessageTemplate) {
+      settings.whatsappMessageTemplate = `Halo, saya ingin melakukan pemesanan madu:
+
+PRODUK YANG DIPESAN:
+{productList}
+
+RINGKASAN PESANAN:
+Subtotal: Rp {subtotal}
+Pengiriman: Rp {shipping}
+Total: Rp {total}
+
+Terima kasih!`;
+    }
+
     res.json(settings);
   } catch (error) {
     console.error('Error fetching general settings:', error);
@@ -230,7 +245,7 @@ router.post('/general-settings', authenticateToken, verifyAdmin, async (req, res
   try {
     console.log('POST /admin/general-settings - Request received');
     console.log('Request body:', req.body);
-    const { operatingYears, whatsappNumber } = req.body;
+    const { operatingYears, whatsappNumber, whatsappMessageTemplate } = req.body;
 
     // Validate input
     if (typeof operatingYears !== 'number' || operatingYears < 0) {
@@ -248,19 +263,31 @@ router.post('/general-settings', authenticateToken, verifyAdmin, async (req, res
       });
     }
 
+    // Validate WhatsApp message template if provided
+    if (whatsappMessageTemplate && typeof whatsappMessageTemplate !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Template pesan WhatsApp harus berupa teks'
+      });
+    }
+
     let settings = await GeneralSettings.findOne();
 
     if (settings) {
       // Update existing settings
       settings.operatingYears = operatingYears;
-      if (whatsappNumber) {
+      if (whatsappNumber !== undefined) {
         settings.whatsappNumber = whatsappNumber;
+      }
+      if (whatsappMessageTemplate !== undefined) {
+        settings.whatsappMessageTemplate = whatsappMessageTemplate;
       }
     } else {
       // Create new settings
       settings = new GeneralSettings({
         operatingYears,
-        whatsappNumber: whatsappNumber || '6287888888888'
+        whatsappNumber: whatsappNumber || '6287888888888',
+        whatsappMessageTemplate: whatsappMessageTemplate || undefined
       });
     }
 
